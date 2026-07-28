@@ -195,6 +195,23 @@ export class EneideClient {
     return body
   }
 
+  async uploadPostCover(identifier: string | number, file: Blob | File, fileName: string, type: string): Promise<SingleResponse<{ alt: string; src: string; ext: string }>> {
+    const form = new FormData()
+    form.append('file', file, fileName)
+    form.append('fileName', fileName)
+    form.append('type', type)
+    const url = `${this.baseUrl}/api/v1/posts/${identifier}/cover`
+    const headers: Record<string, string> = {}
+    if (this.apiKey) headers['authorization'] = `Bearer ${this.apiKey}`
+    const res = await fetch(url, { method: 'POST', headers, body: form })
+    const body = await res.json()
+    if (!res.ok) {
+      const err = body as { error?: { code?: string; message?: string } }
+      throw new EneideApiError(err?.error?.message ?? `HTTP ${res.status}`, err?.error?.code ?? 'UNKNOWN_ERROR', res.status)
+    }
+    return body
+  }
+
   async deletePostImage(identifier: string | number, imageId: number): Promise<SingleResponse<{ id: number; deleted: boolean }>> {
     return this.request<SingleResponse<{ id: number; deleted: boolean }>>(`/posts/${identifier}/images?id=${imageId}`, {
       method: 'DELETE',

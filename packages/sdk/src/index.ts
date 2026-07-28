@@ -1,12 +1,12 @@
 import type {
   Post, Tag, Author, SiteSettings, BlogStats, PostStatus, PostLink,
-  ApiKey, ApiKeyCreated,
+  ApiKey, ApiKeyCreated, UserProfile,
   PaginatedResponse, SingleResponse, QueryParams,
   CreatePostPayload, UpdatePostPayload,
   CreateTagPayload, UpdateTagPayload,
 } from './types'
 
-export type { PostStatus, PostLink, Post, Tag, Author, SiteSettings, BlogStats, ApiKey, ApiKeyCreated, QueryParams, CreatePostPayload, UpdatePostPayload, CreateTagPayload, UpdateTagPayload }
+export type { PostStatus, PostLink, Post, Tag, Author, SiteSettings, BlogStats, ApiKey, ApiKeyCreated, UserProfile, QueryParams, CreatePostPayload, UpdatePostPayload, CreateTagPayload, UpdateTagPayload }
 
 export class EneideClient {
   private baseUrl: string
@@ -137,6 +137,35 @@ export class EneideClient {
   async deleteTag(id: number): Promise<SingleResponse<{ id: number; deleted: boolean }>> {
     return this.request<SingleResponse<{ id: number; deleted: boolean }>>(`/tags/${id}`, {
       method: 'DELETE',
+    })
+  }
+
+  async getDrafts(): Promise<SingleResponse<Post[]>> {
+    return this.request<SingleResponse<Post[]>>('/posts/drafts')
+  }
+
+  async getProfile(): Promise<SingleResponse<UserProfile>> {
+    return this.request<SingleResponse<UserProfile>>('/user/profile')
+  }
+
+  async updateProfile(payload: Partial<UserProfile>): Promise<SingleResponse<UserProfile>> {
+    return this.request<SingleResponse<UserProfile>>('/user/profile', {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    })
+  }
+
+  async updateArticle(identifier: string | number, article: object): Promise<SingleResponse<{ message: string }>> {
+    return this.request<SingleResponse<{ message: string }>>(`/posts/${identifier}/article`, {
+      method: 'PUT',
+      body: JSON.stringify({ article }),
+    })
+  }
+
+  async register(payload: { name: string; email: string; password: string; biography?: string; job?: string; language?: string; location?: string }): Promise<SingleResponse<UserProfile>> {
+    return this.request<SingleResponse<UserProfile>>('/register', {
+      method: 'POST',
+      body: JSON.stringify(payload),
     })
   }
 }

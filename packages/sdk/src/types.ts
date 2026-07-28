@@ -61,6 +61,21 @@ export type Author = {
 
 export type SiteSettings = Record<string, unknown>
 
+export type UserProfile = {
+  id: number
+  name: string
+  slug: string
+  email: string
+  avatar: string
+  biography: string
+  job: string
+  location: string
+  language: string
+  socials: string
+  created_at: string
+  updated_at: string
+}
+
 export type BlogStats = {
   posts: number
   projects: number

@@ -169,6 +169,14 @@ export class EneideClient {
     })
   }
 
+  async logout(): Promise<SingleResponse<{ success: boolean }>> {
+    return this.request<SingleResponse<{ success: boolean }>>('/logout', { method: 'POST' })
+  }
+
+  async deleteAvatar(): Promise<SingleResponse<{ deleted: boolean }>> {
+    return this.request<SingleResponse<{ deleted: boolean }>>('/user/avatar', { method: 'DELETE' })
+  }
+
   async login(email: string, password: string): Promise<SingleResponse<UserProfile>> {
     return this.request<SingleResponse<UserProfile>>('/login', {
       method: 'POST',

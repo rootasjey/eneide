@@ -168,6 +168,13 @@ export class EneideClient {
       body: JSON.stringify(payload),
     })
   }
+
+  async login(email: string, password: string): Promise<SingleResponse<UserProfile>> {
+    return this.request<SingleResponse<UserProfile>>('/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    })
+  }
 }
 
 export class EneideApiError extends Error {

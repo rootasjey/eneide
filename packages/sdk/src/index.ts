@@ -220,6 +220,32 @@ export class EneideClient {
     return body
   }
 
+  async getPostVideos(identifier: string | number): Promise<SingleResponse<any[]>> {
+    return this.request<SingleResponse<any[]>>(`/posts/${identifier}/videos`)
+  }
+
+  async uploadPostVideo(identifier: string | number, file: Blob | File, filename: string, type: string, poster?: Blob | File, posterFilename?: string, posterType?: string): Promise<SingleResponse<{ src: string; storedPath: string; posterSrc: string | null }>> {
+    const form = new FormData()
+    form.append('file', file, filename)
+    if (poster && posterFilename && posterType) {
+      form.append('poster', poster, posterFilename)
+    }
+    const url = `${this.baseUrl}/api/v1/posts/${identifier}/videos`
+    const headers: Record<string, string> = {}
+    if (this.apiKey) headers['authorization'] = `Bearer ${this.apiKey}`
+    const res = await fetch(url, { method: 'POST', headers, body: form })
+    const body = await res.json()
+    if (!res.ok) {
+      const err = body as { error?: { code?: string; message?: string } }
+      throw new EneideApiError(err?.error?.message ?? `HTTP ${res.status}`, err?.error?.code ?? 'UNKNOWN_ERROR', res.status)
+    }
+    return body
+  }
+
+  async deletePostVideo(identifier: string | number, videoId: number): Promise<SingleResponse<{ id: number; deleted: boolean }>> {
+    return this.request<SingleResponse<{ id: number; deleted: boolean }>>(`/posts/${identifier}/videos?id=${videoId}`, { method: 'DELETE' })
+  }
+
   async uploadPostCover(identifier: string | number, file: Blob | File, fileName: string, type: string): Promise<SingleResponse<{ alt: string; src: string; ext: string }>> {
     const form = new FormData()
     form.append('file', file, fileName)

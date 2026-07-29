@@ -268,6 +268,61 @@ export class EneideClient {
       method: 'DELETE',
     })
   }
+
+  async getPostAudios(identifier: string | number): Promise<SingleResponse<any[]>> {
+    return this.request<SingleResponse<any[]>>(`/posts/${identifier}/audios`)
+  }
+
+  async uploadPostAudio(identifier: string | number, file: Blob | File, filename: string): Promise<SingleResponse<{ src: string; storedPath: string }>> {
+    const form = new FormData()
+    form.append('file', file, filename)
+    const url = `${this.baseUrl}/api/v1/posts/${identifier}/audios`
+    const headers: Record<string, string> = {}
+    if (this.apiKey) headers['authorization'] = `Bearer ${this.apiKey}`
+    const res = await fetch(url, { method: 'POST', headers, body: form })
+    const body = await res.json()
+    if (!res.ok) {
+      const err = body as { error?: { code?: string; message?: string } }
+      throw new EneideApiError(err?.error?.message ?? `HTTP ${res.status}`, err?.error?.code ?? 'UNKNOWN_ERROR', res.status)
+    }
+    return body
+  }
+
+  async deletePostAudio(identifier: string | number, audioId: number): Promise<SingleResponse<{ id: number; deleted: boolean }>> {
+    return this.request<SingleResponse<{ id: number; deleted: boolean }>>(`/posts/${identifier}/audios?id=${audioId}`, { method: 'DELETE' })
+  }
+
+  async importPosts(payload: { posts: CreatePostPayload[] } | CreatePostPayload[]): Promise<SingleResponse<{ count: number; posts: Post[] }>> {
+    return this.request<SingleResponse<{ count: number; posts: Post[] }>>('/posts/import', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    })
+  }
+
+  async subscribeNewsletter(email: string): Promise<SingleResponse<{ ok: boolean; status: string; alreadySubscribed: boolean; message: string }>> {
+    return this.request<SingleResponse<{ ok: boolean; status: string; alreadySubscribed: boolean; message: string }>>('/newsletter/subscribe', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    })
+  }
+
+  async getLinkPreview(url: string): Promise<SingleResponse<{ title: string | null; description: string | null; image: string | null }>> {
+    return this.request<SingleResponse<{ title: string | null; description: string | null; image: string | null }>>(`/link-preview?url=${encodeURIComponent(url)}`)
+  }
+
+  async clearOgCache(key: string, type?: string, slug?: string): Promise<SingleResponse<{ deletedCount: number; message: string }>> {
+    const params = new URLSearchParams({ key })
+    if (type) params.set('type', type)
+    if (slug) params.set('slug', slug)
+    return this.request<SingleResponse<{ deletedCount: number; message: string }>>(`/admin/clear-og-cache?${params}`)
+  }
+
+  async updateSiteSettings(socials: any[]): Promise<SingleResponse<{ message: string; socials: any[] }>> {
+    return this.request<SingleResponse<{ message: string; socials: any[] }>>('/admin/site-settings', {
+      method: 'PUT',
+      body: JSON.stringify({ socials }),
+    })
+  }
 }
 
 export class EneideApiError extends Error {

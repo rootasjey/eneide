@@ -173,6 +173,23 @@ export class EneideClient {
     return this.request<SingleResponse<{ success: boolean }>>('/logout', { method: 'POST' })
   }
 
+  async uploadAvatar(file: Blob | File, fileName: string, type: string): Promise<SingleResponse<{ src: string; alt: string }>> {
+    const form = new FormData()
+    form.append('file', file, fileName)
+    form.append('fileName', fileName)
+    form.append('type', type)
+    const url = `${this.baseUrl}/api/v1/user/avatar`
+    const headers: Record<string, string> = {}
+    if (this.apiKey) headers['authorization'] = `Bearer ${this.apiKey}`
+    const res = await fetch(url, { method: 'POST', headers, body: form })
+    const body = await res.json()
+    if (!res.ok) {
+      const err = body as { error?: { code?: string; message?: string } }
+      throw new EneideApiError(err?.error?.message ?? `HTTP ${res.status}`, err?.error?.code ?? 'UNKNOWN_ERROR', res.status)
+    }
+    return body
+  }
+
   async deleteAvatar(): Promise<SingleResponse<{ deleted: boolean }>> {
     return this.request<SingleResponse<{ deleted: boolean }>>('/user/avatar', { method: 'DELETE' })
   }

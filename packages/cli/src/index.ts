@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander'
-import { readFileSync, existsSync, mkdirSync, writeFileSync } from 'node:fs'
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { EneideClient, EneideApiError } from '@eneide/sdk'
@@ -11,17 +11,13 @@ const CONFIG_FILE = join(CONFIG_DIR, 'config.json')
 
 function loadConfig(): { baseUrl?: string; apiKey?: string } {
   try {
-    if (existsSync(CONFIG_FILE)) {
-      return JSON.parse(readFileSync(CONFIG_FILE, 'utf-8'))
-    }
+    if (existsSync(CONFIG_FILE)) return JSON.parse(readFileSync(CONFIG_FILE, 'utf-8'))
   } catch {}
   return {}
 }
 
 function saveConfig(config: { baseUrl?: string; apiKey?: string }) {
-  if (!existsSync(CONFIG_DIR)) {
-    mkdirSync(CONFIG_DIR, { recursive: true })
-  }
+  if (!existsSync(CONFIG_DIR)) mkdirSync(CONFIG_DIR, { recursive: true })
   writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2))
 }
 
@@ -40,333 +36,197 @@ function formatJson(data: unknown): string {
 
 const program = new Command()
 
-program
-  .name('eneide')
-  .description('CLI for Énéide CMS')
-  .version('0.1.0')
+program.name('eneide').description('CLI for Énéide CMS').version('0.2.0')
 
-// config
+// ---- config ----
 const configCmd = program.command('config').description('Manage CLI configuration')
+configCmd.command('set-base-url').argument('<url>', 'API base URL').action((url: string) => {
+  const config = loadConfig(); config.baseUrl = url.replace(/\/+$/, ''); saveConfig(config)
+  console.log(`Base URL set to: ${config.baseUrl}`)
+})
+configCmd.command('set-api-key').argument('<key>', 'API key').action((key: string) => {
+  const config = loadConfig(); config.apiKey = key; saveConfig(config)
+  console.log('API key saved')
+})
+configCmd.command('show').description('Show current configuration').action(() => {
+  const config = loadConfig()
+  console.log(formatJson({ ...config, apiKey: config.apiKey ? '***' : undefined }))
+})
 
-configCmd
-  .command('set-base-url')
-  .argument('<url>', 'API base URL (e.g. https://corpinot.cc)')
-  .action((url: string) => {
-    const config = loadConfig()
-    config.baseUrl = url.replace(/\/+$/, '')
-    saveConfig(config)
-    console.log(`Base URL set to: ${config.baseUrl}`)
+// ---- auth ----
+const authCmd = program.command('auth').description('Authentication')
+authCmd.command('register').description('Create a new account')
+  .requiredOption('-e, --email <email>', 'Email')
+  .requiredOption('-p, --password <password>', 'Password')
+  .requiredOption('-n, --name <name>', 'Display name')
+  .action(async (opts) => {
+    try { console.log(formatJson(await createClient().register({ email: opts.email, password: opts.password, name: opts.name }))) }
+    catch (e) { handleError(e) }
   })
-
-configCmd
-  .command('set-api-key')
-  .argument('<key>', 'API key')
-  .action((key: string) => {
-    const config = loadConfig()
-    config.apiKey = key
-    saveConfig(config)
-    console.log('API key saved')
+authCmd.command('login').description('Login').argument('<email>', 'Email').argument('<password>', 'Password')
+  .action(async (email, password) => {
+    try { console.log(formatJson(await createClient().login(email, password))) }
+    catch (e) { handleError(e) }
   })
+authCmd.command('logout').description('Logout').action(async () => {
+  try { console.log(formatJson(await createClient().logout())) }
+  catch (e) { handleError(e) }
+})
 
-configCmd
-  .command('show')
-  .description('Show current configuration (excluding secrets)')
-  .action(() => {
-    const config = loadConfig()
-    const { apiKey: _, ...safe } = config
-    console.log(formatJson({ ...safe, apiKey: config.apiKey ? '***' : undefined }))
+// ---- user ----
+const userCmd = program.command('user').description('User profile & avatar')
+userCmd.command('profile').description('Get profile').action(async () => {
+  try { console.log(formatJson(await createClient().getProfile())) }
+  catch (e) { handleError(e) }
+})
+userCmd.command('update-profile').description('Update profile')
+  .option('-n, --name <name>', 'Name')
+  .option('-b, --biography <text>', 'Biography')
+  .option('-j, --job <job>', 'Job')
+  .option('-l, --location <location>', 'Location')
+  .option('-L, --language <lang>', 'Language')
+  .action(async (opts) => {
+    try { console.log(formatJson(await createClient().updateProfile(opts))) }
+    catch (e) { handleError(e) }
   })
+userCmd.command('delete-avatar').description('Delete avatar').action(async () => {
+  try { console.log(formatJson(await createClient().deleteAvatar())) }
+  catch (e) { handleError(e) }
+})
 
-// posts
+// ---- posts ----
 const postsCmd = program.command('posts').description('Manage posts')
-
-postsCmd
-  .command('list')
-  .description('List published posts')
-  .option('-p, --page <number>', 'Page number', '1')
-  .option('-l, --limit <number>', 'Items per page', '25')
-  .option('-s, --search <query>', 'Search term')
-  .option('-t, --tag <tag>', 'Filter by tag')
-  .option('-a, --author <author>', 'Filter by author (id, slug, or name)')
-  .option('-L, --language <lang>', 'Filter by language (en, fr, es, de, it)')
-  .action(async (options) => {
-    try {
-      const client = createClient()
-      const result = await client.getPosts(options)
-      console.log(formatJson(result))
-    } catch (err) {
-      handleError(err)
-    }
+postsCmd.command('list').description('List published posts')
+  .option('-p, --page <n>', 'Page', '1').option('-l, --limit <n>', 'Limit', '25')
+  .option('-s, --search <q>', 'Search').option('-t, --tag <tag>', 'Filter by tag')
+  .option('-a, --author <author>', 'Filter by author').option('-L, --language <lang>', 'Language')
+  .action(async (opts) => {
+    try { console.log(formatJson(await createClient().getPosts(opts))) }
+    catch (e) { handleError(e) }
   })
-
-postsCmd
-  .command('get')
-  .description('Get a single post by slug')
-  .argument('<slug>', 'Post slug')
-  .action(async (slug: string) => {
-    try {
-      const client = createClient()
-      const result = await client.getPost(slug)
-      console.log(formatJson(result))
-    } catch (err) {
-      handleError(err)
-    }
+postsCmd.command('get').description('Get post by slug').argument('<slug>', 'Post slug')
+  .action(async (slug) => {
+    try { console.log(formatJson(await createClient().getPost(slug))) }
+    catch (e) { handleError(e) }
   })
-
-postsCmd
-  .command('create')
-  .description('Create a new post')
-  .requiredOption('-n, --name <name>', 'Post name')
-  .option('-d, --description <desc>', 'Post description')
-  .option('-s, --status <status>', 'Post status (draft|published|archived)')
+postsCmd.command('drafts').description('List drafts')
+  .action(async () => {
+    try { console.log(formatJson(await createClient().getDrafts())) }
+    catch (e) { handleError(e) }
+  })
+postsCmd.command('create').description('Create post')
+  .requiredOption('-n, --name <name>', 'Name')
+  .option('-d, --description <desc>', 'Description').option('-s, --status <status>', 'Status')
   .option('-t, --tags <tags>', 'Comma-separated tag names')
-  .action(async (options) => {
+  .action(async (opts) => {
     try {
-      const client = createClient()
-      const tags = options.tags
-        ? options.tags.split(',').map((t: string) => ({ name: t.trim() }))
-        : undefined
-      const result = await client.createPost({ name: options.name, description: options.description, status: options.status, tags })
-      console.log(formatJson(result))
-    } catch (err) {
-      handleError(err)
-    }
+      const tags = opts.tags ? opts.tags.split(',').map((t: string) => ({ name: t.trim() })) : undefined
+      console.log(formatJson(await createClient().createPost({ name: opts.name, description: opts.description, status: opts.status, tags })))
+    } catch (e) { handleError(e) }
+  })
+postsCmd.command('update').description('Update post').argument('<id>', 'Post ID or slug')
+  .option('-n, --name <name>').option('-d, --description <desc>').option('-s, --slug <slug>')
+  .option('--status <status>').option('-l, --language <lang>').option('-t, --tags <tags>', 'Comma-separated')
+  .action(async (id, opts) => {
+    try {
+      const p: any = {}; if (opts.name) p.name = opts.name; if (opts.description) p.description = opts.description
+      if (opts.slug) p.slug = opts.slug; if (opts.status) p.status = opts.status; if (opts.language) p.language = opts.language
+      if (opts.tags) p.tags = opts.tags.split(',').map((t: string) => ({ name: t.trim() }))
+      console.log(formatJson(await createClient().updatePost(id, p)))
+    } catch (e) { handleError(e) }
+  })
+postsCmd.command('delete').description('Delete post').argument('<id>', 'Post ID or slug')
+  .action(async (id) => {
+    try { console.log(formatJson(await createClient().deletePost(id))) }
+    catch (e) { handleError(e) }
+  })
+postsCmd.command('article').description('Update article JSON').argument('<id>', 'Post ID or slug').argument('<file>', 'JSON file path')
+  .action(async (id, file) => {
+    try {
+      const article = JSON.parse(readFileSync(file, 'utf-8'))
+      console.log(formatJson(await createClient().updateArticle(id, article)))
+    } catch (e) { handleError(e) }
+  })
+postsCmd.command('export').description('Export post as ZIP').argument('<id>', 'Post ID or slug').argument('[output]', 'Output file')
+  .action(async (id, output) => {
+    try {
+      const cfg = loadConfig()
+      const url = `${cfg.baseUrl}/api/v1/posts/${id}/export`
+      const res = await fetch(url)
+      if (!res.ok) { const b = await res.json(); throw new EneideApiError(b?.error?.message || 'Export failed', 'EXPORT_ERROR', res.status) }
+      const buffer = Buffer.from(await res.arrayBuffer())
+      const out = output || `post-${id}.zip`
+      writeFileSync(out, buffer)
+      console.log(`Exported to: ${out}`)
+    } catch (e) { handleError(e) }
+  })
+postsCmd.command('import').description('Import posts from JSON file').argument('<file>', 'JSON file path')
+  .action(async (file) => {
+    try {
+      const data = JSON.parse(readFileSync(file, 'utf-8'))
+      console.log(formatJson(await createClient().importPosts(data)))
+    } catch (e) { handleError(e) }
   })
 
-postsCmd
-  .command('update')
-  .description('Update a post')
-  .argument('<identifier>', 'Post ID or slug')
-  .option('-n, --name <name>', 'Post name')
-  .option('-d, --description <desc>', 'Post description')
-  .option('-s, --slug <slug>', 'Post slug')
-  .option('--status <status>', 'Post status (draft|published|archived)')
-  .option('-l, --language <lang>', 'Language (en|fr|es|de|it)')
-  .option('-t, --tags <tags>', 'Comma-separated tag names')
-  .action(async (identifier: string, options) => {
-    try {
-      const client = createClient()
-      const payload: Record<string, any> = {}
-      if (options.name) payload.name = options.name
-      if (options.description) payload.description = options.description
-      if (options.slug) payload.slug = options.slug
-      if (options.status) payload.status = options.status
-      if (options.language) payload.language = options.language
-      if (options.tags) payload.tags = options.tags.split(',').map((t: string) => ({ name: t.trim() }))
-      const result = await client.updatePost(identifier, payload)
-      console.log(formatJson(result))
-    } catch (err) {
-      handleError(err)
-    }
-  })
-
-postsCmd
-  .command('delete')
-  .description('Delete a post')
-  .argument('<identifier>', 'Post ID or slug')
-  .action(async (identifier: string) => {
-    try {
-      const client = createClient()
-      const result = await client.deletePost(identifier)
-      console.log(formatJson(result))
-    } catch (err) {
-      handleError(err)
-    }
-  })
-
-// tags
+// ---- tags ----
 const tagsCmd = program.command('tags').description('Manage tags')
+tagsCmd.command('list').description('List tags').option('-c, --category <cat>', 'Category').option('-s, --search <q>', 'Search')
+  .action(async (opts) => { try { console.log(formatJson(await createClient().getTags(opts))) } catch (e) { handleError(e) } })
+tagsCmd.command('create').description('Create tag').requiredOption('-n, --name <name>', 'Name')
+  .option('-c, --category <cat>', 'Category').option('-d, --description <desc>', 'Description')
+  .action(async (opts) => { try { console.log(formatJson(await createClient().createTag(opts))) } catch (e) { handleError(e) } })
+tagsCmd.command('update').description('Update tag').argument('<id>', 'Tag ID')
+  .requiredOption('-n, --name <name>', 'Name').option('-c, --category <cat>').option('-d, --description <desc>')
+  .action(async (id, opts) => { try { console.log(formatJson(await createClient().updateTag(Number(id), opts))) } catch (e) { handleError(e) } })
+tagsCmd.command('delete').description('Delete tag').argument('<id>', 'Tag ID')
+  .action(async (id) => { try { console.log(formatJson(await createClient().deleteTag(Number(id)))) } catch (e) { handleError(e) } })
 
-tagsCmd
-  .command('list')
-  .description('List all tags')
-  .option('-c, --category <category>', 'Filter by category')
-  .option('-s, --search <query>', 'Search tags')
-  .action(async (options) => {
-    try {
-      const client = createClient()
-      const result = await client.getTags(options)
-      console.log(formatJson(result))
-    } catch (err) {
-      handleError(err)
-    }
-  })
-
-tagsCmd
-  .command('create')
-  .description('Create a new tag')
-  .requiredOption('-n, --name <name>', 'Tag name')
-  .option('-c, --category <category>', 'Tag category')
-  .option('-d, --description <desc>', 'Tag description')
-  .action(async (options) => {
-    try {
-      const client = createClient()
-      const result = await client.createTag({ name: options.name, category: options.category, description: options.description })
-      console.log(formatJson(result))
-    } catch (err) {
-      handleError(err)
-    }
-  })
-
-tagsCmd
-  .command('update')
-  .description('Update a tag')
-  .argument('<id>', 'Tag ID')
-  .requiredOption('-n, --name <name>', 'Tag name')
-  .option('-c, --category <category>', 'Tag category')
-  .option('-d, --description <desc>', 'Tag description')
-  .action(async (id: string, options) => {
-    try {
-      const client = createClient()
-      const result = await client.updateTag(Number(id), { name: options.name, category: options.category, description: options.description })
-      console.log(formatJson(result))
-    } catch (err) {
-      handleError(err)
-    }
-  })
-
-tagsCmd
-  .command('delete')
-  .description('Delete a tag')
-  .argument('<id>', 'Tag ID')
-  .action(async (id: string) => {
-    try {
-      const client = createClient()
-      const result = await client.deleteTag(Number(id))
-      console.log(formatJson(result))
-    } catch (err) {
-      handleError(err)
-    }
-  })
-
-// authors
+// ---- authors ----
 const authorsCmd = program.command('authors').description('Manage authors')
+authorsCmd.command('list').description('List authors').action(async () => { try { console.log(formatJson(await createClient().getAuthors())) } catch (e) { handleError(e) } })
+authorsCmd.command('get').description('Get author').argument('<id>', 'Author ID').action(async (id) => { try { console.log(formatJson(await createClient().getAuthor(Number(id)))) } catch (e) { handleError(e) } })
 
-authorsCmd
-  .command('list')
-  .description('List all authors')
-  .action(async () => {
-    try {
-      const client = createClient()
-      const result = await client.getAuthors()
-      console.log(formatJson(result))
-    } catch (err) {
-      handleError(err)
-    }
-  })
+// ---- stats ----
+program.command('stats').description('Blog statistics').action(async () => { try { console.log(formatJson(await createClient().getStats())) } catch (e) { handleError(e) } })
 
-authorsCmd
-  .command('get')
-  .description('Get an author by ID')
-  .argument('<id>', 'Author ID')
-  .action(async (id: string) => {
-    try {
-      const client = createClient()
-      const result = await client.getAuthor(Number(id))
-      console.log(formatJson(result))
-    } catch (err) {
-      handleError(err)
-    }
-  })
+// ---- search ----
+program.command('search').description('Search posts').argument('<q>', 'Query')
+  .option('-p, --page <n>', 'Page', '1').option('-l, --limit <n>', 'Limit', '25').option('-L, --language <lang>', 'Language')
+  .action(async (q, opts) => { try { console.log(formatJson(await createClient().search(q, opts))) } catch (e) { handleError(e) } })
 
-// stats
-program
-  .command('stats')
-  .description('Get blog statistics')
-  .action(async () => {
-    try {
-      const client = createClient()
-      const result = await client.getStats()
-      console.log(formatJson(result))
-    } catch (err) {
-      handleError(err)
-    }
-  })
+// ---- api-keys ----
+const apiKeysCmd = program.command('api-keys').description('Manage API keys (admin)')
+apiKeysCmd.command('list').description('List keys').action(async () => { try { console.log(formatJson(await createClient().listApiKeys())) } catch (e) { handleError(e) } })
+apiKeysCmd.command('create').description('Create key').argument('<name>', 'Key name').action(async (n) => { try { console.log(formatJson(await createClient().createApiKey(n))) } catch (e) { handleError(e) } })
+apiKeysCmd.command('revoke').description('Revoke key').argument('<id>', 'Key ID').action(async (id) => { try { console.log(formatJson(await createClient().revokeApiKey(Number(id)))) } catch (e) { handleError(e) } })
 
-// search
-program
-  .command('search')
-  .description('Search posts')
-  .argument('<query>', 'Search query')
-  .option('-p, --page <number>', 'Page number', '1')
-  .option('-l, --limit <number>', 'Items per page', '25')
-  .option('-L, --language <lang>', 'Filter by language')
-  .action(async (query: string, options) => {
-    try {
-      const client = createClient()
-      const result = await client.search(query, options)
-      console.log(formatJson(result))
-    } catch (err) {
-      handleError(err)
-    }
-  })
+// ---- newsletter ----
+program.command('subscribe').description('Subscribe to newsletter').argument('<email>', 'Email').action(async (email) => {
+  try { console.log(formatJson(await createClient().subscribeNewsletter(email))) } catch (e) { handleError(e) }
+})
 
-// site-settings
-program
-  .command('site-settings')
-  .description('Get public site settings')
-  .action(async () => {
-    try {
-      const client = createClient()
-      const result = await client.getSiteSettings()
-      console.log(formatJson(result))
-    } catch (err) {
-      handleError(err)
-    }
-  })
+// ---- link-preview ----
+program.command('link-preview').description('Get link preview').argument('<url>', 'URL').action(async (url) => {
+  try { console.log(formatJson(await createClient().getLinkPreview(url))) } catch (e) { handleError(e) }
+})
 
-// api-keys (admin only)
-const apiKeysCmd = program.command('api-keys').description('Manage API keys (admin only)')
+// ---- site-settings ----
+program.command('site-settings').description('Get public site settings').action(async () => {
+  try { console.log(formatJson(await createClient().getSiteSettings())) } catch (e) { handleError(e) }
+})
 
-apiKeysCmd
-  .command('list')
-  .description('List all API keys')
-  .action(async () => {
-    try {
-      const client = createClient()
-      const result = await client.listApiKeys()
-      console.log(formatJson(result))
-    } catch (err) {
-      handleError(err)
-    }
-  })
-
-apiKeysCmd
-  .command('create')
-  .description('Create a new API key')
-  .argument('<name>', 'Key name')
-  .action(async (name: string) => {
-    try {
-      const client = createClient()
-      const result = await client.createApiKey(name)
-      console.log(formatJson(result))
-    } catch (err) {
-      handleError(err)
-    }
-  })
-
-apiKeysCmd
-  .command('revoke')
-  .description('Revoke an API key')
-  .argument('<id>', 'Key ID')
-  .action(async (id: string) => {
-    try {
-      const client = createClient()
-      const result = await client.revokeApiKey(Number(id))
-      console.log(formatJson(result))
-    } catch (err) {
-      handleError(err)
-    }
-  })
+// ---- admin ----
+const adminCmd = program.command('admin').description('Admin commands')
+adminCmd.command('clear-og-cache').description('Clear OG image cache').argument('<key>', 'Secret key')
+  .option('-t, --type <type>', 'Filter by type (home|post|author|tag)').option('-s, --slug <slug>', 'Filter by slug')
+  .action(async (key, opts) => { try { console.log(formatJson(await createClient().clearOgCache(key, opts.type, opts.slug))) } catch (e) { handleError(e) } })
+adminCmd.command('update-site-settings').description('Update site social links').argument('<json>', 'Social links JSON array')
+  .action(async (json) => { try { console.log(formatJson(await createClient().updateSiteSettings(JSON.parse(json)))) } catch (e) { handleError(e) } })
 
 function handleError(err: unknown) {
-  if (err instanceof EneideApiError) {
-    console.error(`Error [${err.code}] (${err.status}): ${err.message}`)
-  } else if (err instanceof Error) {
-    console.error(`Error: ${err.message}`)
-  } else {
-    console.error('Unknown error')
-  }
+  if (err instanceof EneideApiError) console.error(`Error [${err.code}] (${err.status}): ${err.message}`)
+  else if (err instanceof Error) console.error(`Error: ${err.message}`)
+  else console.error('Unknown error')
   process.exit(1)
 }
 

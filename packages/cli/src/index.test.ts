@@ -12,16 +12,21 @@ const mockClient = vi.hoisted(() => {
   const m: Record<string, ReturnType<typeof vi.fn>> = {}
   const methods = [
     'register', 'login', 'logout',
-    'getProfile', 'updateProfile', 'deleteAvatar',
-    'getPosts', 'getPost', 'getDrafts', 'createPost', 'updatePost', 'deletePost', 'updateArticle', 'importPosts',
+    'getProfile', 'updateProfile', 'deleteAvatar', 'uploadAvatar',
+    'getPosts', 'getPost', 'getDrafts', 'createPost', 'updatePost', 'deletePost', 'updateArticle', 'importPosts', 'exportPost',
     'getTags', 'createTag', 'updateTag', 'deleteTag',
     'getAuthors', 'getAuthor',
     'getStats', 'search',
     'listApiKeys', 'createApiKey', 'revokeApiKey',
     'subscribeNewsletter', 'getLinkPreview', 'getSiteSettings',
     'clearOgCache', 'updateSiteSettings',
+    'getPostImages', 'uploadPostImage', 'deletePostImage',
+    'getPostVideos', 'uploadPostVideo', 'deletePostVideo',
+    'getPostAudios', 'uploadPostAudio', 'deletePostAudio',
+    'uploadPostCover',
   ]
   for (const name of methods) m[name] = vi.fn().mockResolvedValue({ data: null })
+  m.exportPost = vi.fn().mockResolvedValue(new Blob(['zip-data'], { type: 'application/zip' }))
   return m
 })
 
@@ -108,6 +113,12 @@ describe('user', () => {
     await parse(['user', 'delete-avatar'])
     expect(mockClient.deleteAvatar).toHaveBeenCalled()
   })
+
+  it('upload-avatar calls client.uploadAvatar', async () => {
+    vi.mocked(readFileSync).mockReturnValueOnce(Buffer.from('av'))
+    await parse(['user', 'upload-avatar', 'avatar.png'])
+    expect(mockClient.uploadAvatar).toHaveBeenCalled()
+  })
 })
 
 describe('posts', () => {
@@ -144,6 +155,74 @@ describe('posts', () => {
   it('delete calls client.deletePost', async () => {
     await parse(['posts', 'delete', 'my-slug'])
     expect(mockClient.deletePost).toHaveBeenCalledWith('my-slug')
+  })
+
+  it('export calls client.exportPost and writes file', async () => {
+    const spy = vi.spyOn(console, 'log').mockImplementation(() => {})
+    await parse(['posts', 'export', '42'])
+    expect(mockClient.exportPost).toHaveBeenCalledWith('42')
+    expect(writeFileSync).toHaveBeenCalledWith(expect.stringContaining('post-42.zip'), expect.any(Buffer))
+    spy.mockRestore()
+  })
+
+  it('cover calls client.uploadPostCover', async () => {
+    vi.mocked(readFileSync).mockReturnValueOnce(Buffer.from('img'))
+    await parse(['posts', 'cover', '1', 'cover.jpg'])
+    expect(mockClient.uploadPostCover).toHaveBeenCalled()
+  })
+})
+
+describe('posts images', () => {
+  it('list calls client.getPostImages', async () => {
+    await parse(['posts', 'images', 'list', '1'])
+    expect(mockClient.getPostImages).toHaveBeenCalledWith('1')
+  })
+
+  it('upload calls client.uploadPostImage', async () => {
+    vi.mocked(readFileSync).mockReturnValueOnce(Buffer.from('img'))
+    await parse(['posts', 'images', 'upload', '1', 'photo.png'])
+    expect(mockClient.uploadPostImage).toHaveBeenCalled()
+  })
+
+  it('delete calls client.deletePostImage', async () => {
+    await parse(['posts', 'images', 'delete', '1', '5'])
+    expect(mockClient.deletePostImage).toHaveBeenCalledWith('1', 5)
+  })
+})
+
+describe('posts videos', () => {
+  it('list calls client.getPostVideos', async () => {
+    await parse(['posts', 'videos', 'list', '1'])
+    expect(mockClient.getPostVideos).toHaveBeenCalledWith('1')
+  })
+
+  it('upload calls client.uploadPostVideo', async () => {
+    vi.mocked(readFileSync).mockReturnValueOnce(Buffer.from('vid'))
+    await parse(['posts', 'videos', 'upload', '1', 'clip.mp4'])
+    expect(mockClient.uploadPostVideo).toHaveBeenCalled()
+  })
+
+  it('delete calls client.deletePostVideo', async () => {
+    await parse(['posts', 'videos', 'delete', '1', '3'])
+    expect(mockClient.deletePostVideo).toHaveBeenCalledWith('1', 3)
+  })
+})
+
+describe('posts audios', () => {
+  it('list calls client.getPostAudios', async () => {
+    await parse(['posts', 'audios', 'list', '1'])
+    expect(mockClient.getPostAudios).toHaveBeenCalledWith('1')
+  })
+
+  it('upload calls client.uploadPostAudio', async () => {
+    vi.mocked(readFileSync).mockReturnValueOnce(Buffer.from('aud'))
+    await parse(['posts', 'audios', 'upload', '1', 'track.mp3'])
+    expect(mockClient.uploadPostAudio).toHaveBeenCalled()
+  })
+
+  it('delete calls client.deletePostAudio', async () => {
+    await parse(['posts', 'audios', 'delete', '1', '7'])
+    expect(mockClient.deletePostAudio).toHaveBeenCalledWith('1', 7)
   })
 })
 

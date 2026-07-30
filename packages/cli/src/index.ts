@@ -34,6 +34,20 @@ function formatJson(data: unknown): string {
   return JSON.stringify(data, null, 2)
 }
 
+function readFileAsBlob(filePath: string): { blob: Blob; name: string; type: string } {
+  const buffer = readFileSync(filePath)
+  const name = filePath.split('/').pop() || filePath.split('\\').pop() || 'file'
+  const ext = name.split('.').pop()?.toLowerCase() || ''
+  const mime: Record<string, string> = {
+    jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', gif: 'image/gif',
+    webp: 'image/webp', svg: 'image/svg+xml', avif: 'image/avif',
+    mp4: 'video/mp4', webm: 'video/webm', mov: 'video/quicktime',
+    mp3: 'audio/mpeg', wav: 'audio/wav', ogg: 'audio/ogg', m4a: 'audio/mp4',
+  }
+  const type = mime[ext] || 'application/octet-stream'
+  return { blob: new Blob([buffer], { type }), name, type }
+}
+
 const program = new Command()
 
 program.name('eneide').description('CLI for Énéide CMS').version('0.2.0')
@@ -93,6 +107,11 @@ userCmd.command('delete-avatar').description('Delete avatar').action(async () =>
   try { console.log(formatJson(await createClient().deleteAvatar())) }
   catch (e) { handleError(e) }
 })
+userCmd.command('upload-avatar').description('Upload avatar image').argument('<file>', 'Image file path')
+  .action(async (file) => {
+    try { const f = readFileAsBlob(file); console.log(formatJson(await createClient().uploadAvatar(f.blob, f.name, f.type))) }
+    catch (e) { handleError(e) }
+  })
 
 // ---- posts ----
 const postsCmd = program.command('posts').description('Manage posts')
@@ -150,11 +169,8 @@ postsCmd.command('article').description('Update article JSON').argument('<id>', 
 postsCmd.command('export').description('Export post as ZIP').argument('<id>', 'Post ID or slug').argument('[output]', 'Output file')
   .action(async (id, output) => {
     try {
-      const cfg = loadConfig()
-      const url = `${cfg.baseUrl}/api/v1/posts/${id}/export`
-      const res = await fetch(url)
-      if (!res.ok) { const b = await res.json(); throw new EneideApiError(b?.error?.message || 'Export failed', 'EXPORT_ERROR', res.status) }
-      const buffer = Buffer.from(await res.arrayBuffer())
+      const blob = await createClient().exportPost(id)
+      const buffer = Buffer.from(await blob.arrayBuffer())
       const out = output || `post-${id}.zip`
       writeFileSync(out, buffer)
       console.log(`Exported to: ${out}`)
@@ -166,6 +182,50 @@ postsCmd.command('import').description('Import posts from JSON file').argument('
       const data = JSON.parse(readFileSync(file, 'utf-8'))
       console.log(formatJson(await createClient().importPosts(data)))
     } catch (e) { handleError(e) }
+  })
+
+const imagesCmd = postsCmd.command('images').description('Manage post images')
+imagesCmd.command('list').description('List images').argument('<id>', 'Post ID or slug')
+  .action(async (id) => { try { console.log(formatJson(await createClient().getPostImages(id))) } catch (e) { handleError(e) } })
+imagesCmd.command('upload').description('Upload image').argument('<id>', 'Post ID or slug').argument('<file>', 'Image file path')
+  .action(async (id, file) => {
+    try { const f = readFileAsBlob(file); console.log(formatJson(await createClient().uploadPostImage(id, f.blob, f.name))) }
+    catch (e) { handleError(e) }
+  })
+imagesCmd.command('delete').description('Delete image').argument('<id>', 'Post ID or slug').argument('<imageId>', 'Image ID', Number)
+  .action(async (id, imageId) => { try { console.log(formatJson(await createClient().deletePostImage(id, imageId))) } catch (e) { handleError(e) } })
+
+const videosCmd = postsCmd.command('videos').description('Manage post videos')
+videosCmd.command('list').description('List videos').argument('<id>', 'Post ID or slug')
+  .action(async (id) => { try { console.log(formatJson(await createClient().getPostVideos(id))) } catch (e) { handleError(e) } })
+videosCmd.command('upload').description('Upload video').argument('<id>', 'Post ID or slug').argument('<file>', 'Video file path')
+  .option('-p, --poster <file>', 'Poster image file path')
+  .action(async (id, file, opts) => {
+    try {
+      const f = readFileAsBlob(file)
+      let posterBlob: Blob | undefined; let posterName: string | undefined; let posterType: string | undefined
+      if (opts.poster) { const p = readFileAsBlob(opts.poster); posterBlob = p.blob; posterName = p.name; posterType = p.type }
+      console.log(formatJson(await createClient().uploadPostVideo(id, f.blob, f.name, f.type, posterBlob, posterName, posterType)))
+    } catch (e) { handleError(e) }
+  })
+videosCmd.command('delete').description('Delete video').argument('<id>', 'Post ID or slug').argument('<videoId>', 'Video ID', Number)
+  .action(async (id, videoId) => { try { console.log(formatJson(await createClient().deletePostVideo(id, videoId))) } catch (e) { handleError(e) } })
+
+const audiosCmd = postsCmd.command('audios').description('Manage post audios')
+audiosCmd.command('list').description('List audios').argument('<id>', 'Post ID or slug')
+  .action(async (id) => { try { console.log(formatJson(await createClient().getPostAudios(id))) } catch (e) { handleError(e) } })
+audiosCmd.command('upload').description('Upload audio').argument('<id>', 'Post ID or slug').argument('<file>', 'Audio file path')
+  .action(async (id, file) => {
+    try { const f = readFileAsBlob(file); console.log(formatJson(await createClient().uploadPostAudio(id, f.blob, f.name))) }
+    catch (e) { handleError(e) }
+  })
+audiosCmd.command('delete').description('Delete audio').argument('<id>', 'Post ID or slug').argument('<audioId>', 'Audio ID', Number)
+  .action(async (id, audioId) => { try { console.log(formatJson(await createClient().deletePostAudio(id, audioId))) } catch (e) { handleError(e) } })
+
+postsCmd.command('cover').description('Upload post cover image').argument('<id>', 'Post ID or slug').argument('<file>', 'Image file path')
+  .action(async (id, file) => {
+    try { const f = readFileAsBlob(file); console.log(formatJson(await createClient().uploadPostCover(id, f.blob, f.name, f.type))) }
+    catch (e) { handleError(e) }
   })
 
 // ---- tags ----

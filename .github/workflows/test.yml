@@ -27,3 +27,7 @@ jobs:
       - name: Run SDK tests
         run: bun run test
         working-directory: packages/sdk
+
+      - name: Run CLI tests
+        run: bun run test
+        working-directory: packages/cli

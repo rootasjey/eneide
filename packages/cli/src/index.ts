@@ -230,4 +230,8 @@ function handleError(err: unknown) {
   process.exit(1)
 }
 
-program.parse()
+if (!process.env.VITEST) {
+  program.parse()
+}
+
+export { program, createClient, loadConfig, saveConfig, formatJson, handleError }

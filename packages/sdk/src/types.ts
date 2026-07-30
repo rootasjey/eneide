@@ -71,6 +71,7 @@ export type UserProfile = {
   job: string
   location: string
   language: string
+  role: string
   socials: string
   created_at: string
   updated_at: string
@@ -90,6 +91,11 @@ export type ApiKey = {
   created_at: string
   last_used_at: string | null
   revoked_at: string | null
+  user: {
+    id: number
+    name: string
+    slug: string
+  }
 }
 
 export type ApiKeyCreated = {

@@ -59,6 +59,23 @@ export class EneideClient {
     return this.request<SingleResponse<Post>>(`/posts/${encodeURIComponent(slug)}`)
   }
 
+  async exportPost(identifier: string | number): Promise<Blob> {
+    const url = `${this.baseUrl}/api/v1/posts/${identifier}/export`
+    const headers: Record<string, string> = {}
+    if (this.apiKey) headers['authorization'] = `Bearer ${this.apiKey}`
+    const res = await fetch(url, { headers })
+    if (!res.ok) {
+      const body = await res.json().catch(() => null)
+      const err = body as { error?: { code?: string; message?: string } } | null
+      throw new EneideApiError(
+        err?.error?.message ?? `HTTP ${res.status}`,
+        err?.error?.code ?? 'UNKNOWN_ERROR',
+        res.status,
+      )
+    }
+    return res.blob()
+  }
+
   async getTags(params?: { category?: string; search?: string }): Promise<SingleResponse<Tag[]>> {
     return this.request<SingleResponse<Tag[]>>(`/tags${this.buildQuery(params as QueryParams)}`)
   }

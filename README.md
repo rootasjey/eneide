@@ -1,10 +1,10 @@
-# Énéide 🚀
+![Eneide Home](./screenshots/corpinot-home-desktop-1.jpeg)
+
+# Énéide
 
 > A modern, full-featured blogging platform powered by Nuxt 4 — built for curious minds and creative builders.
 
-![Corpinot Home](./screenshots/corpinot-home-desktop-1.jpeg)
-
-## ✨ What is Énéide?
+## What is Énéide?
 
 Énéide is a next-generation blogging platform and CMS, designed for simplicity, speed, and delightful content creation. Built on cutting-edge web technologies, it offers a seamless experience for writers, readers, and content managers.
 
@@ -19,7 +19,7 @@
 └── ...
 ```
 
-### 📦 Monorepo Structure
+### Monorepo Structure
 
 ```
 ├── server/               ← Nitro API server (Nuxt 4)
@@ -34,17 +34,17 @@
 └── ...
 ```
 
-### 🎯 Key Features
+### Key Features
 
-- **🎨 Rich Content Editor** — TipTap-powered editor with support for images, videos, audio, code blocks, tables, and more
-- **⚡ Lightning Fast** — Built on Nuxt 4 with SSR, SSG, and edge deployment via NuxtHub/Cloudflare Workers
-- **🤖 AI-Powered Writing** — Integrated AI writer using Cloudflare Workers AI for content generation and suggestions
-- **📱 Mobile-First Design** — Responsive UI with dedicated mobile experiences using UnoCSS and Una UI
-- **🏷️ Smart Tagging System** — Organize content with categories, featured posts, and trending tags
-- **👥 Multi-Author Support** — User management with profiles, avatars, and author pages
-- **🔍 Full-Text Search** — Fast search across posts, tags, and authors
-- **📧 Newsletter Integration** — Built-in newsletter subscription system
-- **🌙 Dark Mode** — Beautiful light and dark themes
+- **Rich Content Editor** — TipTap-powered editor with support for images, videos, audio, code blocks, tables, and more
+- **Lightning Fast** — Built on Nuxt 4 with SSR, SSG, and edge deployment via NuxtHub/Cloudflare Workers
+- **AI-Powered Writing** — Integrated AI writer using Cloudflare Workers AI for content generation and suggestions
+- **Mobile-First Design** — Responsive UI with dedicated mobile experiences using UnoCSS and Una UI
+- **Smart Tagging System** — Organize content with categories, featured posts, and trending tags
+- **Multi-Author Support** — User management with profiles, avatars, and author pages
+- **Full-Text Search** — Fast search across posts, tags, and authors
+- **Newsletter Integration** — Built-in newsletter subscription system
+- **Dark Mode** — Beautiful light and dark themes
 
 ### API v1
 
@@ -93,7 +93,7 @@ eneide stats
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -136,7 +136,7 @@ bun run packages:build
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 ### Environment Variables
 
@@ -158,7 +158,7 @@ The database is automatically initialized on first run. Migrations are in `serve
 
 ---
 
-## 📝 Content Management
+## Content Management
 
 ### Creating Posts
 
@@ -185,7 +185,7 @@ The database is automatically initialized on first run. Migrations are in `serve
 
 ---
 
-## 🚢 Deployment
+## Deployment
 
 ### NuxtHub / Cloudflare Workers
 
@@ -207,7 +207,7 @@ node .output/server/index.mjs
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 | Desktop Home | Mobile Post |
 |--------------|-------------|
@@ -215,7 +215,7 @@ node .output/server/index.mjs
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
@@ -225,7 +225,7 @@ node .output/server/index.mjs
 
 ---
 
-## 📄 License
+## License
 
 MIT
 
@@ -235,6 +235,6 @@ MIT
 
 **[Report Bug](https://github.com/rootasjey/eneide/issues)** • **[Request Feature](https://github.com/rootasjey/eneide/issues)**
 
-Made with ❤️ by [rootasjey](https://github.com/rootasjey)
+Made with 💙 by [rootasjey](https://github.com/rootasjey)
 
 </div>

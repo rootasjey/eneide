@@ -367,6 +367,67 @@ describe('EneideClient', () => {
     })
   })
 
+  describe('getArchived', () => {
+    it('calls GET /posts/archived', async () => {
+      mockFetch({ data: [] })
+      const result = await client.getArchived()
+      expect(result).toEqual({ data: [] })
+      expect(fetch).toHaveBeenCalledWith(`${BASE_URL}/api/v1/posts/archived`, expect.any(Object))
+    })
+
+    it('passes search param', async () => {
+      mockFetch({ data: [] })
+      await client.getArchived({ search: 'vue' })
+      expect(fetch).toHaveBeenCalledWith(
+        `${BASE_URL}/api/v1/posts/archived?search=vue`,
+        expect.any(Object),
+      )
+    })
+  })
+
+  describe('duplicatePost', () => {
+    it('calls POST /posts/:id/duplicate', async () => {
+      mockFetch({ data: { id: 2, name: 'Copy' } })
+      const result = await client.duplicatePost(1)
+      expect(result).toEqual({ data: { id: 2, name: 'Copy' } })
+      expect(fetch).toHaveBeenCalledWith(
+        `${BASE_URL}/api/v1/posts/1/duplicate`,
+        expect.objectContaining({ method: 'POST' }),
+      )
+    })
+
+    it('works with string identifier', async () => {
+      mockFetch({ data: { id: 3 } })
+      await client.duplicatePost('my-post')
+      expect(fetch).toHaveBeenCalledWith(
+        `${BASE_URL}/api/v1/posts/my-post/duplicate`,
+        expect.objectContaining({ method: 'POST' }),
+      )
+    })
+  })
+
+  describe('checkSlug', () => {
+    it('calls GET /posts/slug/check with slug', async () => {
+      mockFetch({ data: { exists: false, id: null } })
+      const result = await client.checkSlug('my-slug')
+      expect(result).toEqual({ data: { exists: false, id: null } })
+      expect(fetch).toHaveBeenCalledWith(
+        `${BASE_URL}/api/v1/posts/slug/check?slug=my-slug`,
+        expect.any(Object),
+      )
+    })
+
+    it('includes excludeId when provided', async () => {
+      mockFetch({ data: { exists: true, id: 1 } })
+      const result = await client.checkSlug('my-slug', 1)
+      expect(result).toEqual({ data: { exists: true, id: 1 } })
+      expect(fetch).toHaveBeenCalledWith(
+        `${BASE_URL}/api/v1/posts/slug/check?slug=my-slug&excludeId=1`,
+        expect.any(Object),
+      )
+    })
+  })
+
   describe('login', () => {
     it('calls POST /login with email and password', async () => {
       mockFetch({ data: { id: 1, name: 'John' } })

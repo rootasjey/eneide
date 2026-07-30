@@ -1,12 +1,12 @@
 import type {
   Post, Tag, Author, SiteSettings, BlogStats, PostStatus, PostLink,
-  ApiKey, ApiKeyCreated, UserProfile,
+  ApiKey, ApiKeyCreated, UserProfile, SlugCheck,
   PaginatedResponse, SingleResponse, QueryParams,
   CreatePostPayload, UpdatePostPayload,
   CreateTagPayload, UpdateTagPayload,
 } from './types'
 
-export type { PostStatus, PostLink, Post, Tag, Author, SiteSettings, BlogStats, ApiKey, ApiKeyCreated, UserProfile, QueryParams, CreatePostPayload, UpdatePostPayload, CreateTagPayload, UpdateTagPayload }
+export type { PostStatus, PostLink, Post, Tag, Author, SiteSettings, BlogStats, ApiKey, ApiKeyCreated, UserProfile, SlugCheck, QueryParams, CreatePostPayload, UpdatePostPayload, CreateTagPayload, UpdateTagPayload }
 
 export class EneideClient {
   private baseUrl: string
@@ -159,6 +159,22 @@ export class EneideClient {
 
   async getDrafts(): Promise<SingleResponse<Post[]>> {
     return this.request<SingleResponse<Post[]>>('/posts/drafts')
+  }
+
+  async getArchived(params?: { search?: string }): Promise<SingleResponse<Post[]>> {
+    return this.request<SingleResponse<Post[]>>(`/posts/archived${this.buildQuery(params as QueryParams)}`)
+  }
+
+  async duplicatePost(identifier: string | number): Promise<SingleResponse<Post>> {
+    return this.request<SingleResponse<Post>>(`/posts/${identifier}/duplicate`, {
+      method: 'POST',
+    })
+  }
+
+  async checkSlug(slug: string, excludeId?: number): Promise<SingleResponse<SlugCheck>> {
+    const params = new URLSearchParams({ slug })
+    if (excludeId !== undefined) params.set('excludeId', String(excludeId))
+    return this.request<SingleResponse<SlugCheck>>(`/posts/slug/check?${params}`)
   }
 
   async getProfile(): Promise<SingleResponse<UserProfile>> {

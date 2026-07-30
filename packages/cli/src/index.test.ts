@@ -13,7 +13,8 @@ const mockClient = vi.hoisted(() => {
   const methods = [
     'register', 'login', 'logout',
     'getProfile', 'updateProfile', 'deleteAvatar', 'uploadAvatar',
-    'getPosts', 'getPost', 'getDrafts', 'createPost', 'updatePost', 'deletePost', 'updateArticle', 'importPosts', 'exportPost',
+    'getPosts', 'getPost', 'getDrafts', 'getArchived', 'duplicatePost', 'checkSlug',
+    'createPost', 'updatePost', 'deletePost', 'updateArticle', 'importPosts', 'exportPost',
     'getTags', 'createTag', 'updateTag', 'deleteTag',
     'getAuthors', 'getAuthor',
     'getStats', 'search',
@@ -169,6 +170,31 @@ describe('posts', () => {
     vi.mocked(readFileSync).mockReturnValueOnce(Buffer.from('img'))
     await parse(['posts', 'cover', '1', 'cover.jpg'])
     expect(mockClient.uploadPostCover).toHaveBeenCalled()
+  })
+
+  it('archived calls client.getArchived', async () => {
+    await parse(['posts', 'archived'])
+    expect(mockClient.getArchived).toHaveBeenCalled()
+  })
+
+  it('archived forwards search option', async () => {
+    await parse(['posts', 'archived', '-s', 'vue'])
+    expect(mockClient.getArchived).toHaveBeenCalledWith({ search: 'vue' })
+  })
+
+  it('duplicate calls client.duplicatePost', async () => {
+    await parse(['posts', 'duplicate', '42'])
+    expect(mockClient.duplicatePost).toHaveBeenCalledWith('42')
+  })
+
+  it('check-slug calls client.checkSlug', async () => {
+    await parse(['posts', 'check-slug', 'my-slug'])
+    expect(mockClient.checkSlug).toHaveBeenCalledWith('my-slug', undefined)
+  })
+
+  it('check-slug forwards exclude-id', async () => {
+    await parse(['posts', 'check-slug', 'my-slug', '-e', '5'])
+    expect(mockClient.checkSlug).toHaveBeenCalledWith('my-slug', 5)
   })
 })
 

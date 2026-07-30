@@ -228,6 +228,17 @@ postsCmd.command('cover').description('Upload post cover image').argument('<id>'
     catch (e) { handleError(e) }
   })
 
+postsCmd.command('archived').description('List archived posts')
+  .option('-s, --search <q>', 'Search')
+  .action(async (opts) => { try { console.log(formatJson(await createClient().getArchived(opts))) } catch (e) { handleError(e) } })
+
+postsCmd.command('duplicate').description('Duplicate a post').argument('<id>', 'Post ID or slug')
+  .action(async (id) => { try { console.log(formatJson(await createClient().duplicatePost(id))) } catch (e) { handleError(e) } })
+
+postsCmd.command('check-slug').description('Check if a slug is available').argument('<slug>', 'Slug to check')
+  .option('-e, --exclude-id <id>', 'Exclude post ID from check', Number)
+  .action(async (slug, opts) => { try { console.log(formatJson(await createClient().checkSlug(slug, opts.excludeId))) } catch (e) { handleError(e) } })
+
 // ---- tags ----
 const tagsCmd = program.command('tags').description('Manage tags')
 tagsCmd.command('list').description('List tags').option('-c, --category <cat>', 'Category').option('-s, --search <q>', 'Search')

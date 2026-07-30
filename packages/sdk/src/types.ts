@@ -139,6 +139,11 @@ export type QueryParams = {
   category?: string
 }
 
+export type SlugCheck = {
+  exists: boolean
+  id: number | null
+}
+
 export type CreatePostPayload = {
   name: string
   description?: string

@@ -23,3 +23,7 @@ jobs:
 
       - name: Run tests
         run: node node_modules/.bin/vitest run
+
+      - name: Run SDK tests
+        run: bun run test
+        working-directory: packages/sdk

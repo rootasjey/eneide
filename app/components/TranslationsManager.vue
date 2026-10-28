@@ -59,9 +59,22 @@
           </option>
         </select>
       </div>
+      <div>
+        <label for="translation-title" class="block text-sm font-medium mb-1">
+          {{ $t('editor.translationsManager.translatedTitle') }}
+        </label>
+        <input
+          id="translation-title"
+          v-model="translationTitle"
+          type="text"
+          required
+          maxlength="255"
+          class="w-full px-3 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm"
+        >
+      </div>
       <div class="flex justify-end gap-2">
         <NButton btn="ghost-gray" size="xs" @click="showCreateForm = false">{{ $t('common.cancel') }}</NButton>
-        <NButton btn="solid-blue" size="xs" @click="createTranslation" :disabled="!targetLanguage || creating">
+        <NButton btn="solid-blue" size="xs" @click="createTranslation" :disabled="!targetLanguage || !translationTitle.trim() || creating">
           <span v-if="!creating">{{ $t('editor.translationsManager.createTranslation') }}</span>
           <span v-else>{{ $t('editor.translationsManager.creating') }}</span>
         </NButton>
@@ -90,6 +103,7 @@ const creating = ref(false)
 const unlinking = ref(false)
 const showCreateForm = ref(false)
 const targetLanguage = ref('')
+const translationTitle = ref('')
 
 const languageOptions = [
   { value: 'en', label: $t('pages.postEditor.en') },
@@ -128,12 +142,13 @@ async function fetchTranslations() {
 }
 
 async function createTranslation() {
-  if (!targetLanguage.value) return
+  const name = translationTitle.value.trim()
+  if (!targetLanguage.value || !name) return
   creating.value = true
   try {
     const newPost = await $fetch(`/api/posts/${props.postId}/translations`, {
       method: 'POST',
-      body: { language: targetLanguage.value },
+      body: { language: targetLanguage.value, name },
     })
     showCreateForm.value = false
     emit('translationCreated', newPost.id)

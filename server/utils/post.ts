@@ -9,7 +9,7 @@ import { ApiPost, Post } from "~~/shared/types/post"
  * @param userId - The ID of the user creating the post.
  * @returns A new post data object with default values.
  */
-function sanitizeSlug(name: string) {
+export function sanitizeSlug(name: string) {
   // Normalize, remove accent marks, convert to lower-case, keep letters/numbers and hyphens
   // Collapse whitespace and punctuation into single hyphens and trim
   return name

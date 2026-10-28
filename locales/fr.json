@@ -419,6 +419,7 @@
       "currentLanguage": "Actuel : {language}",
       "createTranslation": "Créer une traduction",
       "createNew": "Créer une traduction en {language}",
+      "translatedTitle": "Titre traduit",
       "targetLanguage": "Langue cible",
       "noTranslations": "Aucune traduction pour l'instant.",
       "unlink": "Délier",

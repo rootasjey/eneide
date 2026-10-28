@@ -76,8 +76,8 @@
               <span class="color-gray-400"> — icon system; Packs: Phosphor, Lucide, Tabler, Radix Icons, Line-MD</span>
             </li>
             <li>
-              <a href="https://www.fontshare.com/" target="_blank" rel="noopener" class="font-600 hover:underline decoration-offset-4 hover:text-primary-600">Fontshare</a>
-              <span class="color-gray-400"> — webfonts: Clash Display, General Sans, Satoshi, Zodiak</span>
+              <a href="https://fonts.google.com/" target="_blank" rel="noopener" class="font-600 hover:underline decoration-offset-4 hover:text-primary-600">Google Fonts</a>
+              <span class="color-gray-400"> — webfonts: Oi, Manrope, Fraunces, Playwrite FR Moderne</span>
             </li>
             <li>
               <a href="https://color-mode.nuxtjs.org/" target="_blank" rel="noopener" class="font-600 hover:underline decoration-offset-4 hover:text-primary-600">@nuxtjs/color-mode</a>

@@ -2,7 +2,12 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "corpinot",
   "main": "./.output/server/index.mjs",
-  "compatibility_date": "2025-07-15",
+  "compatibility_date": "2025-12-31",
+  "compatibility_flags": ["nodejs_compat_v2"],
+  "assets": {
+    "directory": "./.output/public",
+    "binding": "ASSETS"
+  },
   "ai": {
     "binding": "AI"
   },

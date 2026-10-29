@@ -26,6 +26,9 @@ export default defineNuxtConfig({
   future: {
     compatibilityVersion: 4,
   },
+  nitro: {
+    preset: 'cloudflare_module',
+  },
 
   hub: {
     blob: true,

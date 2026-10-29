@@ -1,5 +1,5 @@
 <template>
-  <section class="min-h-screen bg-white dark:bg-gray-950">
+  <section class="site-page site-profile min-h-screen bg-white dark:bg-gray-950">
     <!-- Sticky toolbar -->
     <div class="sticky top-0 z-30 border-b bg-background/95 backdrop-blur-lg supports-[backdrop-filter]:bg-background/80">
       <div class="container mx-auto px-4 md:px-8 py-3 sm:py-4">

@@ -51,12 +51,13 @@
     "next": "Next"
   },
   "nav": {
-    "home": "HOME",
-    "about": "ABOUT",
-    "authors": "AUTHORS",
-    "tags": "TAGS",
-    "projects": "PROJECTS",
-    "posts": "POSTS",
+    "home": "Home",
+    "about": "About",
+    "authors": "Authors",
+    "tags": "Tags",
+    "pages": "Pages",
+    "projects": "Projects",
+    "posts": "Posts",
     "membership": "Membership",
     "brand": "corpinot",
     "donate": "Donate",
@@ -96,14 +97,35 @@
     "siteName": "Corpinot"
   },
   "components": {
+    "readingProgress": {
+      "title": "On this page",
+      "contents": "Table of contents"
+    },
+    "postShare": {
+      "label": "Share this article",
+      "x": "Share on X",
+      "facebook": "Share on Facebook",
+      "email": "Share by email",
+      "copy": "Copy link",
+      "copied": "Link copied",
+      "copyFailed": "Could not copy link"
+    },
+    "postEndMatter": {
+      "authorName": "Jérémie Corpinot",
+      "authorBio": "Developer and writer exploring code, craft, and culture."
+    },
+    "relatedPosts": {
+      "heading": "You might also like"
+    },
     "newsletter": {
-      "heading": "Dive into top stories, trends, and gems you'll love. Subscribe!",
+      "heading": "Insights Delivered",
+      "description": "Get new writing, ideas to explore, and occasional notes on current projects. No spam, just a thoughtful update.",
       "emailPlaceholder": "Email address",
       "subscribing": "subscribing…",
       "subscribe": "subscribe"
     },
     "trendingTags": {
-      "heading": "Trending tags",
+      "heading": "Tags",
       "unavailable": "Tags unavailable",
       "unavailableDesc": "We couldn't fetch tags right now. Try again later.",
       "noPostsYet": "No posts yet. Add this tag to your first post.",
@@ -130,13 +152,16 @@
       "errorNotice": "Showing sample stories while we reconnect."
     },
     "projectsCarousel": {
-      "heading": "Explore our latest projects and creative work",
+      "heading": "Selected Works",
       "unavailable": "Projects unavailable",
       "unavailableDesc": "We couldn't fetch projects. Please try again later.",
       "project": "Project"
     },
+    "homeRecommendations": {
+      "heading": "Recommendations"
+    },
     "recentPosts": {
-      "heading": "Recent Posts",
+      "heading": "The Journal",
       "unavailable": "We couldn't load recent posts",
       "unavailableDesc": "Please try again in a moment.",
       "placeholderBadge": "Category",

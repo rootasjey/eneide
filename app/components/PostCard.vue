@@ -1,7 +1,7 @@
 <template>
   <div
     :class="[
-      'group relative inline-block w-full mb-6 break-inside-avoid transition-all duration-500 ease-out will-change-transform',
+      'site-post-card group relative inline-block w-full mb-6 break-inside-avoid transition-all duration-500 ease-out will-change-transform',
       { 'opacity-0 translate-y-3': !entered, 'opacity-100 translate-y-0': entered }
     ]"
     :style="{ transitionDelay: `${idx * 35}ms` }"
@@ -20,7 +20,7 @@
       :to="link"
       @click="(e: MouseEvent) => $emit('post-click', e, post)"
       :class="[
-        'group block bg-background border border-border rounded-lg overflow-hidden hover:shadow-xl hover:scale-101 transition-all duration-300 transform active:scale-99 active:shadow-none',
+        'site-post-card-link group block bg-background border border-border rounded-lg overflow-hidden hover:shadow-xl hover:scale-101 transition-all duration-300 transform active:scale-99 active:shadow-none',
         { 'scale-90': duplicatingPosts.has(post.slug), 'pointer-events-none opacity-70': duplicatingPosts.has(post.slug) }
       ]"
       :aria-busy="duplicatingPosts.has(post.slug)"

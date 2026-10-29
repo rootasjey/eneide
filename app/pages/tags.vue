@@ -1,9 +1,10 @@
 <template>
   <Transition name="page" appear>
     <div>
-      <section class="py-12 md:py-16 bg-white dark:bg-gray-950">
+      <PresentationTagIndex v-if="!isAdmin && !tagsPending && !tagsError && tags.length === 0" />
+      <section v-else class="site-page site-tags py-12 md:py-16 bg-white dark:bg-gray-950">
       <div class="container mx-auto px-6 max-w-7xl">
-        <h1 class="text-3xl md:text-4xl font-serif font-800 mb-2">{{ $t('pages.tags.heading') }}</h1>
+        <h1 class="site-display-heading text-3xl md:text-4xl font-serif font-800 mb-2">{{ $t('pages.tags.heading') }}</h1>
         <div class="flex items-center justify-between mb-8">
           <p class="text-sm text-gray-600 dark:text-gray-400 mr-4">{{ $t('pages.tags.description') }}</p>
           <div class="lg:hidden">

@@ -1,8 +1,8 @@
 <template>
-  <div class="bg-white dark:bg-gray-950 text-gray-800 dark:text-gray-100">
+  <div class="site-page site-settings bg-white dark:bg-gray-950 text-gray-800 dark:text-gray-100">
     <div class="max-w-3xl mx-auto px-4 py-6">
       <div class="flex items-center justify-between mb-4 animate-entrance" style="animation-delay:80ms;">
-        <h1 class="text-2xl font-bold">{{ $t('pages.settings.heading') }}</h1>
+        <h1 class="site-display-heading text-2xl font-bold">{{ $t('pages.settings.heading') }}</h1>
         <p class="text-sm text-gray-500">v{{ appVersion }}</p>
       </div>
 

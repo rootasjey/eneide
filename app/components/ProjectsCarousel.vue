@@ -1,40 +1,17 @@
 <template>
-  <!-- Projects Carousel -->
-  <section class="relative py-12 md:py-16 bg-gray-900 dark:bg-black text-white grid-pattern animate-entrance">
-    <div class="container mx-auto px-8 md:px-12 lg:px-16">
-      <!-- Title centered, controls on the right -->
-      <div class="relative mb-6 md:mb-8">
-        <h2 class="font-serif font-700 text-center mx-auto max-w-2xl text-2xl md:text-4xl">
-          {{ $t('components.projectsCarousel.heading') }}
-        </h2>
-        <div v-if="!pending && !error && projects.length" class="absolute right-0 top-1/2 -translate-y-1/2 flex">
-          <NButton
-            @click="scrollProjects('left')"
-            btn="ghost-gray"
-            class="p-2"
-            :aria-label="$t('common.previous')"
-          >
-            <div class="i-ph-arrow-left-bold"></div>
-          </NButton>
-          <NButton
-            @click="scrollProjects('right')"
-            btn="ghost-gray"
-            class="p-2"
-            :aria-label="$t('common.next')"
-          >
-            <div class="i-ph-arrow-right-bold"></div>
-          </NButton>
-        </div>
+  <section class="home-projects animate-entrance">
+    <div class="container mx-auto">
+      <div class="home-project-heading">
+        <NuxtLink :to="localizedPath('/projects', $getLocale())">
+          <h2>{{ $t('components.projectsCarousel.heading') }}</h2>
+          <span class="i-ph-arrow-right" aria-hidden="true" />
+        </NuxtLink>
       </div>
 
-      <!-- Loading -->
-      <div v-if="pending" class="flex gap-4 md:gap-6 overflow-x-auto scrollbar-hide pb-2">
-        <div v-for="i in 5" :key="i" class="flex-shrink-0 w-72 md:w-80 lg:w-[22rem] animate-pulse">
-          <div class="relative overflow-hidden rounded-xl aspect-[4/5] bg-gray-800"></div>
-        </div>
+      <div v-if="pending" class="site-home-project-grid" aria-hidden="true">
+        <div v-for="i in 2" :key="i" class="site-home-project-skeleton" />
       </div>
 
-      <!-- Error -->
       <EmptyState
         v-else-if="error"
         :title="$t('components.projectsCarousel.unavailable')"
@@ -43,34 +20,17 @@
         icon="i-ph-folder-duotone"
       />
 
-      <!-- Content -->
-      <div
-        v-else
-        ref="projectsContainer"
-        class="flex gap-4 md:gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-2"
-        style="scrollbar-width: none; -ms-overflow-style: none"
-      >
-        <article
-          v-for="(project, i) in projects"
-          :key="project.slug"
-          class="flex-shrink-0 w-72 md:w-80 lg:w-[22rem] group animate-entrance-item"
-          :style="{ animationDelay: `${i * 60}ms` }"
-        >
-          <NuxtLink :to="`/posts/${project.slug}`" class="block">
-            <!-- Taller image with overlayed text -->
-            <div class="relative overflow-hidden rounded-xl aspect-[4/5]">
-              <PostImage :src="project.image" :alt="project.title" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-              <!-- Gradient overlay for readability -->
-              <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-              <!-- Labels and title -->
-              <div class="absolute inset-0 flex flex-col justify-end p-4 md:p-6">
-                <span class="inline-flex w-fit px-3 py-1.5 text-[11px] tracking-wide uppercase font-semibold bg-white/10 border border-white/15 rounded-full mb-3">
-                  {{ $t('components.projectsCarousel.project') }}
-                </span>
-                <h3 class="text-white text-lg md:text-xl font-serif font-700 leading-snug line-clamp-3">
-                  {{ project.title }}
-                </h3>
-              </div>
+      <div v-else class="site-home-project-grid">
+        <article v-for="project in projects" :key="project.slug" class="site-home-project-card">
+          <NuxtLink :to="project.to">
+            <div class="site-home-project-image">
+              <img v-if="project.image.startsWith('/images/')" :src="project.image" :alt="project.title" loading="lazy" decoding="async">
+              <PostImage v-else :src="project.image" :alt="project.title" loading="lazy" />
+            </div>
+            <h3>{{ project.title }}</h3>
+            <div class="site-home-project-meta">
+              <span>{{ project.tag }}</span>
+              <span>{{ project.year }}</span>
             </div>
           </NuxtLink>
         </article>
@@ -80,26 +40,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import type { Post } from '~~/shared/types/post'
 const { $t, $getLocale } = useI18n()
 import {
   FEATURED_PROJECT_FALLBACK_IMAGE,
   FEATURED_PROJECT_TAG,
   FEATURED_PROJECTS_KEY,
-  FALLBACK_PROJECTS,
 } from '~/utils/featuredProjects'
+import { localizedPath, PRESENTATION_POSTS } from '~/utils/presentationPosts'
 
 const { enhancePost } = usePost()
-
-const projectsContainer = ref<HTMLElement>()
-
-function scrollProjects(direction: 'left' | 'right') {
-  if (!projectsContainer.value) return
-  const scrollAmount = 400
-  const scrollDirection = direction === 'left' ? -scrollAmount : scrollAmount
-  projectsContainer.value.scrollBy({ left: scrollDirection, behavior: 'smooth' })
-}
 
 // Fetch posts with the featured project tag
 const { data, pending, error } = await useFetch<Post[]>('/api/posts', {
@@ -111,43 +62,23 @@ const projects = computed(() => {
   if (data.value && data.value.length > 0) {
     return data.value.map(p => enhancePost(p)).map(post => ({
       slug: post.slug,
+      to: localizedPath(`/posts/${post.slug}`, $getLocale()),
       title: post.name,
       image: post.image?.src || FEATURED_PROJECT_FALLBACK_IMAGE,
+      tag: post.tags?.[0]?.name || $t('components.projectsCarousel.project'),
+      year: post.formattedDate.match(/\d{4}/)?.[0] || '',
     }))
   }
   
-  // Dummy projects when empty
-  return FALLBACK_PROJECTS
+  // Presentation projects keep the portfolio navigable before CMS content exists.
+  const locale = $getLocale() === 'fr' ? 'fr' : 'en'
+  return PRESENTATION_POSTS.filter(project => project.isProject).map(project => ({
+    slug: project.slug,
+    to: localizedPath(`/preview/${project.slug}`, $getLocale()),
+    title: project.title[locale],
+    image: project.image,
+    tag: project.tag[locale],
+    year: new Date(project.publishedAt).getFullYear().toString(),
+  }))
 })
 </script>
-
-<style scoped>
-/* Hide scrollbar for Chrome, Safari and Opera */
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-.scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
-
-/* Subtle grid background, inspired by the reference */
-.grid-pattern {
-  position: relative;
-}
-
-.grid-pattern::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-  background-size: 56px 56px, 56px 56px;
-  background-position: -1px -1px;
-  mask-image: radial-gradient(ellipse at center, black, transparent 85%);
-}
-</style>

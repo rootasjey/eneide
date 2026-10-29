@@ -51,12 +51,13 @@
     "next": "Suivant"
   },
   "nav": {
-    "home": "ACCUEIL",
-    "about": "À PROPOS",
-    "authors": "AUTEURS",
-    "tags": "TAGS",
-    "projects": "PROJETS",
-    "posts": "ARTICLES",
+    "home": "Accueil",
+    "about": "À propos",
+    "authors": "Auteurs",
+    "tags": "Tags",
+    "pages": "Pages",
+    "projects": "Projets",
+    "posts": "Articles",
     "membership": "Adhésion",
     "brand": "corpinot",
     "donate": "Soutenir",
@@ -96,14 +97,35 @@
     "siteName": "Corpinot"
   },
   "components": {
+    "readingProgress": {
+      "title": "Sur cette page",
+      "contents": "Sommaire"
+    },
+    "postShare": {
+      "label": "Partager cet article",
+      "x": "Partager sur X",
+      "facebook": "Partager sur Facebook",
+      "email": "Partager par email",
+      "copy": "Copier le lien",
+      "copied": "Lien copié",
+      "copyFailed": "Impossible de copier le lien"
+    },
+    "postEndMatter": {
+      "authorName": "Jérémie Corpinot",
+      "authorBio": "Développeur et auteur autour du code, de l’artisanat et de la culture."
+    },
+    "relatedPosts": {
+      "heading": "À lire ensuite"
+    },
     "newsletter": {
-      "heading": "Plongez dans les meilleures histoires, tendances et pépites. Abonnez-vous !",
+      "heading": "À lire dans votre boîte mail",
+      "description": "Recevez les nouveaux articles, des idées à explorer et des nouvelles des projets du moment. Une lettre occasionnelle, sans spam.",
       "emailPlaceholder": "Adresse email",
       "subscribing": "abonnement…",
       "subscribe": "s'abonner"
     },
     "trendingTags": {
-      "heading": "Tags tendance",
+      "heading": "Tags",
       "unavailable": "Tags indisponibles",
       "unavailableDesc": "Impossible de charger les tags pour le moment. Réessayez plus tard.",
       "noPostsYet": "Aucun article pour l'instant. Ajoutez ce tag à votre premier article.",
@@ -130,13 +152,16 @@
       "errorNotice": "Affichage d'histoires de démonstration en attendant la reconnexion."
     },
     "projectsCarousel": {
-      "heading": "Explorez nos derniers projets et travaux créatifs",
+      "heading": "Projets sélectionnés",
       "unavailable": "Projets indisponibles",
       "unavailableDesc": "Impossible de charger les projets. Réessayez plus tard.",
       "project": "Projet"
     },
+    "homeRecommendations": {
+      "heading": "Recommandations"
+    },
     "recentPosts": {
-      "heading": "Articles récents",
+      "heading": "Le journal",
       "unavailable": "Impossible de charger les articles récents",
       "unavailableDesc": "Réessayez dans un instant.",
       "placeholderBadge": "Catégorie",

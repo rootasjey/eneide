@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen py-6">
+  <div class="min-h-screen py-6 site-post-index">
     <div class="container mx-auto px-4 md:px-8">
       <!-- Admin Toolbar (sticky top) -->
       <ClientOnly>
@@ -75,7 +75,7 @@
       </ClientOnly>
 
       <!-- Language filter -->
-      <div class="flex items-center gap-2 mb-4">
+      <div v-if="isAdmin" class="flex items-center gap-2 mb-4">
         <button
           @click="showAllLanguages = !showAllLanguages"
           class="px-3 py-1.5 rounded-full text-xs font-semibold transition-colors"
@@ -90,17 +90,21 @@
         </span>
       </div>
       
-      <!-- Page Header -->
-      <div class="mb-12 md:mb-16">
+      <CollectionIntro
+        v-if="activeTab === 'published' && !isAdmin"
+        :title="$t('pages.posts.publishedHeading')"
+        :description="$t('pages.posts.publishedDescription')"
+      />
+
+      <!-- Admin-only post controls -->
+      <div v-if="isAdmin" class="site-page-heading mb-12 md:mb-16">
         <div v-if="activeTab === 'published'">
           <div class="flex items-start justify-between gap-4">
             <div>
-              <h1 class="font-title text-size-24 font-bold line-height-28 overflow-hidden">
-                <TypewriterText :text="$t('pages.posts.publishedHeading')" :auto-hide-cursor="true" />
-              </h1>
+              <h1 class="font-title text-size-24 font-bold line-height-28">{{ $t('pages.posts.publishedHeading') }}</h1>
               
               <div class="flex items-center gap-2">
-                <NDropdownMenu :items="viewDropdownItems" :_dropdownMenuContent="{ side: 'bottom', align: 'end' }">
+                <NDropdownMenu v-if="isAdmin" :items="viewDropdownItems" :_dropdownMenuContent="{ side: 'bottom', align: 'end' }">
                   <template #default>
                     <NButton btn="outline-gray" size="xs" icon :aria-label="$t('common.changeView')">
                       <NIcon :name="viewMode === 'cards' ? 'i-ph-squares-four' : 'i-ph-list-checks'" />
@@ -108,7 +112,7 @@
                   </template>
                 </NDropdownMenu>
                 <p class="text-lg md:text-xl text-slate-500 dark:text-slate-400 max-w-2xl">
-                  {{ $t('pages.posts.archivedDescription') }}
+                  {{ $t('pages.posts.publishedDescription') }}
                 </p>
               </div>
             </div>
@@ -175,6 +179,10 @@
         @post-click="onPostCardClick"
         :linkForPost="(p) => `/posts/${p.slug}`"
         :entered="entered"
+      />
+
+      <PresentationPostGrid
+        v-else-if="activeTab === 'published' && !isLoadingVisible"
       />
 
       <!-- Loading state -->
@@ -281,6 +289,7 @@ import { usePostsApi } from '~/composables/usePostsApi'
 import TypewriterText from '~/components/TypewriterText.vue'
 import { useHeaderToolbarOffset } from '~/composables/useHeaderToolbarOffset' 
 import EditPostDialog from '~/components/EditPostDialog.vue' 
+import PresentationPostGrid from '~/components/PresentationPostGrid.vue'
 
 const router = useRouter()
 const confirmDialogOpen = ref(false)

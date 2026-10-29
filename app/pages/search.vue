@@ -1,10 +1,10 @@
 <template>
-  <div class="min-h-screen bg-white dark:bg-gray-950">
+  <div class="site-page site-search min-h-screen bg-white dark:bg-gray-950">
     <div class="mx-auto max-w-3xl px-4 pb-28 pt-6 md:pt-10">
       <header class="flex items-center justify-between gap-3 mb-5">
         <div>
           <p class="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">{{ $t('pages.search.heading') }}</p>
-          <h1 class="text-2xl md:text-3xl font-title font-bold text-gray-900 dark:text-gray-50">{{ $t('pages.search.title') }}</h1>
+          <h1 class="site-display-heading text-2xl md:text-3xl font-title font-bold text-gray-900 dark:text-gray-50">{{ $t('pages.search.title') }}</h1>
         </div>
         <NuxtLink to="/" class="hidden sm:inline-flex items-center gap-2 px-3 py-2 text-xs font-semibold uppercase tracking-wide border border-gray-200 dark:border-gray-800 rounded-full text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
           <span class="i-ph-house-duotone text-sm" />

@@ -1,8 +1,8 @@
 <template>
   <transition name="page-entrance" appear>
-    <div class="mx-auto max-w-4xl px-6 py-12 page-entrance-target">
+    <div class="site-page site-donate mx-auto max-w-4xl px-6 py-12 page-entrance-target">
     <div class="text-center mb-8">
-      <h1 class="font-title text-3xl font-bold mb-2">{{ $t('pages.donate.heading') }}</h1>
+      <h1 class="site-display-heading font-title text-3xl font-bold mb-2">{{ $t('pages.donate.heading') }}</h1>
       <p class="text-slate-600 dark:text-slate-400">{{ $t('pages.donate.description') }}</p>
       <NBadge badge="solid-pink" class="mt-4">{{ $t('pages.donate.notAvailable') }}</NBadge>
     </div>

@@ -1,8 +1,8 @@
 {
   "pages": {
     "tags": {
-      "heading": "Tags",
-      "description": "Parcourez tous les tags et d\u00e9couvrez les articles regroup\u00e9s par sujet.",
+      "heading": "Thèmes & idées",
+      "description": "Un index des thèmes récurrents du journal : systèmes d’interface, langage visuel, direction créative, processus et avenir des expériences numériques.",
       "filters": "Filtres",
       "newTag": "Nouveau tag",
       "searchPlaceholder": "Rechercher des tags",

@@ -1,7 +1,7 @@
 <template>
-  <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <section class="site-page site-credits max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <header class="mb-10 text-center animate-entrance" style="animation-delay:80ms;">
-      <h1 class="font-title text-4xl font-800 tracking-tight">{{ $t('pages.credits.heading') }}</h1>
+      <h1 class="site-display-heading font-title text-4xl font-800 tracking-tight">{{ $t('pages.credits.heading') }}</h1>
       <p class="font-body mt-3 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
         {{ $t('pages.credits.description') }}
       </p>

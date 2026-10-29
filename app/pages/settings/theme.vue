@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white dark:bg-gray-950 text-gray-800 dark:text-gray-100">
+  <div class="site-page site-settings bg-white dark:bg-gray-950 text-gray-800 dark:text-gray-100">
     <div class="max-w-3xl mx-auto px-4 py-6">
       <div class="flex items-center gap-3 mb-4">
         <NuxtLink to="/settings" class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">

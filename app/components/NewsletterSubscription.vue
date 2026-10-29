@@ -1,10 +1,11 @@
 <template>
   <!-- Newsletter Subscription -->
-  <section class="py-12 md:py-12 bg-white dark:bg-gray-950 animate-entrance">
+  <section id="newsletter" class="home-newsletter py-12 md:py-12 bg-white dark:bg-gray-950 animate-entrance">
     <div class="container mx-auto px-4 text-center">
-      <h1 class="text-2xl md:text-3xl lg:text-4xl font-serif font-bold mb-6 md:mb-8 max-w-3xl mx-auto leading-tight">
+      <h2>
         {{ $t('components.newsletter.heading') }}
-      </h1>
+      </h2>
+      <p class="site-newsletter-description">{{ $t('components.newsletter.description') }}</p>
       <form class="max-w-lg mx-auto" @submit.prevent="handleSubscribe">
         <div class="flex sm:flex-row gap-3 items-stretch">
           <div class="flex-1 relative">

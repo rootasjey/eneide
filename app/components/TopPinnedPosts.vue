@@ -1,5 +1,5 @@
 <template>
-  <section class="py-8 md:py-12 bg-[#F8F9FA] dark:bg-gray-900 animate-entrance">
+  <section class="home-pinned-posts py-8 md:py-12 bg-[#F8F9FA] dark:bg-gray-900 animate-entrance">
     <div class="container mx-auto px-4 max-w-7xl">
       <!-- Loading -->
       <div v-if="pending" :class="scrollerClasses">
@@ -31,7 +31,7 @@
           :class="['group', itemClass, 'animate-entrance-item']"
           :style="{ animationDelay: `${i * 60}ms` }"
         >
-          <NuxtLink :to="`/posts/${post.slug}`" class="flex gap-3 md:gap-4 items-start">
+          <NuxtLink :to="localizedPath(`/posts/${post.slug}`, $getLocale())" class="flex gap-3 md:gap-4 items-start">
             <!-- Image on Left (smaller) -->
             <div v-if="post.image?.src" class="relative overflow-hidden rounded-xl w-24 h-24 md:w-28 md:h-28 xl:w-24 xl:h-24 flex-shrink-0">
               <PostImage :src="post.image.src" :alt="post.image.alt || post.name" class="w-full h-full object-cover" />
@@ -55,8 +55,8 @@
 
       <!-- Empty: dummy row matching final UI -->
       <div v-else :class="[scrollerClasses, 'justify-items-center']">
-        <article v-for="(item, i) in dummyHero" :key="i" :class="['group w-90 xl:w-auto', itemClass, 'animate-entrance-item']" :style="{ animationDelay: `${i * 60}ms` }">
-          <div class="flex gap-3 md:gap-4 items-start">
+        <article v-for="(item, i) in dummyHero" :key="item.slug" :class="['group w-90 xl:w-auto', itemClass, 'animate-entrance-item']" :style="{ animationDelay: `${i * 60}ms` }">
+          <NuxtLink :to="localizedPath(`/preview/${item.slug}`, $getLocale())" class="flex gap-3 md:gap-4 items-start">
             <!-- Image placeholder on Left -->
             <div class="relative overflow-hidden rounded-xl w-24 h-24 md:w-28 md:h-28 xl:w-24 xl:h-24 flex-shrink-0 bg-gray-200 dark:bg-gray-800">
               <PostImage v-if="item.img.src" :src="item.img.src" :alt="$t('components.topPinned.placeholderImgAlt')" class="w-full h-full object-cover" />
@@ -76,7 +76,7 @@
                 <span>{{ item.author }}</span>
               </div>
             </div>
-          </div>
+          </NuxtLink>
         </article>
       </div>
     </div>
@@ -85,6 +85,7 @@
 
 <script setup lang="ts">
 import type { Post } from '~~/shared/types/post'
+import { localizedPath, PRESENTATION_POSTS } from '~/utils/presentationPosts'
 
 const { $getLocale } = useI18n()
 const { enhancePost } = usePost()
@@ -100,13 +101,13 @@ const scrollerClasses = 'flex gap-4 overflow-x-auto scrollbar-hide snap-x snap-m
 const itemClass = 'min-w-[16rem] flex-shrink-0 snap-start md:min-w-0'
 
 // Dummy items when empty – match the final UI
-const today = new Date()
-const formatted = today.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })
 const { $t } = useI18n()
-const dummyHero = [
-  { title: $t('components.topPinned.dummyTitle1'), date: formatted, author: $t('components.topPinned.dummyAuthor1'), img: {src: "https://images.pexels.com/photos/1406282/pexels-photo-1406282.jpeg"} },
-  { title: $t('components.topPinned.dummyTitle2'), date: formatted, author: $t('components.topPinned.dummyAuthor2'), img: {src: "https://images.pexels.com/photos/159618/still-life-school-retro-ink-159618.jpeg"} },
-  { title: $t('components.topPinned.dummyTitle3'), date: formatted, author: $t('components.topPinned.dummyAuthor3'), img: {src: "https://images.pexels.com/photos/1765033/pexels-photo-1765033.jpeg"} },
-  { title: $t('components.topPinned.dummyTitle4'), date: formatted, author: $t('components.topPinned.dummyAuthor4'), img: {src: "https://images.pexels.com/photos/7422438/pexels-photo-7422438.jpeg"} }
-]
+const locale = computed(() => $getLocale() === 'fr' ? 'fr' : 'en')
+const dummyHero = computed(() => PRESENTATION_POSTS.slice(0, 4).map((post, index) => ({
+  slug: post.slug,
+  title: index === 0 ? $t('components.topPinned.dummyTitle1') : post.title[locale.value],
+  date: new Date(post.publishedAt).toLocaleDateString(locale.value, { day: 'numeric', month: 'short', year: 'numeric' }),
+  author: $t(`components.topPinned.dummyAuthor${index + 1}`),
+  img: { src: post.image },
+})))
 </script>

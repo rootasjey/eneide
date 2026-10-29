@@ -14,8 +14,8 @@
     },
     "projects": {
       "newProject": "Nouveau projet",
-      "heading": "Projets",
-      "description": "D\u00e9couvrez notre collection de projets et d'\u00e9tudes de cas.",
+      "heading": "Projets sélectionnés",
+      "description": "Études de cas, expérimentations produit et systèmes visuels imaginés au fil de projets indépendants et collaboratifs.",
       "draftsDescription": "Ces projets ne sont pas visibles du public.",
       "archivedDescription": "Ces projets sont archiv\u00e9s et non visibles du public.",
       "loading": "Chargement des projets\u2026",

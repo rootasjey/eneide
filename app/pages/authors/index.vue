@@ -1,7 +1,7 @@
 <template>
-  <section class="py-14 md:py-18 bg-white dark:bg-gray-950">
+  <section class="site-page site-author-index py-14 md:py-18 bg-white dark:bg-gray-950">
     <div class="container mx-auto px-6 max-w-6xl space-y-8">
-      <header class="space-y-2">
+      <header class="site-page-heading space-y-2">
         <p class="text-sm uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">{{ $t('pages.authors.heading') }}</p>
         <h1 class="text-3xl md:text-4xl font-serif font-800">{{ $t('pages.authors.title') }}</h1>
         <p class="text-gray-600 dark:text-gray-400 max-w-3xl">{{ $t('pages.authors.description') }}</p>

@@ -14,8 +14,8 @@
     },
     "projects": {
       "newProject": "New Project",
-      "heading": "Projects",
-      "description": "Showcasing our collection of project posts and case studies.",
+      "heading": "Selected Works",
+      "description": "Case studies, product explorations, and visual systems developed across independent and collaborative projects.",
       "draftsDescription": "These projects are not visible to the public.",
       "archivedDescription": "These projects are archived and not visible to the public.",
       "loading": "Loading projects\u2026",

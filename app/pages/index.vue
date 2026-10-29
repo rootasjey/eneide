@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-50 dark:bg-gray-950">
+  <div class="site-home bg-gray-50 dark:bg-gray-950">
     <!-- Client-only mobile experience -->
     <ClientOnly>
       <component
@@ -10,18 +10,32 @@
 
     <!-- Desktop / SSR experience -->
     <div v-if="!isMobile">
-      <div class="animate-entrance"><TopPinnedPosts /></div>
-      <div class="animate-entrance"><NewsletterSubscription /></div>
-      <div class="animate-entrance"><TrendingTagsCarousel /></div>
+      <section class="site-intro">
+        <img class="site-intro-mark" src="/images/presentation/jc-pp.jpg" alt="Jérémie Corpinot" width="100" height="100">
+        <h1>{{ $t('nav.brand') }}</h1>
+        <p>{{ $t('pages.home.description') }}</p>
+        <p class="site-intro-links">
+          <NuxtLink :to="localizedPath('/posts', $getLocale())">{{ $t('nav.posts') }}</NuxtLink>
+          <span> · </span>
+          <NuxtLink :to="localizedPath('/projects', $getLocale())">{{ $t('nav.projects') }}</NuxtLink>
+          <span> · </span>
+          <NuxtLink :to="localizedPath('/about', $getLocale())">{{ $t('nav.about') }}</NuxtLink>
+        </p>
+        <a class="site-intro-subscribe" href="#newsletter">{{ $t('common.subscribe') }}</a>
+      </section>
       <div class="animate-entrance"><FeaturedPostsGrid /></div>
-      <div class="animate-entrance"><ProjectsCarousel /></div>
+      <div class="animate-entrance"><TrendingTagsCarousel /></div>
       <div class="animate-entrance"><RecentPostsGrid /></div>
-    </div> 
+      <div class="animate-entrance"><NewsletterSubscription /></div>
+      <div class="animate-entrance"><ProjectsCarousel /></div>
+      <div class="animate-entrance"><HomeRecommendations /></div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue'
+import { localizedPath } from '~/utils/presentationPosts'
 
 const isMobile = useIsMobile()
 const config = useRuntimeConfig()
@@ -33,7 +47,7 @@ const mobileIndex = computed(() => {
 
 const ogImageUrl = `${config.public.siteUrl}/og/home/default.png`
 
-const { $t } = useI18n()
+const { $t, $getLocale } = useI18n()
 
 const { website } = useJsonld()
 

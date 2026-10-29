@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen py-6">
+  <div class="min-h-screen py-6 site-project-index">
     <div class="container mx-auto px-4 md:px-8">
       <!-- Admin Toolbar (sticky top) -->
       <ClientOnly>
@@ -52,17 +52,21 @@
         </div>
       </ClientOnly> 
 
-      <!-- Page Header -->
-      <div class="mb-12 md:mb-16">
+      <CollectionIntro
+        v-if="activeTab === 'published' && !isAdmin"
+        :title="$t('pages.projects.heading')"
+        :description="$t('pages.projects.description')"
+      />
+
+      <!-- Admin-only project controls -->
+      <div v-if="isAdmin" class="site-page-heading mb-12 md:mb-16">
         <div v-if="activeTab === 'published'">
           <div class="flex items-start justify-between gap-4">
             <div>
-              <h1 class="font-title text-size-24 font-bold line-height-28">
-                <TypewriterText :text="$t('pages.projects.heading')" :auto-hide-cursor="true" />
-              </h1>
+              <h1 class="font-title text-size-24 font-bold line-height-28">{{ $t('pages.projects.heading') }}</h1>
 
               <div class="flex items-center gap-2">
-                <NDropdownMenu :items="viewDropdownItems" :_dropdownMenuContent="{ side: 'bottom', align: 'end' }">
+                <NDropdownMenu v-if="isAdmin" :items="viewDropdownItems" :_dropdownMenuContent="{ side: 'bottom', align: 'end' }">
                   <template #default>
                     <NButton btn="outline-gray" size="xs" icon :aria-label="$t('common.changeView')">
                       <NIcon :name="viewMode === 'cards' ? 'i-ph-squares-four' : 'i-ph-list-checks'" />
@@ -140,6 +144,16 @@
         :linkForPost="(p) => `/posts/${p.slug}`"
         :entered="entered"
       />
+
+      <section v-else-if="activeTab === 'published' && !isLoadingVisible && demoProjects.length" class="site-demo-projects">
+        <NuxtLink v-for="project in demoProjects" :key="project.slug" :to="project.to" class="site-demo-project">
+          <div class="site-demo-project-image">
+            <PostImage :src="project.image" :alt="project.title" />
+          </div>
+          <h2>{{ project.title }}</h2>
+          <p>{{ project.description }}</p>
+        </NuxtLink>
+      </section>
 
       <!-- Loading state -->
       <div v-else-if="isLoadingVisible" class="text-center py-12">
@@ -239,6 +253,7 @@ import type { Post } from '~~/shared/types/post'
 import { watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { useHeaderToolbarOffset } from '~/composables/useHeaderToolbarOffset' 
+import { localizedPath, PRESENTATION_POSTS } from '~/utils/presentationPosts'
 const router = useRouter()
 const confirmDialogOpen = ref(false)
 const postPendingDelete = ref<Post | null>(null)
@@ -445,7 +460,18 @@ onUnmounted(() => {
   }
 })
 
-const { $t } = useI18n()
+const { $t, $getLocale } = useI18n()
+
+const demoProjects = computed(() => {
+  const locale = $getLocale() === 'fr' ? 'fr' : 'en'
+  return PRESENTATION_POSTS.filter(post => post.isProject).map(post => ({
+    slug: post.slug,
+    to: localizedPath(`/preview/${post.slug}`, $getLocale()),
+    title: post.title[locale],
+    description: post.description[locale],
+    image: post.image,
+  }))
+})
 const config = useRuntimeConfig()
 
 useSeoMeta({

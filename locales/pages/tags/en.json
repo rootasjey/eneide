@@ -1,8 +1,8 @@
 {
   "pages": {
     "tags": {
-      "heading": "Tags",
-      "description": "Browse all tags and discover posts grouped by topic.",
+      "heading": "Topics & Threads",
+      "description": "An index of recurring themes across the journal, from interface systems and visual language to creative direction, process, and the future of digital experiences.",
       "filters": "Filters",
       "newTag": "New Tag",
       "searchPlaceholder": "Search tags",

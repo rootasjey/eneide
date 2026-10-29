@@ -16,28 +16,28 @@
 
         <nav class="space-y-1">
           <NuxtLink
-            to="/"
+            :to="localizedPath('/', $getLocale())"
             class="block py-3 px-4 text-base hover:bg-gray-50 dark:hover:bg-gray-800 rounded transition-colors"
             @click="closeMobileMenu"
           >
             {{ $t('nav.home') }}
           </NuxtLink>
           <NuxtLink
-            to="/about"
+            :to="localizedPath('/about', $getLocale())"
             class="block py-3 px-4 text-base hover:bg-gray-50 dark:hover:bg-gray-800 rounded transition-colors"
             @click="closeMobileMenu"
           >
             {{ $t('nav.about') }}
           </NuxtLink>
           <NuxtLink
-            to="/authors"
+            :to="localizedPath('/authors', $getLocale())"
             class="block py-3 px-4 text-base hover:bg-gray-50 dark:hover:bg-gray-800 rounded transition-colors"
             @click="closeMobileMenu"
           >
             {{ $t('nav.authors') }}
           </NuxtLink>
           <NuxtLink
-            to="/tags"
+            :to="localizedPath('/tags', $getLocale())"
             class="block py-3 px-4 text-base hover:bg-gray-50 dark:hover:bg-gray-800 rounded transition-colors"
             @click="closeMobileMenu"
           >
@@ -45,7 +45,7 @@
           </NuxtLink>
           <template v-if="!isLoggedIn">
             <NuxtLink
-              to="/signin"
+              :to="localizedPath('/signin', $getLocale())"
               class="block py-3 px-4 text-base hover:bg-gray-50 dark:hover:bg-gray-800 rounded transition-colors"
               @click="closeMobileMenu"
             >
@@ -56,21 +56,21 @@
             <button @click="() => { handleLogout(); closeMobileMenu(); }" class="w-full text-left block py-3 px-4 text-base hover:bg-gray-50 dark:hover:bg-gray-800 rounded transition-colors">{{ $t('common.signout') }}</button>
           </template>
           <NuxtLink
-            to="/signup"
+            :to="localizedPath('/signup', $getLocale())"
             class="block py-3 px-4 text-base hover:bg-gray-50 dark:hover:bg-gray-800 rounded transition-colors"
             @click="closeMobileMenu"
           >
             {{ $t('common.signup') }}
           </NuxtLink>
           <NuxtLink
-            to="/subscribe"
+            :to="localizedPath('/subscribe', $getLocale())"
             class="block py-3 px-4 text-base hover:bg-gray-50 dark:hover:bg-gray-800 rounded transition-colors"
             @click="closeMobileMenu"
           >
             {{ $t('common.subscribe') }}
           </NuxtLink>
           <NuxtLink
-            to="/membership"
+            :to="localizedPath('/membership', $getLocale())"
             class="block py-3 px-4 text-base hover:bg-gray-50 dark:hover:bg-gray-800 rounded transition-colors"
             @click="closeMobileMenu"
           >
@@ -115,7 +115,7 @@
     </div>
   </aside>
 
-  <header>
+  <header class="site-masthead">
     <div class="mx-auto">
       <!-- Mobile Top Bar -->
       <div class="lg:hidden flex items-center justify-between px-4 py-3"
@@ -123,9 +123,9 @@
           'bg-white/80 dark:bg-gray-950/80 backdrop-blur': isScrolled
         }"
       >
-        <NuxtLink to="/" class="ml-1 flex items-center gap-2 bg-black/10 px-3 py-1 rounded-full">
+        <NuxtLink :to="localizedPath('/', $getLocale())" class="site-mobile-brand ml-1 flex items-center gap-2 bg-black/10 px-3 py-1 rounded-full">
           <span
-            class="font-title font-bold text-xl"
+            class="site-wordmark font-title font-bold text-xl"
             :class="{
               'text-white': !isScrolled && router.currentRoute.value.path === '/',
             }"
@@ -153,7 +153,7 @@
       </div>
 
       <!-- Desktop Header -->
-      <div class="hidden lg:block py-6 border-b"
+      <div class="site-header-desktop hidden lg:block py-6 border-b"
         :class="{
           'bg-[#F8F9FA] dark:bg-gray-900': !isScrolled,
           'bg-white/80 dark:bg-gray-950/80 backdrop-blur': isScrolled
@@ -161,12 +161,12 @@
       >
         <!-- Row 1: Centered Logo -->
         <div
-          class="flex justify-center px-6 border-b border-gray-200 dark:border-gray-800 transition-all duration-300"
+          class="site-header-brand flex justify-center px-6 border-b border-gray-200 dark:border-gray-800 transition-all duration-300"
           :class="isScrolled ? 'mb-2 pb-3' : 'mb-6 pb-6'"
         >
-          <NuxtLink to="/" class="flex items-center">
+          <NuxtLink :to="localizedPath('/', $getLocale())" class="flex items-center">
             <span
-              class="font-title font-bold text-black dark:text-white transition-all duration-300"
+              class="site-wordmark font-title font-bold text-black dark:text-white transition-all duration-300"
               :class="isScrolled ? 'text-3xl' : 'text-4xl'"
             >
               {{ $t('nav.brand') }}
@@ -175,9 +175,9 @@
         </div>
 
         <!-- Row 2: Social | Navigation | Auth -->
-        <div class="grid items-center px-6 max-w-7xl mx-auto grid-cols-3">
+        <div class="site-header-grid grid items-center px-6 max-w-7xl mx-auto grid-cols-3">
           <!-- Left: Social Icons -->
-          <div class="flex items-center gap-3 justify-self-start">
+          <div class="site-header-social flex items-center gap-3 justify-self-start">
             <a
               v-for="s in orderedSocials"
               :key="s.platform + s.url"
@@ -191,25 +191,46 @@
           </div>
 
           <!-- Center: Navigation Links -->
-          <nav class="flex items-center gap-8 text-sm font-medium justify-self-center">
-            <NuxtLink to="/" class="font-600 hover:underline decoration-offset-6 text-gray-700 dark:text-gray-100 hover:text-black dark:hover:text-white transition-colors">
+          <nav class="site-header-nav flex items-center gap-8 text-sm font-medium justify-self-center">
+            <NuxtLink :to="localizedPath('/', $getLocale())" class="font-600 hover:underline decoration-offset-6 text-gray-700 dark:text-gray-100 hover:text-black dark:hover:text-white transition-colors">
               {{ $t('nav.home') }}
             </NuxtLink>
-            <NuxtLink to="/projects" class="font-600 hover:underline decoration-offset-6 text-gray-700 dark:text-gray-100 hover:text-black dark:hover:text-white transition-colors">
-              {{ $t('nav.projects') }}
-            </NuxtLink>
-            <NuxtLink to="/posts" class="font-600 hover:underline decoration-offset-6 text-gray-700 dark:text-gray-100 hover:text-black dark:hover:text-white transition-colors">
+            <NuxtLink :to="localizedPath('/posts', $getLocale())" class="font-600 hover:underline decoration-offset-6 text-gray-700 dark:text-gray-100 hover:text-black dark:hover:text-white transition-colors">
               {{ $t('nav.posts') }}
             </NuxtLink>
-            <NuxtLink to="/about" class="font-600 hover:underline decoration-offset-6 text-gray-700 dark:text-gray-100 hover:text-black dark:hover:text-white transition-colors">
-              {{ $t('nav.about') }}
+            <NuxtLink :to="localizedPath('/projects', $getLocale())" class="font-600 hover:underline decoration-offset-6 text-gray-700 dark:text-gray-100 hover:text-black dark:hover:text-white transition-colors">
+              {{ $t('nav.projects') }}
             </NuxtLink>
+            <div
+              class="site-header-pages"
+              :data-open="isPagesMenuOpen"
+              @mouseenter="isPagesMenuOpen = true"
+              @mouseleave="isPagesMenuOpen = false"
+              @focusin="isPagesMenuOpen = true"
+              @focusout="closePagesMenuOnFocusLeave"
+              @keydown.esc="isPagesMenuOpen = false"
+            >
+              <button
+                type="button"
+                :aria-expanded="isPagesMenuOpen"
+                aria-haspopup="true"
+                @click="isPagesMenuOpen = true"
+              >
+                {{ $t('nav.pages') }}
+              </button>
+              <nav class="site-header-pages-menu" :aria-label="$t('nav.pages')">
+                <NuxtLink :to="localizedPath('/about', $getLocale())">{{ $t('nav.about') }}</NuxtLink>
+                <NuxtLink :to="localizedPath('/tags', $getLocale())">{{ $t('nav.tags') }}</NuxtLink>
+                <NuxtLink :to="localizedPath('/authors', $getLocale())">{{ $t('nav.authors') }}</NuxtLink>
+                <NuxtLink :to="localizedPath('/credits', $getLocale())">{{ $t('footer.credits') }}</NuxtLink>
+              </nav>
+            </div>
           </nav>
 
           <!-- Right: Auth + Search + Theme -->
-          <div class="flex items-center gap-3 justify-self-end">
+          <div class="site-header-controls flex items-center gap-3 justify-self-end">
             <template v-if="!isLoggedIn">
-              <NuxtLink to="/signin" class="text-sm font-600 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
+              <NuxtLink :to="localizedPath('/signin', $getLocale())" class="text-sm font-600 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
                 {{ $t('common.signin') }}
               </NuxtLink>
             </template>
@@ -222,7 +243,7 @@
                 </NButton>
               </NDropdownMenu>
             </template>
-            <NuxtLink to="/donate" class="uppercase px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-xs font-bold uppercase tracking-wide rounded-4 hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors">
+            <NuxtLink :to="localizedPath('/donate', $getLocale())" class="uppercase px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-xs font-bold uppercase tracking-wide rounded-4 hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors">
               {{ $t('nav.donate') }}
             </NuxtLink>
 
@@ -289,6 +310,7 @@ import { useRouter } from 'vue-router'
 import { useHeaderScroll } from '../composables/useHeaderScroll'
 import useGlobalSearch from '~/composables/useGlobalSearch'
 import useSiteSettings from '~/composables/useSiteSettings'
+import { localizedPath } from '~/utils/presentationPosts'
 
 type ThemePreference = 'light' | 'dark' | 'system'
 type ThemeMenuScope = 'desktop' | 'mobile'
@@ -305,6 +327,7 @@ const userInitial = computed(() => (currentUser.value?.name ? currentUser.value.
 const isAdmin = computed(() => isLoggedIn.value && currentUser.value?.role === 'admin')
 
 const isMobileMenuOpen = ref(false)
+const isPagesMenuOpen = ref(false)
 const colorMode = useColorMode()
 const { isScrolled, y: scrollY } = useHeaderScroll({ threshold: 12 })
 const siteSettingsDrawerOpen = ref(false)
@@ -325,7 +348,7 @@ const { open: openSearchModal } = useGlobalSearch()
 function openSearch() { openSearchModal() }
 
 function goSearch() {
-  router.push('/search')
+  router.push(localizedPath('/search', $getLocale()))
 }
 
 async function handleLogout() {
@@ -333,7 +356,7 @@ async function handleLogout() {
     await $fetch('/api/logout', { method: 'POST' })
     await clearSession()
     await refreshSession()
-    router.push('/')
+    router.push(localizedPath('/', $getLocale()))
   } catch (err) {
     console.error('Logout failed', err)
   }
@@ -354,8 +377,8 @@ function onLocaleChange(item: { code: string } | null) {
 
 const dropdownItems = computed(() => {
   const items = [
-    { label: $t('common.settings'), onSelect: () => { router.push('/settings') } },
-    { label: $t('common.profile'), onSelect: () => { router.push('/profile') } },
+    { label: $t('common.settings'), onSelect: () => { router.push(localizedPath('/settings', $getLocale())) } },
+    { label: $t('common.profile'), onSelect: () => { router.push(localizedPath('/profile', $getLocale())) } },
     { label: $t('common.signout'), onSelect: async () => { await handleLogout() } },
   ]
 
@@ -428,6 +451,13 @@ function onThemePressEnd(scope: ThemeMenuScope) {
 
 function closeMobileMenu() {
   isMobileMenuOpen.value = false
+}
+
+function closePagesMenuOnFocusLeave(event: FocusEvent) {
+  const menu = event.currentTarget as HTMLElement
+  if (!menu.contains(event.relatedTarget as Node | null)) {
+    isPagesMenuOpen.value = false
+  }
 }
 
 function toggleTheme() {

@@ -1,15 +1,16 @@
 <template>
-  <section class="py-12 md:py-16 animate-entrance">
+  <section class="home-recent-posts py-12 md:py-16 animate-entrance">
     <div class="container mx-auto px-4 max-w-7xl">
-      <div class="flex items-center justify-between px-1 mb-6">
-        <NuxtLink to="/posts" class="inline-block">
+      <div class="site-recent-header flex items-center justify-between mb-6">
+        <NuxtLink :to="localizedPath('/posts', $getLocale())" class="inline-block">
           <h2 class="text-[11px] uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">
             {{ $t('components.recentPosts.heading') }}
           </h2>
+          <NIcon name="i-ph-arrow-right" aria-hidden="true" />
         </NuxtLink>
 
         <NuxtLink
-          to="/posts"
+          :to="localizedPath('/posts', $getLocale())"
           class="text-[11px] uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 flex items-center gap-1"
           :aria-label="$t('common.viewAllPosts')"
         >
@@ -28,7 +29,7 @@
         v-else-if="error"
         :title="$t('components.recentPosts.unavailable')"
         :description="$t('components.recentPosts.unavailableDesc')"
-        secondary-to="/posts"
+        :secondary-to="localizedPath('/posts', $getLocale())"
         :secondary-label="$t('common.retry')"
         variant="card"
         icon="i-ph-clock-counter-clockwise-duotone"
@@ -36,21 +37,19 @@
 
       <!-- Empty: dummy grid matching final UI -->
       <div v-else-if="!enhancedPosts.length" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 sm:gap-x-6 gap-y-8 md:gap-y-12">
-        <article v-for="i in 6" :key="i" class="group flex flex-col animate-entrance-item" :style="{ animationDelay: `${(i - 1) * 40}ms` }">
-          <!-- Image placeholder -->
-          <div class="relative overflow-hidden rounded-2xl aspect-[4/3] mb-4 bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
-            <div class="i-ph-image-duotone text-3xl text-gray-400" />
-          </div>
-          <!-- Content placeholder -->
-          <div class="space-y-3 flex-1 flex flex-col">
-            <span class="inline-block w-fit px-3 py-1.5 text-xs font-semibold tracking-wide bg-lime-300 dark:bg-lime-400 text-gray-900 rounded-full uppercase">{{ $t('components.recentPosts.placeholderBadge') }}</span>
-            <h3 class="text-lg md:text-xl font-serif font-bold leading-snug line-clamp-2 flex-1">{{ $t('components.recentPosts.placeholderTitle') }}</h3>
-            <div class="flex items-center gap-2 font-600 text-xs text-gray-500 dark:text-gray-400 mt-auto">
-              <time>{{ today }}</time>
-              <span>—</span>
-              <span>{{ $t('components.recentPosts.placeholderReadingTime') }}</span>
+        <article v-for="(post, i) in demoPosts" :key="post.slug" class="group flex flex-col animate-entrance-item" :style="{ animationDelay: `${i * 40}ms` }">
+          <NuxtLink :to="localizedPath(`/preview/${post.slug}`, $getLocale())" class="block flex flex-col h-full">
+            <div class="relative overflow-hidden rounded-2xl aspect-[4/3] mb-4 bg-gray-200 dark:bg-gray-800">
+              <img :src="post.image" :alt="post.title" class="w-full h-full object-cover" loading="lazy" decoding="async">
             </div>
-          </div>
+            <div class="home-recent-content">
+              <h3 class="line-clamp-2">{{ post.title }}</h3>
+              <div class="home-recent-meta">
+                <span class="home-recent-tag" :style="{ color: recentTagColor(post.tag) }">{{ post.tag }}</span>
+                <time>{{ post.date }}</time>
+              </div>
+            </div>
+          </NuxtLink>
         </article>
       </div>
 
@@ -62,29 +61,20 @@
           class="group flex flex-col animate-entrance-item"
           :style="{ animationDelay: `${i * 40}ms` }"
         >
-          <NuxtLink :to="`/posts/${post.slug}`" class="block flex flex-col h-full">
+          <NuxtLink :to="localizedPath(`/posts/${post.slug}`, $getLocale())" class="block flex flex-col h-full">
             <!-- Image -->
             <div v-if="post.image?.src" class="relative overflow-hidden rounded-2xl aspect-[4/3] mb-4">
               <PostImage :src="post.image.src" :alt="post.image.alt || post.name" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             </div>
 
             <!-- Content -->
-            <div class="space-y-3 flex-1 flex flex-col">
-              <!-- Category badge (first tag) -->
-              <span v-if="post.tags?.length" class="inline-block w-fit px-3 py-1.5 text-xs font-semibold tracking-wide bg-lime-300 dark:bg-lime-400 text-gray-900 rounded-full uppercase">
-                {{ post.tags?.[0]?.name }}
-              </span>
-              
-              <!-- Title -->
-              <h3 class="text-lg md:text-xl font-serif font-bold leading-snug group-hover:opacity-80 transition-opacity line-clamp-2 flex-1">
+            <div class="home-recent-content">
+              <h3 class="line-clamp-2 group-hover:opacity-80 transition-opacity">
                 {{ post.name }}
               </h3>
-              
-              <!-- Metadata -->
-              <div class="flex items-center gap-2 font-600 text-xs text-gray-500 dark:text-gray-400 mt-auto">
+              <div v-if="post.tags?.length" class="home-recent-meta">
+                <span class="home-recent-tag" :style="{ color: recentTagColor(post.tags[0].name) }">{{ post.tags[0].name }}</span>
                 <time>{{ post.formattedDate }}</time>
-                <span>—</span>
-                <span>{{ post.readingTime }}</span>
               </div>
             </div>
           </NuxtLink>
@@ -112,8 +102,9 @@
 <script setup lang="ts">
 import type { Post } from '~~/shared/types/post'
 import { EXCLUDED_TAGS } from '~/utils/tagConstants'
+import { localizedPath, PRESENTATION_POSTS } from '~/utils/presentationPosts'
 
-const { $t } = useI18n()
+const { $t, $getLocale } = useI18n()
 const { enhancePost } = usePost()
 
 // Client-side pagination with Load more
@@ -155,7 +146,32 @@ const enhancedPosts = computed(() => {
   return posts.filter(post => !(post.tags?.some(tag => excludeSet.has(tag.name.toLowerCase()))))
 })
 
-const today = new Date().toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })
+const demoPosts = computed(() => {
+  const locale = $getLocale() === 'fr' ? 'fr' : 'en'
+  return PRESENTATION_POSTS.filter(post => !post.isProject).slice(0, 4).map(post => ({
+    slug: post.slug,
+    title: post.title[locale],
+    tag: post.tag[locale],
+    image: post.image,
+    date: new Date(post.publishedAt).toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' }),
+  }))
+})
+
+const RECENT_TAG_COLORS: Record<string, string> = {
+  'minimalisme': '#a467d5',
+  'minimalism': '#a467d5',
+  'design': '#a467d5',
+  'études de cas': '#36c86b',
+  'case studies': '#36c86b',
+  'créativité': '#efaa68',
+  'creative': '#efaa68',
+  'culture numérique': '#77b9ec',
+  'digital culture': '#77b9ec',
+}
+
+function recentTagColor(tag: string) {
+  return RECENT_TAG_COLORS[tag.toLocaleLowerCase()] ?? 'var(--corpinot-muted)'
+}
 
 function loadMore() {
   if (!hasMore.value || loadingMore.value) return

@@ -1,7 +1,7 @@
 <template>
-  <div v-if="post" class="min-h-screen">
+  <div v-if="post" class="min-h-screen site-post">
     <!-- Hero Section - Dark Header with Title -->
-    <div class="py-16 md:py-24">
+    <div class="site-post-header py-16 md:py-24">
       <div class="container mx-auto px-4 md:px-8">
           <div class="max-w-4xl mx-auto text-center animate-entrance">
           <!-- Date and Reading Time -->
@@ -17,7 +17,7 @@
           </h1>
           
           <!-- Excerpt/Description -->
-          <p class="font-body font-600 color-gray-500 text-base md:text-lg leading-relaxed mb-8 max-w-3xl mx-auto animate-entrance-item" style="animation-delay: 240ms;">
+          <p class="post-summary font-body font-600 color-gray-500 text-base md:text-lg leading-relaxed mb-8 max-w-3xl mx-auto animate-entrance-item" style="animation-delay: 240ms;">
             {{ post.description }}
           </p>
 
@@ -54,7 +54,7 @@
 
     <!-- Featured Image -->
     <div v-if="post.image?.src" class="w-full px-4 animate-entrance" style="animation-delay: 360ms;">
-      <PostImage provider="hubblob" :src="post.image.src" :alt="post.image.alt || post.name" class="w-full h-auto max-h-[90vh] object-cover rounded-2xl" />
+      <PostImage provider="hubblob" :src="post.image.src" :alt="post.image.alt || post.name" class="post-cover w-full h-auto max-h-[90vh] object-cover rounded-2xl" />
     </div>
 
     <!-- Post Info Bar Below Image -->
@@ -71,35 +71,7 @@
             </NLink>
 
             <!-- Social Share Buttons -->
-            <div class="flex gap-2">
-              <NButton
-                icon
-                size="sm"
-                btn="ghost-gray"
-                class="hover:bg-muted"
-                :aria-label="$t('pages.post.shareTwitter')"
-              >
-                <div class="i-ph-x-logo w-5 h-5" />
-              </NButton>
-              <NButton
-                icon
-                size="sm"
-                btn="ghost-gray"
-                class="hover:bg-muted"
-                :aria-label="$t('pages.post.shareFacebook')"
-              >
-                <div class="i-ph-facebook-logo w-5 h-5" />
-              </NButton>
-              <NButton
-                icon
-                size="sm"
-                btn="ghost-gray"
-                class="hover:bg-muted"
-                :aria-label="$t('pages.post.shareEmail')"
-              >
-                <div class="i-ph-envelope w-5 h-5" />
-              </NButton>
-            </div>
+            <PostShareActions :title="post.name" />
           </div>
         </div>
       </div>
@@ -127,8 +99,10 @@
       </div>
     </div>
 
+    <ReadingProgress v-if="post.article" content-selector=".site-post-content .post-content" />
+
     <!-- Article Content -->
-    <article class="py-12 md:py-16 bg-background animate-entrance" style="animation-delay: 420ms;">
+    <article class="site-post-content py-12 md:py-16 bg-background animate-entrance" style="animation-delay: 420ms;">
       <div class="container mx-auto px-4 md:px-8">
         <div
           class="max-w-3xl mx-auto animate-entrance-item" style="animation-delay: 480ms;"
@@ -153,59 +127,14 @@
               </div>
             </NLink>
 
-            <!-- Social Share Buttons -->
-            <div class="flex gap-2">
-              <NButton
-                icon
-                size="sm"
-                btn="ghost-gray"
-                class="hover:bg-muted"
-                :aria-label="$t('pages.post.shareTwitter')"
-              >
-                <div class="i-ph-x-logo w-5 h-5" />
-              </NButton>
-              <NButton
-                icon
-                size="sm"
-                btn="ghost-gray"
-                class="hover:bg-muted"
-                :aria-label="$t('pages.post.shareFacebook')"
-              >
-                <div class="i-ph-facebook-logo w-5 h-5" />
-              </NButton>
-              <NButton
-                icon
-                size="sm"
-                btn="ghost-gray"
-                class="hover:bg-muted"
-                :aria-label="$t('pages.post.shareEmail')"
-              >
-                <div class="i-ph-envelope w-5 h-5" />
-              </NButton>
-              <NButton
-                icon
-                size="sm"
-                btn="ghost-gray"
-                class="hover:bg-muted"
-                :aria-label="$t('pages.post.copyLink')"
-              >
-                <div class="i-ph-copy w-5 h-5" />
-              </NButton>
-            </div>
+            <PostShareActions :title="post.name" />
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Related Posts Section - TODO: Implement related posts API -->
-    <!-- <section class="py-16 bg-muted/30">
-      <div class="container mx-auto px-4 md:px-8">
-        <h2 class="uppercase font-600 text-size-4 mb-4">You Might Also Like</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-          Related posts will go here
-        </div>
-      </div>
-    </section> -->
+    <PostRelatedArticles :articles="relatedArticles" />
+    <NewsletterSubscription />
 
     <transition :css="false" @enter="handleLightboxEnter" @leave="handleLightboxLeave">
       <div
@@ -270,6 +199,11 @@ if (error.value || !post.value) {
   throw createError({ statusCode: 404, statusMessage: $t('pages.post.notFound') })
 }
 
+const { data: publishedPosts } = await useFetch<Post[]>('/api/posts', {
+  query: { language: post.value.language, limit: 12 },
+  default: () => [],
+})
+
 const editPostUrl = computed(() => `/posts/edit/${post.value?.slug || post.value?.id}`)
 
 // Enhance post with computed properties
@@ -299,6 +233,25 @@ const allVersions = computed(() => {
     list.push({ language: t.language, label: languageLabels[t.language] || t.language, slug: t.slug, active: false })
   }
   return list
+})
+
+const relatedArticles = computed(() => {
+  const current = post.value
+  const candidates = (publishedPosts.value ?? []).filter(candidate => candidate.id !== current.id)
+  const sharesTag = (candidate: Post) => candidate.tags?.some(tag => current.tags?.some(currentTag => currentTag.id === tag.id)) ?? false
+  const selected = [
+    ...candidates.filter(sharesTag),
+    ...candidates.filter(candidate => !sharesTag(candidate)),
+  ].slice(0, 2)
+
+  return selected.map(candidate => ({
+    to: `${current.language === 'en' ? '' : `/${current.language}`}/posts/${candidate.slug}`,
+    title: candidate.name,
+    image: candidate.image?.src || '/images/presentation/esc.webp',
+    tag: candidate.tags?.[0]?.name || $t('components.relatedPosts.heading'),
+    date: candidate.publishedAt || candidate.createdAt,
+    dateLabel: formatPostDate(candidate.publishedAt || candidate.createdAt),
+  }))
 })
 
 // Redirect to translated version when interface language changes

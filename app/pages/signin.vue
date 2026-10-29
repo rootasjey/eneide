@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col items-center py-12 px-6 bg-gray-50 dark:bg-gray-950">
+  <div class="site-page site-auth-page min-h-screen flex flex-col items-center py-12 px-6 bg-gray-50 dark:bg-gray-950">
 
     <!-- Logo -->
     <NuxtLink to="/" class="mb-12">

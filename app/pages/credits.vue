@@ -1,15 +1,15 @@
 <template>
-  <section class="site-page site-credits max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <header class="mb-10 text-center animate-entrance" style="animation-delay:80ms;">
+  <section class="site-page site-credits">
+    <header class="site-credits-intro animate-entrance" style="animation-delay:80ms;">
       <h1 class="site-display-heading font-title text-4xl font-800 tracking-tight">{{ $t('pages.credits.heading') }}</h1>
-      <p class="font-body mt-3 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+      <p class="font-body">
         {{ $t('pages.credits.description') }}
       </p>
     </header>
 
-    <div class="grid gap-6">
+    <div class="site-credits-sections">
       <!-- Frameworks & Core -->
-      <NCard class="p-0 overflow-hidden animate-entrance" style="animation-delay:160ms;">
+      <section class="site-credits-section animate-entrance" style="animation-delay:160ms;">
         <div class="p-6 sm:p-8">
           <h2 class="text-xl font-700 mb-4">{{ $t('pages.credits.frameworksAndCore') }}</h2>
           <ul class="grid sm:grid-cols-2 gap-3 font-body font-500 text-gray-700 dark:text-gray-200">
@@ -39,10 +39,10 @@
             </li>
           </ul>
         </div>
-      </NCard>
+      </section>
 
       <!-- Platform & Data -->
-      <NCard class="p-0 overflow-hidden animate-entrance" style="animation-delay:220ms;">
+      <section class="site-credits-section animate-entrance" style="animation-delay:220ms;">
         <div class="p-6 sm:p-8">
           <h2 class="text-xl font-700 mb-4">{{ $t('pages.credits.platformAndData') }}</h2>
           <ul class="grid sm:grid-cols-2 gap-3 font-body font-500 text-gray-700 dark:text-gray-200">
@@ -56,10 +56,10 @@
             </li>
           </ul>
         </div>
-      </NCard>
+      </section>
 
       <!-- UI & Styling -->
-      <NCard class="p-0 overflow-hidden animate-entrance" style="animation-delay:280ms;">
+      <section class="site-credits-section animate-entrance" style="animation-delay:280ms;">
         <div class="p-6 sm:p-8">
           <h2 class="text-xl font-700 mb-4">{{ $t('pages.credits.uiAndStyling') }}</h2>
           <ul class="grid sm:grid-cols-2 gap-3 font-body font-500 text-gray-700 dark:text-gray-200">
@@ -89,10 +89,10 @@
             </li>
           </ul>
         </div>
-      </NCard>
+      </section>
 
       <!-- Content & Editing -->
-      <NCard class="p-0 overflow-hidden animate-entrance" style="animation-delay:340ms;">
+      <section class="site-credits-section animate-entrance" style="animation-delay:340ms;">
         <div class="p-6 sm:p-8">
           <h2 class="text-xl font-700 mb-4">{{ $t('pages.credits.contentAndEditing') }}</h2>
           <ul class="grid sm:grid-cols-2 gap-3 font-body font-500 text-gray-700 dark:text-gray-200">
@@ -110,13 +110,13 @@
             </li>
           </ul>
         </div>
-      </NCard>
+      </section>
 
       <!-- Images & Media Pipeline -->
-      <NCard class="p-0 overflow-hidden animate-entrance" style="animation-delay:400ms;">
+      <section class="site-credits-section animate-entrance" style="animation-delay:400ms;">
         <div class="p-6 sm:p-8">
           <h2 class="text-xl font-700 mb-4">{{ $t('pages.credits.imagesAndMedia') }}</h2>
-          <ul class="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 gap-3">
+          <ul class="site-credits-media-list">
             <li v-for="item in pexelsAttributions" :key="item.href">
               <NTooltip :_tooltipContent="{ side: 'top', sideOffset: 8, align: 'center' }" :_tooltipProvider="{ delayDuration: 300 }">
                 <template #default>
@@ -138,17 +138,17 @@
             </li>
           </ul>
         </div>
-      </NCard>
+      </section>
 
       <!-- Thank you -->
-      <NCard class="p-0 overflow-hidden animate-entrance" style="animation-delay:460ms;">
+      <section class="site-credits-section animate-entrance" style="animation-delay:460ms;">
         <div class="p-6 sm:p-8">
           <h2 class="font-text text-xl font-700 mb-4">{{ $t('pages.credits.thankYou') }}</h2>
           <p class="font-body font-500 text-gray-700 dark:text-gray-200">
             {{ $t('pages.credits.thankYouText') }}
           </p>
         </div>
-      </NCard>
+      </section>
     </div>
   </section>
 </template>

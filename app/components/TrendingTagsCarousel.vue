@@ -29,6 +29,7 @@
 
 <script setup lang="ts">
 import type { ApiTag } from '~~/shared/types/tags'
+import { EXCLUDED_TAGS } from '~/utils/tagConstants'
 import { localizedPath, PRESENTATION_POSTS } from '~/utils/presentationPosts'
 
 const { $getLocale, $t } = useI18n()
@@ -51,11 +52,15 @@ const tags = computed(() => {
     sampleCounts.set(name, (sampleCounts.get(name) || 0) + 1)
   }
 
-  const liveTags = (tagStore.allTags as (ApiTag & { count?: number })[]).slice(0, 4)
+  const hiddenTags = new Set([...EXCLUDED_TAGS, 'project'])
+  const liveTags = (tagStore.allTags as ApiTag[])
+    .filter(tag => !hiddenTags.has(tag.name.toLocaleLowerCase()) && (tag.count ?? 0) > 0)
+    .sort((a, b) => (b.count ?? 0) - (a.count ?? 0))
+    .slice(0, 4)
   if (liveTags.length) {
     return liveTags.map(tag => ({
       name: tag.name,
-      count: tag.count ?? sampleCounts.get(tag.name) ?? 1,
+      count: tag.count ?? 0,
     }))
   }
 

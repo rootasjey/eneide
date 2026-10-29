@@ -63,8 +63,8 @@
         >
           <NuxtLink :to="localizedPath(`/posts/${post.slug}`, $getLocale())" class="block flex flex-col h-full">
             <!-- Image -->
-            <div v-if="post.image?.src" class="relative overflow-hidden rounded-2xl aspect-[4/3] mb-4">
-              <PostImage :src="post.image.src" :alt="post.image.alt || post.name" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <div class="relative overflow-hidden rounded-2xl aspect-[4/3] mb-4">
+              <PostImage :src="post.image?.src || '/images/corpinot-cover.jpeg'" :alt="post.image?.alt || post.name" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             </div>
 
             <!-- Content -->
@@ -72,28 +72,13 @@
               <h3 class="line-clamp-2 group-hover:opacity-80 transition-opacity">
                 {{ post.name }}
               </h3>
-              <div v-if="post.tags?.length" class="home-recent-meta">
-                <span class="home-recent-tag" :style="{ color: recentTagColor(post.tags[0].name) }">{{ post.tags[0].name }}</span>
-                <time>{{ post.formattedDate }}</time>
+              <div v-if="post.tags?.length || post.formattedDate" class="home-recent-meta">
+                <span v-if="post.tags?.length" class="home-recent-tag" :style="{ color: recentTagColor(post.tags[0].name) }">{{ post.tags[0].name }}</span>
+                <time v-if="post.formattedDate">{{ post.formattedDate }}</time>
               </div>
             </div>
           </NuxtLink>
         </article>
-      </div>
-      <!-- Load More -->
-      <div v-if="!pending && hasMore" class="mt-12 flex justify-center">
-        <NButton
-          btn="ghost"
-          :disabled="loadingMore"
-          class="group/btn px-8 py-3 uppercase tracking-[0.25em] font-800 text-slate-900 dark:text-slate-300 border-2 border-slate-600 dark:border-slate-700 rounded-full 
-            hover:border-slate-400 dark:hover:border-slate-600 hover:text-slate-900 dark:hover:text-slate-100 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed
-            hover:shadow-md hover:scale-105 active:shadow-none active:scale-99 transform"
-          @click="loadMore"
-        >
-          <span v-if="loadingMore" class="i-ph-circle-notch animate-spin mr-2" />
-          <span v-else class="i-ph-arrow-down mr-2 group-hover/btn:translate-y-0.5 transition-transform duration-300" />
-          {{ loadingMore ? $t('common.loading') : $t('components.recentPosts.loadMore') }}
-        </NButton>
       </div>
     </div>
   </section>
@@ -107,41 +92,12 @@ import { localizedPath, PRESENTATION_POSTS } from '~/utils/presentationPosts'
 const { $t, $getLocale } = useI18n()
 const { enhancePost } = usePost()
 
-// Client-side pagination with Load more
-const page = ref(1)
-const limit = 6
-const items = ref<Post[]>([])
-const pending = ref(true)
-const error = ref<string | null>(null)
-const hasMore = ref(false)
-const loadingMore = ref(false)
-
-async function load(pageToLoad = 1) {
-  const params = { page: pageToLoad, limit, exclude: EXCLUDED_TAGS.join(',') }
-  try {
-    if (pageToLoad === 1) {
-      pending.value = true
-      error.value = null
-    } else {
-      loadingMore.value = true
-    }
-    const result = await $fetch<Post[]>('/api/posts', { params })
-    if (pageToLoad === 1) items.value = result
-    else items.value = [...items.value, ...result]
-    hasMore.value = result.length === limit
-    if (result.length > 0) page.value = pageToLoad
-  } catch (e: any) {
-    error.value = e?.message || 'Failed to load posts'
-  } finally {
-    pending.value = false
-    loadingMore.value = false
-  }
-}
-
-await load(1)
+const { data: items, pending, error } = await useFetch<Post[]>('/api/posts', {
+  query: { limit: 4, exclude: EXCLUDED_TAGS.join(',') },
+})
 
 const enhancedPosts = computed(() => {
-  const posts = items.value.map(p => enhancePost(p))
+  const posts = (items.value ?? []).map(p => enhancePost(p))
   const excludeSet = new Set(EXCLUDED_TAGS.map(t => t.toLowerCase()))
   return posts.filter(post => !(post.tags?.some(tag => excludeSet.has(tag.name.toLowerCase()))))
 })
@@ -173,8 +129,4 @@ function recentTagColor(tag: string) {
   return RECENT_TAG_COLORS[tag.toLocaleLowerCase()] ?? 'var(--corpinot-muted)'
 }
 
-function loadMore() {
-  if (!hasMore.value || loadingMore.value) return
-  return load(page.value + 1)
-}
 </script>

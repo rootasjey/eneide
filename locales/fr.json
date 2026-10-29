@@ -55,11 +55,12 @@
     "about": "À propos",
     "authors": "Auteurs",
     "tags": "Tags",
+    "recommendations": "Recommandations",
     "pages": "Pages",
     "projects": "Projets",
     "posts": "Articles",
     "membership": "Adhésion",
-    "brand": "corpinot",
+    "brand": "gg corp",
     "donate": "Soutenir",
     "toggleTheme": "Changer de thème",
     "openSearch": "Ouvrir la recherche",
@@ -92,9 +93,9 @@
     "debugInfo": "Infos de débogage (Admin)"
   },
   "seo": {
-    "defaultTitle": "Corpinot - Reflexions personnelles, partagées ouvertement",
-    "defaultDescription": "Reflexions personnelles partagées ouvertement sur Corpinot",
-    "siteName": "Corpinot"
+    "defaultTitle": "GG CORP - Reflexions personnelles, partagées ouvertement",
+    "defaultDescription": "Reflexions personnelles partagées ouvertement sur GG CORP",
+    "siteName": "GG CORP"
   },
   "components": {
     "readingProgress": {
@@ -105,7 +106,9 @@
       "label": "Partager cet article",
       "x": "Partager sur X",
       "facebook": "Partager sur Facebook",
-      "email": "Partager par email",
+      "linkedin": "Partager sur LinkedIn",
+      "bluesky": "Partager sur Bluesky",
+      "pinterest": "Partager sur Pinterest",
       "copy": "Copier le lien",
       "copied": "Lien copié",
       "copyFailed": "Impossible de copier le lien"
@@ -173,7 +176,7 @@
       "unavailable": "Articles épinglés indisponibles",
       "unavailableDesc": "Impossible de charger le contenu épinglé. Réessayez plus tard.",
       "placeholderImgAlt": "Image de substitution",
-      "dummyTitle1": "Bienvenue sur Corpinot",
+      "dummyTitle1": "Bienvenue sur mon site web",
       "dummyTitle2": "Créez votre premier article",
       "dummyTitle3": "Ajoutez une image de couverture",
       "dummyTitle4": "Utilisez des tags pour organiser",

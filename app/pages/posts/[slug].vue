@@ -1,140 +1,106 @@
 <template>
-  <div v-if="post" class="min-h-screen site-post">
-    <!-- Hero Section - Dark Header with Title -->
-    <div class="site-post-header py-16 md:py-24">
-      <div class="container mx-auto px-4 md:px-8">
-          <div class="max-w-4xl mx-auto text-center animate-entrance">
-          <!-- Date and Reading Time -->
-          <div class="font-600 text-md text-gray-400 flex items-center justify-center gap-3 mb-6 animate-entrance-item" style="animation-delay: 80ms;">
-            <time>{{ formatPostDate(post.publishedAt || post.createdAt) }}</time>
-            <span>—</span>
-            <span>{{ enhancedPost.readingTime }}</span>
-          </div>
-          
-          <!-- Title -->
-          <h1 class="max-w-3xl mx-auto text-4xl md:text-5xl lg:text-4xl font-serif font-700 mb-6 leading-tight animate-entrance-item" style="animation-delay: 160ms;">
-            <TypewriterText :text="post.name" :speed="50" auto-hide-cursor />
-          </h1>
-          
-          <!-- Excerpt/Description -->
-          <p class="post-summary font-body font-600 color-gray-500 text-base md:text-lg leading-relaxed mb-8 max-w-3xl mx-auto animate-entrance-item" style="animation-delay: 240ms;">
-            {{ post.description }}
-          </p>
-
-          <!-- Tags/Badges -->
-          <div class="flex items-center justify-center flex-wrap gap-3 animate-entrance-item" style="animation-delay: 320ms;">
+  <main v-if="post" class="min-h-screen site-post site-dynamic-post">
+    <header class="site-post-header">
+      <div class="container">
+        <div>
+          <nav class="site-preview-topic-nav" :aria-label="locale === 'fr' ? 'Articles associés' : 'Related posts'">
             <NuxtLink
-              v-for="tag in post.tags"
-              :key="tag.id"
-              :to="{ path: '/tags', query: { tag: tag.name } }"
-              class="uppercase bg-[#F2F3F4] text-color-black dark:bg-gray-600 dark:text-color-white rounded-full px-4 py-1 text-xs font-semibold flex items-center transition-transform hover:scale-105 active:scale-95"
-              :aria-label="`View posts for tag ${tag.name}`"
+              v-if="previousPost"
+              :to="localizedPath(`/posts/${previousPost.slug}`, locale)"
+              :aria-label="locale === 'fr' ? 'Article précédent' : 'Previous post'"
             >
-              <NIcon v-if="iconTag[tag.name]" :name="iconTag[tag.name]" />
-              <span>{{ tag.name }}</span>
+              <span class="i-ph-arrow-left" aria-hidden="true" />
             </NuxtLink>
-            <NTooltip v-if="isAdmin">
-              <template #content>
-                <span class="font-600">{{ $t('pages.post.editPost') }}</span>
-              </template>
-                <NButton
-                size="xs"
-                icon
-                label="i-ph-pencil"
-                rounded="full"
-                btn="soft-gray"
-                :to="`/posts/edit/${post.slug || post.id}`"
-                class="hover:scale-110 active:scale-99 transition-transform"
-              />
-            </NTooltip>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Featured Image -->
-    <div v-if="post.image?.src" class="w-full px-4 animate-entrance" style="animation-delay: 360ms;">
-      <PostImage provider="hubblob" :src="post.image.src" :alt="post.image.alt || post.name" class="post-cover w-full h-auto max-h-[90vh] object-cover rounded-2xl" />
-    </div>
-
-    <!-- Post Info Bar Below Image -->
-    <div class="border-b border-border bg-background">
-      <div class="container mx-auto px-4 md:px-8">
-        <div class="max-w-3xl mx-auto py-6">
-          <div class="flex items-center justify-between flex-wrap gap-4">
-            <!-- Author Info -->
-            <NLink v-if="post.user" :to="`/authors/${post.user.slug || post.user.id}`" class="flex items-center gap-3">
-              <PostImage provider="hubblob" v-if="post.user.avatar" :src="post.user.avatar" :alt="post.user.name || $t('pages.post.userAlt')" class="w-8 h-8 rounded-full border" />
-              <div v-if="post.user.name">
-                <div class="font-semibold">{{ post.user.name }}</div>
-              </div>
-            </NLink>
-
-            <!-- Social Share Buttons -->
-            <PostShareActions :title="post.name" />
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Translation Switcher -->
-    <div v-if="translations.length" class="border-b border-border">
-      <div class="container mx-auto px-4 md:px-8">
-        <div class="max-w-3xl mx-auto py-4 flex items-center gap-3">
-          <span class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">{{ $t('common.language') }}:</span>
-          <div class="flex flex-wrap gap-2">
+            <span v-else class="site-post-nav-spacer" aria-hidden="true" />
             <NuxtLink
-              v-for="t in allVersions"
-              :key="t.language"
-              :to="t.slug ? `/posts/${t.slug}` : undefined"
-              class="px-3 py-1 rounded-full text-xs font-semibold transition-colors"
-              :class="t.active
-                ? 'bg-black dark:bg-white text-white dark:text-black'
-                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'"
+              v-if="primaryTag"
+              class="site-preview-tag"
+              :to="`${localizedPath('/posts', locale)}?tag=${encodeURIComponent(primaryTag.name)}`"
+              :style="{ '--post-tag-color': postTagColor(primaryTag.name) }"
             >
-              {{ t.label }}
+              {{ primaryTag.name }}
             </NuxtLink>
-          </div>
+            <span v-else class="site-post-nav-spacer" aria-hidden="true" />
+            <NuxtLink
+              v-if="nextPost"
+              :to="localizedPath(`/posts/${nextPost.slug}`, locale)"
+              :aria-label="locale === 'fr' ? 'Article suivant' : 'Next post'"
+            >
+              <span class="i-ph-arrow-right" aria-hidden="true" />
+            </NuxtLink>
+            <span v-else class="site-post-nav-spacer" aria-hidden="true" />
+          </nav>
+          <h1>{{ post.name }}</h1>
+          <p v-if="post.description" class="post-summary">{{ post.description }}</p>
         </div>
       </div>
+    </header>
+
+    <div v-if="post.image?.src" class="site-preview-cover">
+      <PostImage provider="hubblob" :src="post.image.src" :alt="post.image.alt || post.name" class="post-cover" />
     </div>
 
     <ReadingProgress v-if="post.article" content-selector=".site-post-content .post-content" />
 
-    <!-- Article Content -->
-    <article class="site-post-content py-12 md:py-16 bg-background animate-entrance" style="animation-delay: 420ms;">
-      <div class="container mx-auto px-4 md:px-8">
-        <div
-          class="max-w-3xl mx-auto animate-entrance-item" style="animation-delay: 480ms;"
-          @click="handleContentClick"
-        >
-          <!-- Tiptap Content Renderer -->
+    <article class="site-post-content">
+      <div class="container">
+        <div class="site-post-reading-column" @click="handleContentClick">
           <PostContent v-if="post.article" :content="post.article" />
         </div>
       </div>
     </article>
 
-    <!-- Author Bio Section -->
-    <section v-if="post.user" class="py-12 md:py-16 dark:bg-gray-950">
-      <div class="container mx-auto px-4 md:px-8">
-        <div class="max-w-3xl mx-auto border-t pt-8">
-          <div class="flex items-center justify-between gap-8 flex-wrap md:flex-nowrap">
-            <!-- Left: Avatar and Name -->
-            <NLink :to="`/authors/${post.user.slug || post.user.id}`" class="flex items-center gap-6">
-              <PostImage provider="hubblob" v-if="post.user.avatar" :src="post.user.avatar" :alt="post.user.name || $t('pages.post.userAlt')" class="w-12 h-12 rounded-full flex-shrink-0 ring-4 ring-white/10 border" />
-              <div>
-                <h3 class="text-md font-bold mb-1">{{ post.user.name }}</h3>
-              </div>
-            </NLink>
-
-            <PostShareActions :title="post.name" />
+    <section v-if="!post.isProject" class="site-post-end">
+      <div class="container">
+        <NuxtLink
+          v-if="post.user"
+          class="site-post-author-card"
+          :to="authorPath"
+          :aria-label="post.user.name || $t('components.postEndMatter.authorName')"
+        >
+          <div class="site-post-author-heading">
+            <PostImage
+              v-if="post.user.avatar"
+              provider="hubblob"
+              :src="post.user.avatar"
+              :alt="post.user.name || $t('pages.post.userAlt')"
+              width="32"
+              height="32"
+              loading="lazy"
+            />
+            <span>{{ post.user.name || $t('components.postEndMatter.authorName') }}</span>
           </div>
+          <p class="site-post-author-bio">{{ authorProfile?.biography || $t('components.postEndMatter.authorBio') }}</p>
+        </NuxtLink>
+
+        <div class="site-post-share-row">
+          <PostShareActions :title="post.name" />
         </div>
+
+        <div class="site-post-end-meta">
+          <time :datetime="post.publishedAt || post.createdAt">{{ formatPostDate(post.publishedAt || post.createdAt) }}</time>
+          <div v-if="translations.length" class="site-post-language-switcher" :aria-label="$t('common.language')">
+            <template v-for="version in allVersions" :key="version.language">
+              <NuxtLink
+                v-if="version.slug"
+                :to="localizedPath(`/posts/${version.slug}`, version.language)"
+                :aria-current="version.active ? 'page' : undefined"
+                :class="{ 'is-active': version.active }"
+              >
+                {{ version.label }}
+              </NuxtLink>
+              <span v-else class="is-active" aria-current="page">{{ version.label }}</span>
+            </template>
+          </div>
+          <NuxtLink v-if="isAdmin" class="site-post-edit-link" :to="editPostUrl">
+            {{ $t('pages.post.editPost') }}
+          </NuxtLink>
+        </div>
+
+        <PostRelatedArticles :articles="relatedArticles" />
       </div>
     </section>
-
-    <PostRelatedArticles :articles="relatedArticles" />
-    <NewsletterSubscription />
+    <NewsletterSubscription v-if="!post.isProject" />
 
     <transition :css="false" @enter="handleLightboxEnter" @leave="handleLightboxLeave">
       <div
@@ -155,16 +121,18 @@
         </div>
       </div>
     </transition>
-  </div>
+  </main>
 </template>
 
 <script setup lang="ts">
 import type { Post } from '~~/shared/types/post'
+import { localizedPath } from '~/utils/presentationPosts'
+import { postTagColor } from '~/utils/postTagColor'
 
-const { $t } = useI18n()
+const { $t, $getLocale } = useI18n()
 const route = useRoute()
 const slug = route.params.slug as string
-const { enhancePost, formatPostDate } = usePost()
+const { formatPostDate } = usePost()
 const { loggedIn, user } = useUserSession()
 
 const isAdmin = computed(() => loggedIn.value && user.value?.role === 'admin')
@@ -199,15 +167,31 @@ if (error.value || !post.value) {
   throw createError({ statusCode: 404, statusMessage: $t('pages.post.notFound') })
 }
 
+const { data: authorProfile } = post.value.user
+  ? await useFetch<{ biography?: string | null }>(`/api/authors/${post.value.user.slug || post.value.user.id}`)
+  : { data: ref<{ biography?: string | null } | null>(null) }
+
 const { data: publishedPosts } = await useFetch<Post[]>('/api/posts', {
   query: { language: post.value.language, limit: 12 },
   default: () => [],
 })
 
 const editPostUrl = computed(() => `/posts/edit/${post.value?.slug || post.value?.id}`)
-
-// Enhance post with computed properties
-const enhancedPost = computed(() => enhancePost(post.value!))
+const locale = computed(() => post.value?.language || $getLocale())
+const primaryTag = computed(() => post.value?.tags?.[0])
+const currentPostIndex = computed(() => (publishedPosts.value ?? []).findIndex(item => item.slug === post.value?.slug))
+const previousPost = computed(() => {
+  const index = currentPostIndex.value
+  return index >= 0 ? publishedPosts.value?.[index + 1] : undefined
+})
+const nextPost = computed(() => {
+  const index = currentPostIndex.value
+  return index > 0 ? publishedPosts.value?.[index - 1] : undefined
+})
+const authorPath = computed(() => {
+  const identifier = post.value?.user?.slug || post.value?.user?.id
+  return localizedPath(identifier ? `/authors/${identifier}` : '/authors', locale.value)
+})
 
 // Fetch translations
 const { data: translations } = await useFetch<any[]>('/api/posts/' + slug + '/translations', {
@@ -237,6 +221,7 @@ const allVersions = computed(() => {
 
 const relatedArticles = computed(() => {
   const current = post.value
+  if (!current) return []
   const candidates = (publishedPosts.value ?? []).filter(candidate => candidate.id !== current.id)
   const sharesTag = (candidate: Post) => candidate.tags?.some(tag => current.tags?.some(currentTag => currentTag.id === tag.id)) ?? false
   const selected = [
@@ -245,7 +230,7 @@ const relatedArticles = computed(() => {
   ].slice(0, 2)
 
   return selected.map(candidate => ({
-    to: `${current.language === 'en' ? '' : `/${current.language}`}/posts/${candidate.slug}`,
+    to: localizedPath(`/posts/${candidate.slug}`, current.language),
     title: candidate.name,
     image: candidate.image?.src || '/images/presentation/esc.webp',
     tag: candidate.tags?.[0]?.name || $t('components.relatedPosts.heading'),
@@ -255,7 +240,6 @@ const relatedArticles = computed(() => {
 })
 
 // Redirect to translated version when interface language changes
-const { $getLocale } = useI18n()
 watch($getLocale, (newLocale) => {
   if (!post.value || newLocale === post.value.language) return
   const match = (translations.value || []).find(t => t.language === newLocale)
@@ -263,22 +247,6 @@ watch($getLocale, (newLocale) => {
     navigateTo(`/posts/${match.slug}`)
   }
 })
-
-const iconTag: Record<string, string> = {
-  featured: 'i-ph-lightning-fill',
-  'featured post': 'i-ph-lightning-fill',
-  'featured project': 'i-ph-lightning-fill',
-  technology: 'i-ph-laptop-fill',
-  lifestyle: 'i-ph-coffee-fill',
-  travel: 'i-ph-airplane-fill',
-  food: 'i-ph-fork-knife-fill',
-  education: 'i-ph-book-fill',
-  health: 'i-ph-heartbeat-fill',
-  finance: 'i-ph-currency-dollar-fill',
-  entertainment: 'i-ph-film-strip-fill',
-  business: 'i-ph-briefcase-fill',
-  science: 'i-ph-flask-fill',
-}
 
 type LightboxImage = {
   src: string

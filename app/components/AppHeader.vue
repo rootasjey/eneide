@@ -43,6 +43,13 @@
           >
             {{ $t('nav.tags') }}
           </NuxtLink>
+          <NuxtLink
+            :to="localizedPath('/recommendations', $getLocale())"
+            class="block py-3 px-4 text-base hover:bg-gray-50 dark:hover:bg-gray-800 rounded transition-colors"
+            @click="closeMobileMenu"
+          >
+            {{ $t('nav.recommendations') }}
+          </NuxtLink>
           <template v-if="!isLoggedIn">
             <NuxtLink
               :to="localizedPath('/signin', $getLocale())"
@@ -105,7 +112,7 @@
               :href="s.url"
               target="_blank"
               rel="noopener"
-              class="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors"
+              class="site-interactive-hover text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors"
             >
               <div :class="`${iconClass(s.platform)} w-5 h-5`"></div>
             </a>
@@ -192,13 +199,13 @@
 
           <!-- Center: Navigation Links -->
           <nav class="site-header-nav flex items-center gap-8 text-sm font-medium justify-self-center">
-            <NuxtLink :to="localizedPath('/', $getLocale())" class="font-600 hover:underline decoration-offset-6 text-gray-700 dark:text-gray-100 hover:text-black dark:hover:text-white transition-colors">
+            <NuxtLink :to="localizedPath('/', $getLocale())" class="site-interactive-hover font-600 hover:underline decoration-offset-6 text-gray-700 dark:text-gray-100 hover:text-black dark:hover:text-white transition-colors">
               {{ $t('nav.home') }}
             </NuxtLink>
-            <NuxtLink :to="localizedPath('/posts', $getLocale())" class="font-600 hover:underline decoration-offset-6 text-gray-700 dark:text-gray-100 hover:text-black dark:hover:text-white transition-colors">
+            <NuxtLink :to="localizedPath('/posts', $getLocale())" class="site-interactive-hover font-600 hover:underline decoration-offset-6 text-gray-700 dark:text-gray-100 hover:text-black dark:hover:text-white transition-colors">
               {{ $t('nav.posts') }}
             </NuxtLink>
-            <NuxtLink :to="localizedPath('/projects', $getLocale())" class="font-600 hover:underline decoration-offset-6 text-gray-700 dark:text-gray-100 hover:text-black dark:hover:text-white transition-colors">
+            <NuxtLink :to="localizedPath('/projects', $getLocale())" class="site-interactive-hover font-600 hover:underline decoration-offset-6 text-gray-700 dark:text-gray-100 hover:text-black dark:hover:text-white transition-colors">
               {{ $t('nav.projects') }}
             </NuxtLink>
             <div
@@ -212,15 +219,17 @@
             >
               <button
                 type="button"
+                class="site-interactive-hover"
                 :aria-expanded="isPagesMenuOpen"
                 aria-haspopup="true"
                 @click="isPagesMenuOpen = true"
               >
-                {{ $t('nav.pages') }}
+                {{ pagesLabel }}
               </button>
-              <nav class="site-header-pages-menu" :aria-label="$t('nav.pages')">
+              <nav class="site-header-pages-menu" :aria-label="pagesLabel">
                 <NuxtLink :to="localizedPath('/about', $getLocale())">{{ $t('nav.about') }}</NuxtLink>
                 <NuxtLink :to="localizedPath('/tags', $getLocale())">{{ $t('nav.tags') }}</NuxtLink>
+                <NuxtLink :to="localizedPath('/recommendations', $getLocale())">{{ $t('nav.recommendations') }}</NuxtLink>
                 <NuxtLink :to="localizedPath('/authors', $getLocale())">{{ $t('nav.authors') }}</NuxtLink>
                 <NuxtLink :to="localizedPath('/credits', $getLocale())">{{ $t('footer.credits') }}</NuxtLink>
               </nav>
@@ -230,31 +239,47 @@
           <!-- Right: Auth + Search + Theme -->
           <div class="site-header-controls flex items-center gap-3 justify-self-end">
             <template v-if="!isLoggedIn">
-              <NuxtLink :to="localizedPath('/signin', $getLocale())" class="text-sm font-600 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
+              <NuxtLink :to="localizedPath('/signin', $getLocale())" class="site-interactive-hover text-sm font-600 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
                 {{ $t('common.signin') }}
               </NuxtLink>
             </template>
 
             <template v-else>
               <NDropdownMenu :items="dropdownItems">
-                <NButton btn="~" rounded="full" class="min-w-0 p-0">
+                <NButton btn="~" rounded="full" class="site-interactive-hover min-w-0 p-0">
                   <img v-if="currentUser.value?.avatar" :src="currentUser.value.avatar" alt="avatar" class="w-8 h-8 rounded-full" />
                   <NAvatar v-else :label="userInitial" avatar="solid-black" size="sm" class="important:font-600 font-title" />
                 </NButton>
               </NDropdownMenu>
             </template>
-            <NuxtLink :to="localizedPath('/donate', $getLocale())" class="uppercase px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-xs font-bold uppercase tracking-wide rounded-4 hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors">
+            <NuxtLink :to="localizedPath('/donate', $getLocale())" class="site-interactive-hover uppercase px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-xs font-bold uppercase tracking-wide rounded-4 hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors">
               {{ $t('nav.donate') }}
             </NuxtLink>
 
-            <NTooltip>
-              <template #content>
-                <span class="font-600">{{ $t('nav.searchTooltip') }}</span>
+            <NCombobox
+              :items="themeOptions"
+              by="value"
+              :model-value="currentThemeObj"
+              @update:model-value="onThemeChange"
+              size="xs"
+              class="w-auto"
+              :_combobox-trigger="{ class: 'site-interactive-hover w-auto min-w-10 border-none shadow-none hover:shadow-none focus:shadow-none', trailing: 'hidden' }"
+              :_combobox-list="{ class: 'w-44 min-w-44' }"
+              :_combobox-input="{ class: 'border-none' }"
+            >
+              <template #trigger="{ modelValue }">
+                <div :class="modelValue?.icon || 'i-ph-sun'" class="w-3.5 h-3.5 mx-auto" />
               </template>
-              <button @click="openSearch" class="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors" :aria-label="$t('nav.openSearch')">
-                <div class="i-ph-magnifying-glass-bold"></div>
-              </button>
-            </NTooltip>
+              <template #label="{ item }">
+                <div class="flex items-center gap-2 text-xs">
+                  <div :class="item.icon" class="w-4 h-4" />
+                  {{ item.label }}
+                </div>
+              </template>
+            </NCombobox>
+            <button type="button" @click="openSearch" class="site-interactive-hover site-header-search text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors" :aria-label="$t('nav.openSearch')">
+              <div class="i-ph-magnifying-glass w-3.5 h-3.5"></div>
+            </button>
             <NCombobox
               :items="localeOptions"
               by="code"
@@ -262,35 +287,15 @@
               @update:model-value="onLocaleChange"
               size="xs"
               class="w-auto"
-              :_combobox-trigger="{ class: 'w-auto min-w-0 border-none', trailing: 'hidden' }"
+              :_combobox-trigger="{ class: 'site-interactive-hover w-auto min-w-0 border-none shadow-none hover:shadow-none focus:shadow-none', trailing: 'hidden' }"
               :_combobox-list="{ class: 'w-auto cursor-pointer' }"
               :_combobox-input="{ class: 'border-none' }"
             >
               <template #trigger="{ modelValue }">
-                <span class="text-xs font-semibold uppercase tracking-wide">{{ modelValue?.code?.toUpperCase() || 'EN' }}</span>
+                <span class="text-sm font-bold uppercase tracking-wide">{{ modelValue?.code?.toUpperCase() || 'EN' }}</span>
               </template>
               <template #label="{ item }">
                 <span class="text-xs">{{ item.displayName }}</span>
-              </template>
-            </NCombobox>
-            <NCombobox
-              :items="themeOptions"
-              by="value"
-              :model-value="currentThemeObj"
-              @update:model-value="onThemeChange"
-              size="xs"
-              class="w-28"
-              :_combobox-trigger="{ class: 'w-auto min-w-10 border-none', trailing: 'hidden' }"
-              :_combobox-input="{ class: 'border-none' }"
-            >
-              <template #trigger="{ modelValue }">
-                <div :class="modelValue?.icon || 'i-ph-sun'" class="w-4 h-4 mx-auto" />
-              </template>
-              <template #label="{ item }">
-                <div class="flex items-center gap-2 text-xs">
-                  <div :class="item.icon" class="w-4 h-4" />
-                  {{ item.label }}
-                </div>
               </template>
             </NCombobox>
           </div>
@@ -363,6 +368,10 @@ async function handleLogout() {
 }
 
 const { $t, $ts, $getLocale, $switchLocale, $getLocales } = useI18n()
+const pagesLabel = computed(() => {
+  const translated = $t('nav.pages')
+  return translated.toLocaleLowerCase() === 'nav.pages' ? 'Pages' : translated
+})
 
 const localeOptions = computed(() => $getLocales().map(l => ({ code: l.code, displayName: l.displayName || l.code })))
 

@@ -20,7 +20,7 @@
     </div>
 
     <div class="home-featured-controls">
-      <div role="group" class="home-featured-control-group" :aria-label="$t('components.featuredPosts.heading')">
+      <div v-if="posts.length > 1" role="group" class="home-featured-control-group" :aria-label="$t('components.featuredPosts.heading')">
         <button type="button" :aria-label="$t('common.previous')" @click="scroll('left')">
           <span class="i-ph-caret-left" aria-hidden="true" />
         </button>
@@ -42,13 +42,16 @@ const track = ref<HTMLElement>()
 const activeIndex = ref(0)
 
 const { data } = await useFetch<Post[]>('/api/posts', {
-  query: { tag: 'featured post', limit: 5, language: $getLocale() },
+  query: { limit: 50, language: $getLocale(), exclude: ['top pinned', 'featured project', 'project'].join(',') },
 })
 
 const posts = computed(() => {
   const published = (data.value ?? []).map(post => enhancePost(post))
   if (published.length) {
-    return published.map(post => ({
+    const featured = published.filter(post => post.tags?.some(tag => tag.name.toLocaleLowerCase() === 'featured post'))
+    const remaining = published.filter(post => !featured.includes(post))
+
+    return [...featured, ...remaining].slice(0, 3).map(post => ({
       slug: post.slug,
       to: localizedPath(`/posts/${post.slug}`, $getLocale()),
       title: post.name,

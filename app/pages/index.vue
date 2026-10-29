@@ -12,16 +12,9 @@
     <div v-if="!isMobile">
       <section class="site-intro">
         <img class="site-intro-mark" src="/images/presentation/jc-pp.jpg" alt="Jérémie Corpinot" width="100" height="100">
-        <h1>{{ $t('nav.brand') }}</h1>
-        <p>{{ $t('pages.home.description') }}</p>
-        <p class="site-intro-links">
-          <NuxtLink :to="localizedPath('/posts', $getLocale())">{{ $t('nav.posts') }}</NuxtLink>
-          <span> · </span>
-          <NuxtLink :to="localizedPath('/projects', $getLocale())">{{ $t('nav.projects') }}</NuxtLink>
-          <span> · </span>
-          <NuxtLink :to="localizedPath('/about', $getLocale())">{{ $t('nav.about') }}</NuxtLink>
-        </p>
-        <a class="site-intro-subscribe" href="#newsletter">{{ $t('common.subscribe') }}</a>
+        <h1>Jérémie Corpinot</h1>
+        <p v-for="(paragraph, index) in homeIntroParagraphs" :key="index">{{ paragraph }}</p>
+        <a class="site-interactive-hover site-intro-subscribe" href="#newsletter">{{ $t('common.subscribe') }}</a>
       </section>
       <div class="animate-entrance"><FeaturedPostsGrid /></div>
       <div class="animate-entrance"><TrendingTagsCarousel /></div>
@@ -35,7 +28,6 @@
 
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue'
-import { localizedPath } from '~/utils/presentationPosts'
 
 const isMobile = useIsMobile()
 const config = useRuntimeConfig()
@@ -47,7 +39,8 @@ const mobileIndex = computed(() => {
 
 const ogImageUrl = `${config.public.siteUrl}/og/home/default.png`
 
-const { $t, $getLocale } = useI18n()
+const { $t } = useI18n()
+const homeIntroParagraphs = computed(() => $t('pages.home.intro').split(/\n\s*\n/).filter(Boolean))
 
 const { website } = useJsonld()
 

@@ -60,7 +60,7 @@ const { data, pending, error } = await useFetch<Post[]>('/api/posts', {
 
 const projects = computed(() => {
   if (data.value && data.value.length > 0) {
-    return data.value.map(p => enhancePost(p)).map(post => ({
+    return data.value.slice(0, 2).map(p => enhancePost(p)).map(post => ({
       slug: post.slug,
       to: localizedPath(`/posts/${post.slug}`, $getLocale()),
       title: post.name,

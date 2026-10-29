@@ -1,8 +1,8 @@
 <template>
   <section class="site-page site-demo-tag-index">
     <div class="site-demo-tag-content">
-      <CollectionIntro :title="$t('pages.tags.heading')" :description="$t('pages.tags.description')" />
-      <nav :aria-label="$t('pages.tags.heading')">
+      <CollectionIntro :title="copy.title" :description="copy.description" />
+      <nav :aria-label="copy.title">
         <NuxtLink
           v-for="item in tags"
           :key="item.name"
@@ -30,7 +30,11 @@
 <script setup lang="ts">
 import { localizedPath, PRESENTATION_POSTS } from '~/utils/presentationPosts'
 
-const { $getLocale, $t } = useI18n()
+type TagItem = { name: string; count: number }
+
+const props = defineProps<{ tags?: TagItem[] }>()
+
+const { $getLocale } = useI18n()
 const locale = computed(() => $getLocale() === 'fr' ? 'fr' : 'en')
 const tagAccents = [
   '#a467d5',
@@ -43,7 +47,24 @@ const tagAccents = [
   '#b8b8c0',
 ]
 const tagIcons = ['triangle', 'heart', 'crown', 'bookmark'] as const
+const copy = computed(() => locale.value === 'fr'
+  ? {
+      title: 'Thèmes & sujets',
+      description: 'Un index des thèmes qui reviennent dans le journal, des systèmes d’interface et du langage visuel à la direction créative, aux processus et à l’avenir des expériences numériques.',
+    }
+  : {
+      title: 'Topics & Threads',
+      description: 'An index of recurring themes across the journal, from interface systems and visual language to creative direction, process, and the future of digital experiences.',
+    })
 const tags = computed(() => {
+  if (props.tags) {
+    return props.tags.map((item, index) => ({
+      ...item,
+      color: tagAccents[index % tagAccents.length],
+      icon: tagIcons[index],
+    }))
+  }
+
   const posts = PRESENTATION_POSTS.filter(post => !post.isProject)
   return [...new Set(posts.map(post => post.tag[locale.value]))].map((name, index) => ({
     name,

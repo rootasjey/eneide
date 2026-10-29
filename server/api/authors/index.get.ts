@@ -1,4 +1,5 @@
 import { db, schema } from 'hub:db'
+import { sql } from 'drizzle-orm'
 
 export default defineEventHandler(async () => {
   const rows = await db
@@ -11,6 +12,12 @@ export default defineEventHandler(async () => {
       job: schema.users.job,
       location: schema.users.location,
       socials: schema.users.socials,
+      postCount: sql<number>`(
+        SELECT COUNT(*)
+        FROM ${schema.posts}
+        WHERE ${schema.posts.user_id} = ${schema.users.id}
+          AND ${schema.posts.status} = 'published'
+      )`,
     })
     .from(schema.users)
     .orderBy(schema.users.name)

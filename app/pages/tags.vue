@@ -1,7 +1,8 @@
 <template>
   <Transition name="page" appear>
     <div>
-      <PresentationTagIndex v-if="!isAdmin && !tagsPending && !tagsError && tags.length === 0" />
+      <PresentationTagIndex v-if="!isAdmin && !tagsPending && !tagsError && publicTags.length" :tags="publicTags" />
+      <PresentationTagIndex v-else-if="!isAdmin && !tagsPending && !tagsError" />
       <section v-else class="site-page site-tags py-12 md:py-16 bg-white dark:bg-gray-950">
       <div class="container mx-auto px-6 max-w-7xl">
         <h1 class="site-display-heading text-3xl md:text-4xl font-serif font-800 mb-2">{{ $t('pages.tags.heading') }}</h1>
@@ -155,6 +156,11 @@
       </div>
     </section>
 
+      <div v-if="!isAdmin && !tagsPending && !tagsError" class="site-public-archive-footer site-public-tags-footer">
+        <NewsletterSubscription />
+        <HomeRecommendations />
+      </div>
+
   <ClientOnly>
     <TagsDrawer
       v-model:open="tagsDrawerOpen"
@@ -216,6 +222,7 @@ import { ref, computed, watch, onUnmounted } from 'vue'
 import type { ApiTag } from '~~/shared/types/tags'
 import type { Post as ApiPost } from '~~/shared/types/post'
 import { useHeaderToolbarOffset } from '~/composables/useHeaderToolbarOffset' 
+import { EXCLUDED_TAGS } from '~/utils/tagConstants'
 
 const { enhancePost } = usePost()
 
@@ -231,7 +238,6 @@ const { data: tagsData, pending: tagsPending, error: tagsError } = await useFetc
 const tags = ref<ApiTag[]>(tagsData.value ?? [])
 // keep tags ref in sync with fetched data (works on both server and client)
 watch(tagsData, (v) => { tags.value = v ?? [] })
-
 // Currently selected tag (may be set from route.query.tag)
 const selectedTag = ref<string | null>(null)
 
@@ -243,7 +249,7 @@ const ogImageUrl = computed(() => {
   return `${config.public.siteUrl}/og/home/default.png` // fallback to home OG
 })
 
-const { $t } = useI18n()
+const { $t, $getLocale } = useI18n()
 useSeoMeta({
   title: () => selectedTag.value ? `#${selectedTag.value} - ${$t('seo.siteName')}` : `${$t('pages.tags.heading')} - ${$t('seo.siteName')}`,
   description: () => selectedTag.value ? `${$t('pages.tags.postsUnavailableDesc')} ${selectedTag.value}` : $t('pages.tags.description'),
@@ -274,6 +280,25 @@ watch([() => tags.value.length, () => route.query.tag], ([len, t]) => {
 // Posts
 const { data: postsData, pending: postsPending, error: postsError } = await useFetch<ApiPost[]>('/api/posts')
 const posts = computed(() => (postsData.value ?? []).map(p => enhancePost(p)))
+const publicTags = computed(() => {
+  const hiddenNames = new Set([...EXCLUDED_TAGS, 'project', 'hero'])
+  const locale = $getLocale()
+  const counts = new Map<string, number>()
+
+  for (const post of posts.value) {
+    if (post.language !== locale) continue
+    for (const tag of post.tags ?? []) {
+      const key = tag.name.toLocaleLowerCase()
+      counts.set(key, (counts.get(key) ?? 0) + 1)
+    }
+  }
+
+  return tags.value
+    .map(tag => ({ ...tag, count: counts.get(tag.name.trim().toLocaleLowerCase()) ?? 0 }))
+    .filter(tag => tag.count > 0 && !hiddenNames.has(tag.name.trim().toLocaleLowerCase()))
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+    .map(({ name, count }) => ({ name, count }))
+})
 
 // UI state
 const search = ref(route.query.q ? String(route.query.q) : '')

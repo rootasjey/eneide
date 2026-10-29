@@ -1,7 +1,7 @@
 <template>
   <section class="site-home-recommendations">
     <div class="site-home-recommendations-inner">
-      <h2>{{ $t('components.homeRecommendations.heading') }}</h2>
+      <h2 v-if="showHeading">{{ heading }}</h2>
       <div class="site-home-recommendations-grid">
         <a
           v-for="item in recommendations"
@@ -24,7 +24,15 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+
 const { $getLocale, $t } = useI18n()
+withDefaults(defineProps<{ showHeading?: boolean }>(), { showHeading: true })
+const heading = computed(() => {
+  const translated = $t('components.homeRecommendations.heading')
+  if (translated.toLocaleLowerCase() !== 'components.homerecommendations.heading') return translated
+  return $getLocale() === 'fr' ? 'Recommandations' : 'Recommendations'
+})
 const recommendations = computed(() => {
   const french = $getLocale() !== 'en'
   return [

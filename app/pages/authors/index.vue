@@ -1,56 +1,85 @@
 <template>
-  <section class="site-page site-author-index py-14 md:py-18 bg-white dark:bg-gray-950">
-    <div class="container mx-auto px-6 max-w-6xl space-y-8">
-      <header class="site-page-heading space-y-2">
-        <p class="text-sm uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">{{ $t('pages.authors.heading') }}</p>
-        <h1 class="text-3xl md:text-4xl font-serif font-800">{{ $t('pages.authors.title') }}</h1>
-        <p class="text-gray-600 dark:text-gray-400 max-w-3xl">{{ $t('pages.authors.description') }}</p>
-      </header>
+  <section class="site-page site-author-index">
+    <div>
+      <CollectionIntro :title="copy.title" :description="copy.description" />
 
-      <div v-if="pending" class="grid gap-6 md:grid-cols-2">
-        <div v-for="i in 4" :key="i" class="p-6 rounded-2xl bg-gray-100 dark:bg-gray-900 animate-pulse h-36"></div>
+      <div v-if="pending" class="site-author-index-list" aria-label="Loading authors">
+        <div v-for="i in 2" :key="i" class="site-author-index-skeleton" />
       </div>
 
-      <div v-else-if="error" class="text-red-600 dark:text-red-400">{{ error }}</div>
+      <p v-else-if="error" class="site-author-index-message">{{ $t('pages.authors.unavailable') }}</p>
 
-      <div v-else class="grid gap-6 md:grid-cols-2">
+      <div v-else class="site-author-index-list">
         <NuxtLink
           v-for="author in authors"
           :key="author.id"
-          :to="`/authors/${author.slug || author.id}`"
-          class="p-6 rounded-2xl border border-gray-200 dark:border-gray-800 hover:border-gray-400 dark:hover:border-gray-600 transition-colors flex gap-4 bg-white dark:bg-gray-900"
+          :to="localizedPath(`/authors/${author.slug || author.id}`, locale)"
+          class="site-author-index-entry"
         >
-          <NuxtImg provider="hubblob" v-if="author.avatar" :src="author.avatar" :alt="author.name" class="w-12 h-12 rounded-full object-cover flex-none" />
-          <div v-else class="w-16 h-16 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-lg font-semibold flex-none">
+          <NuxtImg
+            v-if="author.avatar"
+            provider="hubblob"
+            :src="author.avatar"
+            :alt="author.name"
+            class="site-author-index-avatar"
+            width="104"
+            height="104"
+          />
+          <span v-else class="site-author-index-avatar site-author-index-avatar--empty" aria-hidden="true">
             {{ author.name.charAt(0).toUpperCase() }}
-          </div>
+          </span>
 
-          <div class="space-y-1 min-w-0">
-            <div class="flex items-center gap-2">
-              <h2 class="text-lg font-semibold leading-tight">{{ author.name }}</h2>
-              <span v-if="author.job" class="text-xs text-gray-500 dark:text-gray-400">— {{ author.job }}</span>
-            </div>
-            <p v-if="author.biography" class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 whitespace-normal break-words">{{ author.biography }}</p>
-            <p v-if="author.location" class="text-xs text-gray-500 dark:text-gray-400">{{ author.location }}</p>
-          </div>
+          <span class="site-author-index-copy">
+            <span class="site-author-index-name">{{ author.name }}</span>
+            <span v-if="author.biography" class="site-author-index-biography">{{ author.biography }}</span>
+            <span class="site-author-index-count">
+              {{ author.postCount }}
+              {{ locale === 'fr'
+                ? (author.postCount === 1 ? 'article' : 'articles')
+                : (author.postCount === 1 ? 'post' : 'posts') }}
+            </span>
+          </span>
         </NuxtLink>
+
+        <p v-if="!authors.length" class="site-author-index-message">
+          {{ locale === 'fr' ? 'Aucun auteur à afficher pour le moment.' : 'There are no authors to display yet.' }}
+        </p>
       </div>
     </div>
   </section>
+
+  <div class="site-public-archive-footer site-public-authors-footer">
+    <NewsletterSubscription />
+    <HomeRecommendations />
+  </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { localizedPath } from '~/utils/presentationPosts'
 
 type Author = {
   id: number
   name: string
   slug?: string
-  avatar: string
-  biography: string
-  job: string
-  location: string
+  avatar: string | null
+  biography: string | null
+  job: string | null
+  location: string | null
+  postCount: number
 }
+
+const { $getLocale } = useI18n()
+const locale = computed(() => $getLocale() === 'fr' ? 'fr' : 'en')
+const copy = computed(() => locale.value === 'fr'
+  ? {
+      title: 'Contributeurs & collaborateurs',
+      description: 'Un cercle choisi de rédacteurs, designers et chercheurs dont les perspectives nourrissent ce journal. Découvrez les personnes derrière les essais, les notes et les projets publiés ici.',
+    }
+  : {
+      title: 'Contributors & Collaborators',
+      description: 'A curated circle of writers, designers, and researchers whose perspectives shape this journal. Explore the people behind the essays, notes, and selected work published here.',
+    })
 
 const { data, pending, error } = await useFetch<Author[]>('/api/authors')
 const authors = computed(() => data.value ?? [])

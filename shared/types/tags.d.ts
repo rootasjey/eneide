@@ -10,6 +10,7 @@ export type ApiTag = {
   description: string
   created_at: string
   updated_at: string
+  count?: number
 }
 
 /**

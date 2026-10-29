@@ -5,7 +5,7 @@
       <h2>
         {{ $t('components.newsletter.heading') }}
       </h2>
-      <p class="site-newsletter-description">{{ $t('components.newsletter.description') }}</p>
+      <p class="site-newsletter-description">{{ description }}</p>
       <form class="max-w-lg mx-auto" @submit.prevent="handleSubscribe">
         <div class="flex sm:flex-row gap-3 items-stretch">
           <div class="flex-1 relative">
@@ -37,8 +37,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-const { $t } = useI18n()
+import { computed, ref } from 'vue'
+const { $t, $getLocale } = useI18n()
+const description = computed(() => {
+  const translated = $t('components.newsletter.description')
+  if (translated.toLocaleLowerCase() !== 'components.newsletter.description') return translated
+  return $getLocale() === 'fr'
+    ? 'Recevez les nouveaux articles, des idées à explorer et des nouvelles des projets du moment. Une lettre occasionnelle, sans spam.'
+    : 'Get new writing, ideas to explore, and occasional notes on current projects. No spam, just a thoughtful update.'
+})
 
 const email = ref('')
 const loading = ref(false)

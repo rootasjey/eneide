@@ -3,10 +3,9 @@
   .site-shell .site-reading-progress * { transition-duration: .01ms !important; }
 }
 @media (max-width: 640px) {
-  .site-shell .site-post-author-card { grid-template-columns: 40px minmax(0, 1fr); gap: 12px; padding: 16px; }
-  .site-shell .site-post > section > .container > .site-post-author-card { padding-inline: 16px; }
-  .site-shell .site-post-author-card > img { width: 40px; height: 40px; }
-  .site-shell .site-post-author-card .site-post-share-actions { grid-column: 1 / -1; justify-content: flex-start; }
+  .site-shell .site-post > section.site-post-end > .container > .site-post-author-card { padding: 16px; }
+  .site-shell .site-post-author-heading { gap: 10px; }
+  .site-shell .site-post-share-row { margin-top: 16px; }
   .site-shell .site-post-related-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
 }
 .site-shell .site-post-card { margin-bottom: 16px; }
@@ -57,11 +56,27 @@
   .site-shell .site-project-index { padding-top: 40px !important; }
   .site-shell .site-collection-intro { margin-bottom: 44px; }
   .site-shell .site-collection-avatar { width: 72px; height: 72px; margin-bottom: 28px; }
-  .site-shell .site-project-index .site-demo-projects,
+  .site-shell .site-project-index .site-collection-avatar,
+  .site-shell .site-post-index .site-collection-avatar { margin-bottom: 32px; }
+  .site-shell .site-post-index .site-collection-intro { margin-bottom: 52px; }
+  .site-shell .site-project-index .site-collection-intro { margin-bottom: 52px; }
+  .site-shell .site-project-index .site-demo-projects { width: 100%; max-width: 100%; margin: 0; }
   .site-shell .site-demo-post-grid { width: 100%; max-width: 100%; margin: 0 0 48px; }
+  .site-shell .site-project-index-footer .home-newsletter { margin-top: 80px; }
   .site-shell .site-demo-tag-index { padding-top: 40px; }
   .site-shell .site-demo-tag-content .site-collection-intro { margin-bottom: 44px; }
   .site-shell .site-demo-tag-content nav { width: 100%; max-width: 100%; margin-left: 0; }
+  .site-shell .site-author-index { padding-top: 40px; }
+  .site-shell .site-author-index .site-collection-intro { margin-bottom: 56px; }
+  .site-shell .site-author-index .site-collection-avatar { margin-bottom: 32px; }
+  .site-shell .site-author-index-list { gap: 48px; }
+  .site-shell .site-author-index-entry { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .site-shell .site-author-index-avatar { width: 96px; height: 96px; margin-bottom: 24px; }
+  .site-shell .site-public-authors-footer .home-newsletter { margin-top: 80px; }
+  .site-shell .site-recommendations-page { padding-top: 40px; }
+  .site-shell .site-recommendations-page .site-collection-intro { margin-bottom: 64px; }
+  .site-shell .site-recommendations-page .site-collection-avatar { margin-bottom: 32px; }
+  .site-shell .site-recommendations-newsletter .home-newsletter { margin-top: 100px; }
 }
 
 @media (max-width: 600px) {
@@ -71,6 +86,12 @@
   .site-shell .site-home-recommendations-grid { grid-template-columns: minmax(0, 1fr); }
   .site-shell .site-project-index .site-demo-projects,
   .site-shell .site-demo-post-grid { grid-template-columns: minmax(0, 1fr); }
+  .site-shell .site-project-index .site-demo-projects { gap: 28px; }
+  .site-shell .site-demo-post { grid-template-columns: 96px minmax(0, 1fr); gap: 14px; }
+  .site-shell .site-demo-post-image { width: 96px; height: 96px; }
+  .site-shell .site-credits { padding-block: 40px 48px; }
+  .site-shell .site-credits-intro { margin-bottom: 40px; }
+  .site-shell .site-credits-section ul:not(.site-credits-media-list) { grid-template-columns: minmax(0, 1fr); }
   .site-shell .home-featured-card .home-featured-image { border-radius: 16px; }
   .site-shell .home-featured-posts { padding-bottom: 44px; }
   .site-shell .home-trending-tags { margin-top: 40px; padding: 0; }
@@ -86,6 +107,10 @@
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .site-shell .site-intro-subscribe { transition: border-color 160ms ease; }
+  .site-shell .site-intro-subscribe:hover,
+  .site-shell .site-intro-subscribe:focus-visible,
+  .site-shell .site-intro-subscribe:active { transform: none; }
   .animate-entrance, .animate-entrance-item { animation: none !important; }
   .site-shell .home-featured-card .home-featured-image img { transition: none; }
   .site-shell .home-trending-tags-heading,

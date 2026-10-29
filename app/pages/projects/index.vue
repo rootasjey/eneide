@@ -54,8 +54,8 @@
 
       <CollectionIntro
         v-if="activeTab === 'published' && !isAdmin"
-        :title="$t('pages.projects.heading')"
-        :description="$t('pages.projects.description')"
+        :title="publicIntroCopy.title"
+        :description="publicIntroCopy.description"
       />
 
       <!-- Admin-only project controls -->
@@ -129,7 +129,7 @@
 
       <!-- Projects list (grid cards & list view) -->
       <PostsList
-        v-if="activeTab === 'published' && posts && posts.length > 0"
+        v-if="isAdmin && activeTab === 'published' && posts && posts.length > 0"
         :posts="enhancedPosts"
         :viewMode="viewMode"
         :isAdmin="isAdmin"
@@ -145,13 +145,16 @@
         :entered="entered"
       />
 
-      <section v-else-if="activeTab === 'published' && !isLoadingVisible && demoProjects.length" class="site-demo-projects">
-        <NuxtLink v-for="project in demoProjects" :key="project.slug" :to="project.to" class="site-demo-project">
+      <section v-else-if="activeTab === 'published' && !isLoadingVisible && publicProjects.length" class="site-demo-projects">
+        <NuxtLink v-for="project in publicProjects" :key="project.slug" :to="project.to" class="site-demo-project">
           <div class="site-demo-project-image">
             <PostImage :src="project.image" :alt="project.title" />
           </div>
           <h2>{{ project.title }}</h2>
-          <p>{{ project.description }}</p>
+          <p class="site-demo-project-meta">
+            <span>{{ project.category }}</span>
+            <time :datetime="project.date">{{ project.year }}</time>
+          </p>
         </NuxtLink>
       </section>
 
@@ -227,7 +230,10 @@
     </div>
   </div>
 
-
+  <div v-if="!isAdmin && activeTab === 'published'" class="site-public-archive-footer site-project-index-footer">
+    <NewsletterSubscription />
+    <HomeRecommendations />
+  </div>
 
   <!-- Confirm Delete Modal -->
   <NDialog v-model:open="confirmDialogOpen">
@@ -462,15 +468,47 @@ onUnmounted(() => {
 
 const { $t, $getLocale } = useI18n()
 
+const publicIntroCopy = computed(() => $getLocale() === 'fr'
+  ? {
+      title: 'Projets sélectionnés',
+      description: 'Études de cas, explorations produit et systèmes visuels développés au fil de projets indépendants et collaboratifs. Un aperçu du travail guidé par la clarté, la retenue et une réflexion à long terme.',
+    }
+  : {
+      title: 'Selected Works',
+      description: 'Case studies, product explorations, and visual systems developed across independent and collaborative projects. A focused look at work shaped by clarity, restraint, and long-term thinking.',
+    })
+
 const demoProjects = computed(() => {
   const locale = $getLocale() === 'fr' ? 'fr' : 'en'
   return PRESENTATION_POSTS.filter(post => post.isProject).map(post => ({
     slug: post.slug,
     to: localizedPath(`/preview/${post.slug}`, $getLocale()),
     title: post.title[locale],
-    description: post.description[locale],
     image: post.image,
+    category: post.tag[locale],
+    date: post.publishedAt,
+    year: new Date(post.publishedAt).getFullYear(),
   }))
+})
+
+const publicProjects = computed(() => {
+  if (!enhancedPosts.value.length) return demoProjects.value
+
+  const locale = $getLocale() === 'fr' ? 'fr' : 'en'
+  return enhancedPosts.value.map(post => {
+    const category = post.tags?.find(tag => !projectTags.includes(tag.name.toLowerCase()))?.name
+    const date = post.publishedAt || post.createdAt
+
+    return {
+      slug: post.slug,
+      to: localizedPath(`/posts/${post.slug}`, locale),
+      title: post.name,
+      image: post.image?.src || '',
+      category: category || (locale === 'fr' ? 'Projet' : 'Project'),
+      date,
+      year: date ? new Date(date).getFullYear() : '',
+    }
+  })
 })
 const config = useRuntimeConfig()
 

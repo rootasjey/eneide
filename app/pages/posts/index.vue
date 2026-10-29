@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen py-6 site-post-index">
+  <div class="min-h-screen py-6 site-post-index" :class="{ 'site-post-index--public': !isAdmin && activeTab === 'published' }">
     <div class="container mx-auto px-4 md:px-8">
       <!-- Admin Toolbar (sticky top) -->
       <ClientOnly>
@@ -92,8 +92,8 @@
       
       <CollectionIntro
         v-if="activeTab === 'published' && !isAdmin"
-        :title="$t('pages.posts.publishedHeading')"
-        :description="$t('pages.posts.publishedDescription')"
+        :title="publicArchiveCopy.title"
+        :description="publicArchiveCopy.description"
       />
 
       <!-- Admin-only post controls -->
@@ -164,7 +164,7 @@
       </div>
 
       <PostsList
-        v-if="activeTab === 'published' && posts && posts.length > 0"
+        v-if="isAdmin && activeTab === 'published' && posts && posts.length > 0"
         :posts="enhancedPosts"
         :viewMode="viewMode"
         :isAdmin="isAdmin"
@@ -180,6 +180,18 @@
         :linkForPost="(p) => `/posts/${p.slug}`"
         :entered="entered"
       />
+
+      <PublicPostArchive
+        v-else-if="!isAdmin && activeTab === 'published' && posts && !publicTagFilter"
+        :posts="publicArchivePosts"
+      />
+
+      <div v-else-if="!isAdmin && activeTab === 'published' && publicTagFilter" class="site-public-tag-empty">
+        <p v-if="publicArchivePosts.length">{{ publicArchivePosts.length }} {{ publicArchivePosts.length === 1 ? 'article' : 'articles' }} — {{ publicTagFilter }}</p>
+        <p v-else>{{ $getLocale() === 'fr' ? 'Aucun article pour ce thème.' : 'No articles for this topic.' }}</p>
+        <NuxtLink :to="localizedPath('/posts', $getLocale())">{{ $getLocale() === 'fr' ? 'Voir tous les articles' : 'View all posts' }}</NuxtLink>
+        <PublicPostArchive v-if="publicArchivePosts.length" :posts="publicArchivePosts" />
+      </div>
 
       <PresentationPostGrid
         v-else-if="activeTab === 'published' && !isLoadingVisible"
@@ -260,6 +272,11 @@
     </div>
   </div>
 
+  <div v-if="!isAdmin && activeTab === 'published'" class="site-public-archive-footer">
+    <NewsletterSubscription />
+    <HomeRecommendations />
+  </div>
+
   <EditPostDialog v-model="editDialogOpen" :post="postToEdit" @saved="onPostSaved" />
 
   <!-- Confirm Delete Modal -->
@@ -287,11 +304,14 @@ import { onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { usePostsApi } from '~/composables/usePostsApi'
 import TypewriterText from '~/components/TypewriterText.vue'
+import PublicPostArchive from '~/components/PublicPostArchive.vue'
 import { useHeaderToolbarOffset } from '~/composables/useHeaderToolbarOffset' 
 import EditPostDialog from '~/components/EditPostDialog.vue' 
 import PresentationPostGrid from '~/components/PresentationPostGrid.vue'
+import { localizedPath } from '~/utils/presentationPosts'
 
 const router = useRouter()
+const route = useRoute()
 const confirmDialogOpen = ref(false)
 const postPendingDelete = ref<Post | null>(null)
 const deleting = ref(false)
@@ -451,6 +471,15 @@ async function onImportFileSelected(e: Event) {
 
 const { $t, $getLocale } = useI18n()
 const config = useRuntimeConfig()
+const publicArchiveCopy = computed(() => $getLocale() === 'fr'
+  ? {
+      title: 'Le journal',
+      description: 'Essais, observations et notes de travail sur le design, la création et le langage des produits numériques. C’est ici que les idées prennent forme avant de devenir pratique.',
+    }
+  : {
+      title: 'The Journal',
+      description: 'Essays, observations, and process notes on design, creative work, and the evolving language of digital products. This is where ideas take shape before they become practice.',
+    })
 
 const showAllLanguages = useStorage('posts.showAllLanguages', false)
 
@@ -493,6 +522,15 @@ function setTab(tab: 'published'|'drafts'|'archived') {
 const isAdmin = computed(() => loggedIn.value && user.value?.role === 'admin')
 
 const enhancedPosts = computed(() => posts.value ? posts.value.map(p => enhancePost(p)) : [])
+const publicTagFilter = computed(() => {
+  const tag = route.query.tag
+  return typeof tag === 'string' && tag.trim() ? tag.trim() : ''
+})
+const publicArchivePosts = computed(() => {
+  if (!publicTagFilter.value) return enhancedPosts.value
+  const tag = publicTagFilter.value.toLocaleLowerCase()
+  return enhancedPosts.value.filter(post => post.tags?.some(item => item.name.toLocaleLowerCase() === tag))
+})
 const enhancedDrafts = computed(() => drafts.value ? drafts.value.map(p => enhancePost(p)) : [])
 const enhancedArchived = computed(() => archived.value ? archived.value.map(p => enhancePost(p)) : [])
 

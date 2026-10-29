@@ -1,6 +1,6 @@
 {
   "name": "eneide",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "type": "module",
   "private": true,
   "workspaces": [
@@ -9,6 +9,7 @@
   "scripts": {
     "build": "NODE_OPTIONS=\"--max-old-space-size=8192\" nuxt build",
     "dev": "nuxt dev",
+    "design:compare": "node ./scripts/design-compare.mjs",
     "dev:clean": "rm -rf .nuxt .output node_modules/.vite && nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",

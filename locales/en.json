@@ -55,11 +55,12 @@
     "about": "About",
     "authors": "Authors",
     "tags": "Tags",
+    "recommendations": "Recommendations",
     "pages": "Pages",
     "projects": "Projects",
     "posts": "Posts",
     "membership": "Membership",
-    "brand": "corpinot",
+    "brand": "gg corp",
     "donate": "Donate",
     "toggleTheme": "Toggle theme",
     "openSearch": "Open search",
@@ -92,9 +93,9 @@
     "debugInfo": "Debug Info (Admin)"
   },
   "seo": {
-    "defaultTitle": "Corpinot - Personal Thoughts, Shared Openly",
-    "defaultDescription": "Personal thoughts shared openly on Corpinot",
-    "siteName": "Corpinot"
+    "defaultTitle": "GG CORP - Personal Thoughts, Shared Openly",
+    "defaultDescription": "Personal thoughts shared openly on GG CORP",
+    "siteName": "GG CORP"
   },
   "components": {
     "readingProgress": {
@@ -105,7 +106,9 @@
       "label": "Share this article",
       "x": "Share on X",
       "facebook": "Share on Facebook",
-      "email": "Share by email",
+      "linkedin": "Share on LinkedIn",
+      "bluesky": "Share on Bluesky",
+      "pinterest": "Share on Pinterest",
       "copy": "Copy link",
       "copied": "Link copied",
       "copyFailed": "Could not copy link"
@@ -173,7 +176,7 @@
       "unavailable": "Top pinned posts unavailable",
       "unavailableDesc": "We couldn't fetch pinned content. Please try again later.",
       "placeholderImgAlt": "Placeholder image",
-      "dummyTitle1": "Welcome to Corpinot",
+      "dummyTitle1": "Welcome to my website",
       "dummyTitle2": "Create your first post",
       "dummyTitle3": "Add a cover image",
       "dummyTitle4": "Use tags to organize",

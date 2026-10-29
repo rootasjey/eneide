@@ -4,27 +4,27 @@ import { blob } from 'hub:blob'
 import { db } from 'hub:db'
 import { renderOgHtml } from '~~/server/utils/og'
 import { serveImageUrl } from '~~/server/utils/serveImageUrl'
-import { posts, users, tags, post_tags } from '~~/server/db/schema' 
+import { posts, users, tags, post_tags } from '~~/server/db/schema'
 
 /**
  * OG Image Generator Route
- * 
+ *
  * Generates Open Graph images dynamically using Cloudflare Browser Rendering.
  * Supports: home, post, author, tag pages.
- * 
+ *
  * URLs:
  * - /og-home-default.png
  * - /og-post-{slug}.png
  * - /og-author-{authorName}.png
  * - /og-tag-{tagName}.png
- * 
+ *
  * Images are cached in R2 at og/{type}/{slug} and served with strong cache headers.
  */
 export default defineEventHandler(async (event) => {
   // Get route params
   const type = getRouterParam(event, 'type')
   const slug = getRouterParam(event, 'slug')
-  
+
   if (!type || !slug) {
     throw createError({
       statusCode: 400,
@@ -61,12 +61,12 @@ export default defineEventHandler(async (event) => {
   try {
     // Check if image exists in R2 cache
     const cachedImage = await blob.head(cacheKey)
-    
+
     // Serve cached image if it exists and is fresh (< 7 days)
     if (cachedImage) {
       const cacheAge = Date.now() - new Date(cachedImage.uploadedAt).getTime()
       const maxAge = 7 * 24 * 60 * 60 * 1000 // 7 days
-      
+
       if (cacheAge < maxAge) {
         return blob.serve(event, cacheKey)
       }
@@ -103,18 +103,18 @@ export default defineEventHandler(async (event) => {
 async function generateOgImage(type: string, slug: string, dataParam?: any): Promise<Buffer> {
   // Use provided data if available (we may have already fetched it to compute cache keys)
   const data = dataParam ?? await fetchOgData(type, slug)
-  
+
   // Render HTML template
-  const html = renderOgHtml(type, data) 
+  const html = renderOgHtml(type, data)
 
   try {
     // Use Cloudflare Browser to screenshot
     const { browser, page } = await hubBrowser({ keepAlive: 30 })
-    
+
     try {
       await page.setViewport({ width: 1200, height: 630 })
       await page.setContent(html, { waitUntil: 'networkidle0' })
-      
+
       const screenshot = await page.screenshot({
         type: 'png',
         clip: { x: 0, y: 0, width: 1200, height: 630 }
@@ -142,17 +142,17 @@ async function generateFallbackImage(type: string, data: any): Promise<Buffer> {
   // Dynamically import Jimp and handle ESM/CJS differences safely
   const jimpModule = await import('jimp') as any
   const Jimp = jimpModule.default ?? jimpModule.Jimp ?? jimpModule
-  
+
   // Create 1200x630 image with gradient-like effect (dark background)
   const image = new Jimp(1200, 630, 0x0b1220ff)
-  
+
   // Load font
   const font = await Jimp.loadFont(Jimp.FONT_SANS_64_WHITE)
   const fontSmall = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE)
-  
+
   let title = ''
   let subtitle = ''
-  
+
   switch (type) {
     case 'home':
       // For home fallback, keep minimal footer: only post count + site
@@ -172,7 +172,7 @@ async function generateFallbackImage(type: string, data: any): Promise<Buffer> {
       subtitle = data.description || ''
       break
   }
-  
+
   // Add text
   if (type === 'home') {
     const postCountLabel = (data?.postCount || 0) + ' posts'
@@ -185,7 +185,7 @@ async function generateFallbackImage(type: string, data: any): Promise<Buffer> {
     if (subtitle) image.print(fontSmall, 80, 320, subtitle, 1040)
     image.print(fontSmall, 80, 550, 'corpinot.cc', 1040)
   }
-  
+
   return image.getBufferAsync(Jimp.MIME_PNG)
 }
 
@@ -200,7 +200,7 @@ async function fetchOgData(type: string, slug: string): Promise<any> {
         .select({ count: count() })
         .from(posts)
         .where(eq(posts.status, 'published'))
-      
+
       return {
         title: 'Corpinot',
         description: 'Personal thoughts shared openly',

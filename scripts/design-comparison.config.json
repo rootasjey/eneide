@@ -1,0 +1,35 @@
+{
+  "posts": {
+    "description": "Public posts archive compared with the Core journal.",
+    "localUrl": "http://localhost:3000/posts",
+    "referenceUrl": "https://core.primedirection.org/blog/",
+    "viewport": {
+      "width": 1496,
+      "height": 850
+    },
+    "elements": [
+      {
+        "name": "Article title",
+        "local": ".site-public-post-title",
+        "reference": ".card h2, .card h3"
+      },
+      {
+        "name": "Publication date",
+        "local": ".site-public-post-meta time",
+        "reference": ".card .card-meta time"
+      },
+      {
+        "name": "Tag",
+        "local": ".site-public-post-tag",
+        "reference": "a[href='/tag/creative/']"
+      }
+    ],
+    "hoverStates": [
+      {
+        "name": "Tag hover",
+        "local": ".site-public-post-tag",
+        "reference": "a[href='/tag/creative/']"
+      }
+    ]
+  }
+}

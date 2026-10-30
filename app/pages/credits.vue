@@ -1,156 +1,136 @@
 <template>
-  <section class="site-page site-credits">
-    <header class="site-credits-intro animate-entrance" style="animation-delay:80ms;">
-      <h1 class="site-display-heading font-title text-4xl font-800 tracking-tight">{{ $t('pages.credits.heading') }}</h1>
-      <p class="font-body">
+  <main class="site-page site-credits">
+    <header class="site-credits-header">
+      <h1>{{ $t('pages.credits.heading') }}</h1>
+      <p class="site-credits-description">
         {{ $t('pages.credits.description') }}
       </p>
     </header>
 
     <div class="site-credits-sections">
-      <!-- Frameworks & Core -->
-      <section class="site-credits-section animate-entrance" style="animation-delay:160ms;">
-        <div class="p-6 sm:p-8">
-          <h2 class="text-xl font-700 mb-4">{{ $t('pages.credits.frameworksAndCore') }}</h2>
-          <ul class="grid sm:grid-cols-2 gap-3 font-body font-500 text-gray-700 dark:text-gray-200">
-            <li>
-              <a href="https://nuxt.com" target="_blank" rel="noopener" class="font-700 hover:underline decoration-offset-4 hover:text-primary-600">Nuxt 4</a>
-              <span class="color-gray-400"> — app framework (server routes via Nitro)</span>
-            </li>
-            <li>
-              <a href="https://vuejs.org" target="_blank" rel="noopener" class="font-700 hover:underline decoration-offset-4 hover:text-primary-600">Vue 3</a>
-              <span class="color-gray-400"> — UI runtime</span>
-            </li>
-            <li>
-              <a href="https://pinia.vuejs.org" target="_blank" rel="noopener" class="font-700 hover:underline decoration-offset-4 hover:text-primary-600">Pinia</a>
-              <span class="color-gray-400"> — state management</span>
-            </li>
-            <li>
-              <a href="https://router.vuejs.org" target="_blank" rel="noopener" class="font-700 hover:underline decoration-offset-4 hover:text-primary-600">Vue Router</a>
-              <span class="color-gray-400"> — routing</span>
-            </li>
-            <li>
-              <a href="https://image.nuxt.com" target="_blank" rel="noopener" class="font-700 hover:underline decoration-offset-4 hover:text-primary-600">@nuxt/image</a>
-              <span class="color-gray-400"> — image optimization</span>
-            </li>
-            <li>
-              <a href="https://github.com/atinux/nuxt-auth-utils" target="_blank" rel="noopener" class="font-700 hover:underline decoration-offset-4 hover:text-primary-600">nuxt-auth-utils</a>
-              <span class="color-gray-400"> — auth helpers</span>
-            </li>
-          </ul>
-        </div>
+      <section class="site-credits-section">
+        <h2>{{ $t('pages.credits.frameworksAndCore') }}</h2>
+        <ul class="site-credits-list">
+          <li>
+            <a href="https://nuxt.com" target="_blank" rel="noopener">Nuxt 4</a>
+            <span> — app framework (server routes via Nitro)</span>
+          </li>
+          <li>
+            <a href="https://vuejs.org" target="_blank" rel="noopener">Vue 3</a>
+            <span> — UI runtime</span>
+          </li>
+          <li>
+            <a href="https://pinia.vuejs.org" target="_blank" rel="noopener">Pinia</a>
+            <span> — state management</span>
+          </li>
+          <li>
+            <a href="https://router.vuejs.org" target="_blank" rel="noopener">Vue Router</a>
+            <span> — routing</span>
+          </li>
+          <li>
+            <a href="https://image.nuxt.com" target="_blank" rel="noopener">@nuxt/image</a>
+            <span> — image optimization</span>
+          </li>
+          <li>
+            <a href="https://github.com/atinux/nuxt-auth-utils" target="_blank" rel="noopener">nuxt-auth-utils</a>
+            <span> — auth helpers</span>
+          </li>
+        </ul>
       </section>
 
-      <!-- Platform & Data -->
-      <section class="site-credits-section animate-entrance" style="animation-delay:220ms;">
-        <div class="p-6 sm:p-8">
-          <h2 class="text-xl font-700 mb-4">{{ $t('pages.credits.platformAndData') }}</h2>
-          <ul class="grid sm:grid-cols-2 gap-3 font-body font-500 text-gray-700 dark:text-gray-200">
-            <li>
-              <a href="https://hub.nuxt.com" target="_blank" rel="noopener" class="font-600 hover:underline decoration-offset-4 hover:text-primary-600">@nuxthub/core</a>
-              <span class="color-gray-400"> — blob, cache, database, kv, browser features</span>
-            </li>
-            <li>
-              <a href="https://developers.cloudflare.com/workers/" target="_blank" rel="noopener" class="font-600 hover:underline decoration-offset-4 hover:text-primary-600">Cloudflare tooling</a>
-              <span class="color-gray-400"> — Wrangler and Workers-compatible utilities</span>
-            </li>
-          </ul>
-        </div>
+      <section class="site-credits-section">
+        <h2>{{ $t('pages.credits.platformAndData') }}</h2>
+        <ul class="site-credits-list">
+          <li>
+            <a href="https://hub.nuxt.com" target="_blank" rel="noopener">@nuxthub/core</a>
+            <span> — blob, cache, database, kv, browser features</span>
+          </li>
+          <li>
+            <a href="https://developers.cloudflare.com/workers/" target="_blank" rel="noopener">Cloudflare tooling</a>
+            <span> — Wrangler and Workers-compatible utilities</span>
+          </li>
+        </ul>
       </section>
 
-      <!-- UI & Styling -->
-      <section class="site-credits-section animate-entrance" style="animation-delay:280ms;">
-        <div class="p-6 sm:p-8">
-          <h2 class="text-xl font-700 mb-4">{{ $t('pages.credits.uiAndStyling') }}</h2>
-          <ul class="grid sm:grid-cols-2 gap-3 font-body font-500 text-gray-700 dark:text-gray-200">
-            <li>
-              <a href="https://una-ui.com" target="_blank" rel="noopener" class="font-600 hover:underline decoration-offset-4 hover:text-primary-600">Una UI</a>
-              <span class="color-gray-400"> — component primitives (prefix N)</span>
-            </li>
-            <li>
-              <a href="https://unocss.dev" target="_blank" rel="noopener" class="font-600 hover:underline decoration-offset-4 hover:text-primary-600">UnoCSS</a>
-              <span class="color-gray-400"> — utility-first CSS with Wind3, Attributify, Tagify, Icons & Animations presets</span>
-            </li>
-            <li>
-              <a href="https://iconify.design" target="_blank" rel="noopener" class="font-600 hover:underline decoration-offset-4 hover:text-primary-600">Iconify</a>
-              <span class="color-gray-400"> — icon system; Packs: Phosphor, Lucide, Tabler, Radix Icons, Line-MD</span>
-            </li>
-            <li>
-              <a href="https://fonts.google.com/" target="_blank" rel="noopener" class="font-600 hover:underline decoration-offset-4 hover:text-primary-600">Google Fonts</a>
-              <span class="color-gray-400"> — webfonts: Oi, Manrope, Fraunces, Playwrite FR Moderne</span>
-            </li>
-            <li>
-              <a href="https://color-mode.nuxtjs.org/" target="_blank" rel="noopener" class="font-600 hover:underline decoration-offset-4 hover:text-primary-600">@nuxtjs/color-mode</a>
-              <span class="color-gray-400"> — light/dark theme</span>
-            </li>
-            <li>
-              <a href="https://woords.trexthemes.dev/" target="_blank" rel="noopener" class="font-600 hover:underline decoration-offset-4 hover:text-primary-600">Woords template</a>
-              <span class="color-gray-400"> — layout inspiration</span>
-            </li>
-          </ul>
-        </div>
+      <section class="site-credits-section">
+        <h2>{{ $t('pages.credits.uiAndStyling') }}</h2>
+        <ul class="site-credits-list">
+          <li>
+            <a href="https://una-ui.com" target="_blank" rel="noopener">Una UI</a>
+            <span> — component primitives (prefix N)</span>
+          </li>
+          <li>
+            <a href="https://unocss.dev" target="_blank" rel="noopener">UnoCSS</a>
+            <span> — utility-first CSS with Wind3, Attributify, Tagify, Icons & Animations presets</span>
+          </li>
+          <li>
+            <a href="https://iconify.design" target="_blank" rel="noopener">Iconify</a>
+            <span> — icon system; Packs: Phosphor, Lucide, Tabler, Radix Icons, Line-MD</span>
+          </li>
+          <li>
+            <a href="https://fonts.google.com/" target="_blank" rel="noopener">Google Fonts</a>
+            <span> — webfonts: Oi, Manrope, Fraunces, Playwrite FR Moderne</span>
+          </li>
+          <li>
+            <a href="https://color-mode.nuxtjs.org/" target="_blank" rel="noopener">@nuxtjs/color-mode</a>
+            <span> — light/dark theme</span>
+          </li>
+          <li>
+            <a href="https://woords.trexthemes.dev/" target="_blank" rel="noopener">Woords template</a>
+            <span> — layout inspiration</span>
+          </li>
+        </ul>
       </section>
 
-      <!-- Content & Editing -->
-      <section class="site-credits-section animate-entrance" style="animation-delay:340ms;">
-        <div class="p-6 sm:p-8">
-          <h2 class="text-xl font-700 mb-4">{{ $t('pages.credits.contentAndEditing') }}</h2>
-          <ul class="grid sm:grid-cols-2 gap-3 font-body font-500 text-gray-700 dark:text-gray-200">
-            <li>
-              <a href="https://tiptap.dev/" target="_blank" rel="noopener" class="font-600 hover:underline decoration-offset-4 hover:text-primary-600">Tiptap</a>
-              <span class="color-gray-400"> — rich‑text editor and extensions</span>
-            </li>
-            <li>
-              <a href="https://github.com/jimp-dev/jimp" target="_blank" rel="noopener" class="font-600 hover:underline decoration-offset-4 hover:text-primary-600">Jimp</a>
-              <span class="color-gray-400"> — image manipulation</span>
-            </li>
-            <li>
-              <a href="https://pptr.dev/" target="_blank" rel="noopener" class="font-600 hover:underline decoration-offset-4 hover:text-primary-600">Puppeteer</a>
-              <span class="color-gray-400"> — automation tools (and Cloudflare-compatible build)</span>
-            </li>
-          </ul>
-        </div>
+      <section class="site-credits-section">
+        <h2>{{ $t('pages.credits.contentAndEditing') }}</h2>
+        <ul class="site-credits-list">
+          <li>
+            <a href="https://tiptap.dev/" target="_blank" rel="noopener">Tiptap</a>
+            <span> — rich‑text editor and extensions</span>
+          </li>
+          <li>
+            <a href="https://github.com/jimp-dev/jimp" target="_blank" rel="noopener">Jimp</a>
+            <span> — image manipulation</span>
+          </li>
+          <li>
+            <a href="https://pptr.dev/" target="_blank" rel="noopener">Puppeteer</a>
+            <span> — automation tools (and Cloudflare-compatible build)</span>
+          </li>
+        </ul>
       </section>
 
-      <!-- Images & Media Pipeline -->
-      <section class="site-credits-section animate-entrance" style="animation-delay:400ms;">
-        <div class="p-6 sm:p-8">
-          <h2 class="text-xl font-700 mb-4">{{ $t('pages.credits.imagesAndMedia') }}</h2>
-          <ul class="site-credits-media-list">
-            <li v-for="item in pexelsAttributions" :key="item.href">
-              <NTooltip :_tooltipContent="{ side: 'top', sideOffset: 8, align: 'center' }" :_tooltipProvider="{ delayDuration: 300 }">
-                <template #default>
-                  <a :href="item.href" target="_blank" rel="noopener" class="block group">
-                    <NuxtImg
-                      :src="item.src"
-                      width="80"
-                      height="80"
-                      :alt="item.alt"
-                      class="w-16 h-16 rounded-md object-cover ring-1 ring-gray-200 dark:ring-gray-800 group-hover:ring-primary-500 transition-colors"
-                    />
-                    <span class="sr-only">{{ item.caption }}</span>
-                  </a>
-                </template>
-                <template #content>
-                  <span class="text-xs font-600">{{ item.caption }}</span>
-                </template>
-              </NTooltip>
-            </li>
-          </ul>
-        </div>
+      <section class="site-credits-section">
+        <h2>{{ $t('pages.credits.imagesAndMedia') }}</h2>
+        <ul class="site-credits-media-list">
+          <li v-for="item in pexelsAttributions" :key="item.href">
+            <NTooltip :_tooltipContent="{ side: 'top', sideOffset: 8, align: 'center' }" :_tooltipProvider="{ delayDuration: 300 }">
+              <template #default>
+                <a :href="item.href" target="_blank" rel="noopener" class="site-credits-media-link">
+                  <NuxtImg
+                    :src="item.src"
+                    width="80"
+                    height="80"
+                    :alt="item.alt"
+                    class="site-credits-media-image"
+                  />
+                  <span class="sr-only">{{ item.caption }}</span>
+                </a>
+              </template>
+              <template #content>
+                <span class="text-xs font-600">{{ item.caption }}</span>
+              </template>
+            </NTooltip>
+          </li>
+        </ul>
       </section>
 
-      <!-- Thank you -->
-      <section class="site-credits-section animate-entrance" style="animation-delay:460ms;">
-        <div class="p-6 sm:p-8">
-          <h2 class="font-text text-xl font-700 mb-4">{{ $t('pages.credits.thankYou') }}</h2>
-          <p class="font-body font-500 text-gray-700 dark:text-gray-200">
-            {{ $t('pages.credits.thankYouText') }}
-          </p>
-        </div>
+      <section class="site-credits-section site-credits-thank-you">
+        <h2>{{ $t('pages.credits.thankYou') }}</h2>
+        <p>{{ $t('pages.credits.thankYouText') }}</p>
       </section>
     </div>
-  </section>
+  </main>
 </template>
 
 <script setup lang="ts">
@@ -279,60 +259,139 @@ useHead({
 
 <style scoped>
 @layer components {
-
-.animate-entrance {
-  opacity: 0;
-  transform: translateY(8px) scale(0.996);
-  animation: entrance 640ms cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
-}
-
-@keyframes entrance {
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+  .site-credits {
+    padding-block: 60px 80px;
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .animate-entrance {
-    transition: none;
-    animation: none;
-    opacity: 1;
-    transform: none;
+  .site-credits-header {
+    width: min(700px, calc(100% - 32px));
+    margin-inline: auto;
+    text-align: center;
   }
-}
-}
-</style>
 
-<style>
-@layer components {
+  .site-credits-header h1 {
+    margin: 0;
+    color: var(--site-color-heading);
+    font-size: 20px;
+    font-weight: 550;
+    line-height: 28px;
+  }
 
-/* Component and page styles moved from the global stylesheets. */
-.site-shell .site-credits { box-sizing: border-box; width: min(700px, calc(100% - 32px)); max-width: 700px; margin-inline: auto; padding: 70px 0 64px; }
-.site-shell .site-credits-intro { margin: 0 0 64px; text-align: left; }
-.site-shell .site-credits-intro h1 { margin: 0 0 14px; }
-.site-shell .site-credits-intro p { max-width: 620px; margin: 0; color: var(--site-color-muted); font-family: var(--site-font-body); font-size: 16px; line-height: 24px; }
-.site-shell .site-credits-sections { display: grid; gap: 0; }
-.site-shell .site-credits-section { min-width: 0; padding: 28px 0; border: 0; border-bottom: 1px solid var(--site-color-border); border-radius: 0; background: transparent; box-shadow: none; }
-.site-shell .site-credits-section:first-child { padding-top: 0; }
-.site-shell .site-credits-section:last-child { border-bottom: 0; }
-.site-shell .site-credits-section > div { padding: 0; }
-.site-shell .site-credits-section h2 { margin: 0 0 16px; color: var(--site-color-heading); font-size: 16px; font-weight: 550; line-height: 24px; }
-.site-shell .site-credits-section ul:not(.site-credits-media-list) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; margin: 0; padding: 0; list-style: none; color: var(--site-color-text); font-family: var(--site-font-body); font-size: 14px; line-height: 21px; }
-.site-shell .site-credits-section ul:not(.site-credits-media-list) a { color: var(--site-color-heading); font-weight: 550; text-decoration: none; }
-.site-shell .site-credits-section ul:not(.site-credits-media-list) a:hover { text-decoration: underline; text-underline-offset: 3px; }
-.site-shell .site-credits-section ul:not(.site-credits-media-list) li > span { color: var(--site-color-muted); }
-.site-shell .site-credits-section .site-credits-media-list { display: flex; flex-wrap: wrap; gap: 12px; margin: 0; padding: 0; list-style: none; }
-.site-shell .site-credits-section .site-credits-media-list img { display: block; width: 64px; height: 64px; border: 1px solid var(--site-color-border); border-radius: 10px; object-fit: cover; }
-.site-shell .site-credits-section > div > p { margin: 0; color: var(--site-color-text); font-family: var(--site-font-body); font-size: 15px; line-height: 24px; }
-@media (max-width: 600px) {
-  .site-shell .site-credits { padding-block: 40px 48px; }
-}
-@media (max-width: 600px) {
-  .site-shell .site-credits-intro { margin-bottom: 40px; }
-}
-@media (max-width: 600px) {
-  .site-shell .site-credits-section ul:not(.site-credits-media-list) { grid-template-columns: minmax(0, 1fr); }
-}
+  .site-credits-description {
+    max-width: 600px;
+    margin: 16px auto 0;
+    color: var(--site-color-text);
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .site-credits-sections {
+    width: min(700px, calc(100% - 32px));
+    margin: 64px auto 0;
+  }
+
+  .site-credits-section {
+    min-width: 0;
+    padding-block: 28px;
+    border-top: 1px solid var(--site-color-border);
+  }
+
+  .site-credits-section:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .site-credits-section h2 {
+    margin: 0 0 16px;
+    color: var(--site-color-heading);
+    font-size: 18px;
+    font-weight: 550;
+    line-height: 25px;
+  }
+
+  .site-credits-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 24px;
+    margin: 0;
+    padding: 0;
+    color: var(--site-color-text);
+    font-size: 14px;
+    line-height: 21px;
+    list-style: none;
+  }
+
+  .site-credits-list a {
+    color: var(--site-color-heading);
+    font-weight: 550;
+    text-decoration: none;
+  }
+
+  .site-credits-list a:hover {
+    color: var(--site-color-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .site-credits-list li > span {
+    color: var(--site-color-muted);
+  }
+
+  .site-credits-media-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .site-credits-media-link {
+    display: block;
+    overflow: hidden;
+    border: 1px solid var(--site-color-border);
+    border-radius: 10px;
+  }
+
+  .site-credits-media-image {
+    display: block;
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    transition: transform 180ms ease;
+  }
+
+  .site-credits-media-link:hover .site-credits-media-image {
+    transform: scale(1.06);
+  }
+
+  .site-credits-thank-you p {
+    margin: 0;
+    color: var(--site-color-text);
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  @media (max-width: 600px) {
+    .site-credits {
+      padding-block: 48px 56px;
+    }
+
+    .site-credits-sections {
+      margin-top: 48px;
+    }
+
+    .site-credits-section {
+      padding-block: 24px;
+    }
+
+    .site-credits-section:first-child {
+      padding-top: 0;
+    }
+
+    .site-credits-list {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
 }
 </style>

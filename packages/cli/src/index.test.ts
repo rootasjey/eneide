@@ -32,7 +32,7 @@ const mockClient = vi.hoisted(() => {
 })
 
 vi.mock('@eneide/sdk', () => ({
-  EneideClient: vi.fn(() => mockClient),
+  EneideClient: vi.fn(function EneideClient() { return mockClient }),
   EneideApiError: class extends Error {
     code: string
     status: number

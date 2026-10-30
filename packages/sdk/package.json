@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "typescript": "^5.6.3",
-    "vitest": "^3.1.2"
+    "vitest": "^4.1.12"
   },
   "keywords": ["eneide", "api", "sdk", "blog", "cms"],
   "license": "MIT"

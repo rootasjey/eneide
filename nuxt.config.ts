@@ -18,6 +18,12 @@ export default defineNuxtConfig({
         // Additional meta tags
         { name: 'theme-color', content: '#0BA6DF' }
       ],
+      style: [
+        {
+          children: '@layer reset, tokens, base, unaui, fonts, icons, shortcuts, utilities, components, theme-overrides;',
+          tagPriority: 'critical',
+        },
+      ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
         { rel: 'preconnect', href: 'https://images.pexels.com' },

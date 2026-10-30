@@ -69,5 +69,41 @@
         "reference": "a[href='/tag/creative/']"
       }
     ]
+  },
+  "about": {
+    "description": "About page structure and typography compared with Core's Now page.",
+    "localUrl": "http://localhost:3000/about",
+    "referenceUrl": "https://core.primedirection.org/now/",
+    "viewport": {
+      "width": 1496,
+      "height": 850
+    },
+    "elements": [
+      {
+        "name": "Page heading",
+        "local": ".site-about h1",
+        "reference": "article.page > .post-header > h1"
+      },
+      {
+        "name": "Page introduction",
+        "local": ".site-about-header > p",
+        "reference": "article.page > .post-header > p"
+      },
+      {
+        "name": "Cover image",
+        "local": ".site-about-cover img",
+        "reference": "article.page .post-header .feature-media-image img"
+      },
+      {
+        "name": "Content section heading",
+        "local": ".site-about h2",
+        "reference": "article.page .content-wrapper .content h2"
+      },
+      {
+        "name": "Body paragraph",
+        "local": ".site-about-introduction > p:first-child",
+        "reference": "article.page .content-wrapper .content p"
+      }
+    ]
   }
 }

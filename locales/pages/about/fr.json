@@ -3,7 +3,7 @@
     "about": {
       "heading": "\u00c0 propos",
       "mainTitle": "Une petite collection d'\u00e9crits \u2014 sur le code, l'artisanat et la culture.",
-      "intro": "Je suis **J\u00e9r\u00e9mie Corpinot** \u2014 le d\u00e9veloppeur et \u00e9crivain unique de ce site. Je construis la plateforme et \u00e9cris les articles, en mettant l'accent sur la profondeur technique et la perspective culturelle.",
+      "intro": "Je suis J\u00e9r\u00e9mie Corpinot \u2014 le d\u00e9veloppeur et \u00e9crivain unique de ce site. Je construis la plateforme et \u00e9cris les articles, en mettant l'accent sur la profondeur technique et la perspective culturelle.",
       "browsePosts": "Parcourir les articles",
       "openSource": "Open source sur GitHub",
       "topics": "Technologie, Programmation, Films & Livres",
@@ -15,7 +15,7 @@
       "overlayLabel": "Corpinot",
       "overlaySub": "Code & Culture",
       "openSourceHeading": "Open Source & Contribution",
-      "openSourceText": "Le code source complet est disponible sur **GitHub**. Les issues, PRs ou suggestions de design sont les bienvenues \u2014 consultez le d\u00e9p\u00f4t pour les directives de contribution.",
+      "openSourceText": "Le code source complet est disponible sur GitHub. Les issues, PRs ou suggestions de design sont les bienvenues \u2014 consultez le d\u00e9p\u00f4t pour les directives de contribution.",
       "faqHeading": "FAQ",
       "faqWhoLabel": "Qui g\u00e8re ce site ?",
       "faqWhoContent": "Moi \u2014 je suis le seul d\u00e9veloppeur et \u00e9crivain : J\u00e9r\u00e9mie Corpinot. Je g\u00e8re le code, la publication et le design du site.",

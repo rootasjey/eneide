@@ -3,7 +3,7 @@
     "about": {
       "heading": "About",
       "mainTitle": "A small collection of writing \u2014 on code, craft, and culture.",
-      "intro": "I'm **J\u00e9r\u00e9mie Corpinot** \u2014 the sole developer and writer of this site. I build the platform and write the posts, focusing on technical depth and cultural perspective.",
+      "intro": "I'm J\u00e9r\u00e9mie Corpinot \u2014 the sole developer and writer of this site. I build the platform and write the posts, focusing on technical depth and cultural perspective.",
       "browsePosts": "Browse posts",
       "openSource": "Open source on GitHub",
       "topics": "Technology, Programming, Films & Books",
@@ -15,7 +15,7 @@
       "overlayLabel": "Corpinot",
       "overlaySub": "Code & Culture",
       "openSourceHeading": "Open Source & Contribution",
-      "openSourceText": "The full source code is available on **GitHub**. Issues, PRs, or design suggestions are welcome \u2014 see the repository for contribution guidelines.",
+      "openSourceText": "The full source code is available on GitHub. Issues, PRs, or design suggestions are welcome \u2014 see the repository for contribution guidelines.",
       "faqHeading": "FAQ",
       "faqWhoLabel": "Who runs this site?",
       "faqWhoContent": "I do \u2014 I'm the sole developer and writer: J\u00e9r\u00e9mie Corpinot. I handle code, publishing, and site design.",

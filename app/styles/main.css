@@ -3,3 +3,5 @@
 @import '@unocss/reset/tailwind.css' layer(reset);
 @import '@una-ui/preset/una.css' layer(unaui);
 @import './site-global.css';
+@import './admin-pages.css';
+@import './admin-settings.css';

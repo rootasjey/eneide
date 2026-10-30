@@ -1,7 +1,7 @@
 <template>
   <section class="site-page site-profile min-h-screen bg-white dark:bg-gray-950">
     <!-- Sticky toolbar -->
-    <div class="sticky top-0 z-30 border-b bg-background/95 backdrop-blur-lg supports-[backdrop-filter]:bg-background/80">
+    <div class="sticky top-0 z-30 border-b bg-background/95 backdrop-blur-lg supports-[backdrop-filter]:bg-background/80 site-profile-toolbar">
       <div class="container mx-auto px-4 md:px-8 py-3 sm:py-4">
         <div class="flex items-center justify-between gap-3">
           <!-- Mobile: compact layout with title in center -->
@@ -19,9 +19,9 @@
             <NButton 
               :disabled="!hasChanges || isSaving" 
               @click="onSubmit" 
-              btn="soft-blue" 
+              btn="solid-black"
+              class="site-profile-save hidden md:flex"
               size="sm"
-              class="hidden md:flex"
             >
               <NIcon :name="isSaving ? 'i-lucide-loader' : 'i-lucide-save'" :class="{ 'animate-spin': isSaving }" />
               <span class="ml-2">{{ isSaving ? $t('common.saving') : $t('common.save') }}</span>
@@ -31,11 +31,11 @@
             <NButton 
               :disabled="!hasChanges || isSaving" 
               @click="onSubmit" 
-              btn="soft-blue" 
+              btn="solid-black"
               size="sm"
               icon
               label="i-lucide-save"
-              class="md:hidden"
+              class="site-profile-save md:hidden"
             />
           </div>
         </div>
@@ -59,8 +59,8 @@
         <div class="w-full md:w-auto md:order-2 flex justify-center">
           <button
             type="button"
-            class="relative group w-48 h-48 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-96 lg:h-96 rounded-3xl overflow-hidden bg-gradient-to-br from-pink-50 to-pink-100 dark:from-pink-900/20 dark:to-pink-800/20 flex items-center justify-center border-2 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-pink-400/60 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-950"
-            :class="avatarDragOver ? 'border-pink-400 dark:border-pink-500 scale-105' : 'border-pink-200/50 dark:border-pink-800/30'"
+            class="site-profile-avatar relative group overflow-hidden flex items-center justify-center transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-950"
+            :class="avatarDragOver ? 'site-profile-avatar--dragging scale-105' : ''"
             @dragover.prevent="onAvatarDragOver"
             @dragleave.prevent="onAvatarDragLeave"
             @drop.prevent="onAvatarDrop"
@@ -68,12 +68,12 @@
             :aria-label="$t('pages.profile.editAvatar')"
           >
             <NuxtImg v-if="displayAvatar" provider="hubblob" :src="displayAvatar" :alt="form.name" class="object-cover w-full h-full" />
-            <div v-else class="w-full h-full flex items-center justify-center text-5xl sm:text-6xl md:text-7xl font-bold text-pink-300 dark:text-pink-600">
+            <div v-else class="site-profile-avatar-fallback w-full h-full flex items-center justify-center font-semibold">
               {{ userInitials }}
             </div>
             
             <div v-if="avatarUploading" class="absolute left-0 bottom-0 w-full h-1.5 bg-black/20 overflow-hidden">
-              <div class="h-full bg-pink-500 transition-all duration-300" :style="{ width: avatarUploadProgress + '%' }" />
+              <div class="site-profile-progress h-full transition-all duration-300" :style="{ width: avatarUploadProgress + '%' }" />
             </div>
             <input ref="avatarFileInput" type="file" accept="image/*" class="hidden" @change="handleAvatarFileChange" />
           </button>
@@ -86,7 +86,7 @@
             ref="nameTextarea"
             v-model="form.name"
             rows="1"
-            class="w-full resize-none overflow-hidden text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-serif font-800 leading-tight bg-transparent outline-none focus:outline-none uppercase text-center md:text-left placeholder:text-pink-300 dark:placeholder:text-pink-700"
+            class="site-profile-name w-full resize-none overflow-hidden leading-tight bg-transparent outline-none focus:outline-none text-center md:text-left"
             :placeholder="$t('pages.profile.namePlaceholder')"
             @input="autoResizeName"
           />
@@ -113,12 +113,12 @@
           <!-- Mobile: stacked cards, Desktop: grid -->
           <div class="flex flex-col md:grid gap-3 sm:gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
             <!-- Email -->
-            <div class="group flex flex-col gap-3 sm:gap-4 p-4 sm:p-5 md:p-6 rounded-2xl border border-gray-100 dark:border-gray-800 bg-gradient-to-br from-white to-gray-50/50 dark:from-gray-900/50 dark:to-gray-900/30 transition-all duration-300">
+            <div class="site-profile-field group flex flex-col gap-3 sm:gap-4 p-4 sm:p-5 md:p-6 rounded-xl border transition-colors">
               <div class="flex items-center justify-between">
                 <NIcon name="i-lucide-mail" class="text-2xl sm:text-3xl group-hover:scale-110 transition-transform" />
                 <div class="text-xs uppercase font-bold tracking-wide">{{ $t('pages.profile.required') }}</div>
               </div>
-              <div class="uppercase text-lg sm:text-xl font-bold">{{ $t('pages.profile.email') }}</div>
+              <div class="site-profile-field-label">{{ $t('pages.profile.email') }}</div>
               <NInput 
                 v-model="form.email" 
                 :placeholder="$t('pages.profile.emailPlaceholder')" 
@@ -130,11 +130,11 @@
             </div>
 
             <!-- Location -->
-            <div class="group flex flex-col gap-3 sm:gap-4 p-4 sm:p-5 md:p-6 rounded-2xl border border-gray-100 dark:border-gray-800 bg-gradient-to-br from-white to-gray-50/50 dark:from-gray-900/50 dark:to-gray-900/30 transition-all duration-300">
+            <div class="site-profile-field group flex flex-col gap-3 sm:gap-4 p-4 sm:p-5 md:p-6 rounded-xl border transition-colors">
               <div class="flex items-center justify-between">
                 <NIcon name="i-lucide-map-pin" class="text-2xl sm:text-3xl group-hover:scale-110 transition-transform" />
               </div>
-              <div class="uppercase text-lg sm:text-xl font-bold">{{ $t('pages.profile.location') }}</div>
+              <div class="site-profile-field-label">{{ $t('pages.profile.location') }}</div>
               <NInput 
                 v-model="form.location" 
                 :placeholder="$t('pages.profile.locationPlaceholder')" 
@@ -145,11 +145,11 @@
             </div>
 
             <!-- Job -->
-            <div class="group flex flex-col gap-3 sm:gap-4 p-4 sm:p-5 md:p-6 rounded-2xl border border-gray-100 dark:border-gray-800 bg-gradient-to-br from-white to-gray-50/50 dark:from-gray-900/50 dark:to-gray-900/30 transition-all duration-300">
+            <div class="site-profile-field group flex flex-col gap-3 sm:gap-4 p-4 sm:p-5 md:p-6 rounded-xl border transition-colors">
               <div class="flex items-center justify-between">
                 <NIcon name="i-lucide-briefcase" class="text-2xl sm:text-3xl group-hover:scale-110 transition-transform" />
               </div>
-              <div class="uppercase text-lg sm:text-xl font-bold">{{ $t('pages.profile.job') }}</div>
+              <div class="site-profile-field-label">{{ $t('pages.profile.job') }}</div>
               <NInput 
                 v-model="form.job" 
                 :placeholder="$t('pages.profile.jobPlaceholder')" 
@@ -160,11 +160,11 @@
             </div>
 
             <!-- Language -->
-            <div class="group flex flex-col gap-3 sm:gap-4 p-4 sm:p-5 md:p-6 rounded-2xl border border-gray-100 dark:border-gray-800 bg-gradient-to-br from-white to-gray-50/50 dark:from-gray-900/50 dark:to-gray-900/30 transition-all duration-300">
+            <div class="site-profile-field group flex flex-col gap-3 sm:gap-4 p-4 sm:p-5 md:p-6 rounded-xl border transition-colors">
               <div class="flex items-center justify-between">
                 <NIcon name="i-lucide-globe" class="text-2xl sm:text-3xl group-hover:scale-110 transition-transform" />
               </div>
-              <div class="uppercase text-lg sm:text-xl font-bold">{{ $t('pages.profile.language') }}</div>
+              <div class="site-profile-field-label">{{ $t('pages.profile.language') }}</div>
               <NInput 
                 v-model="form.language" 
                 :placeholder="$t('pages.profile.languagePlaceholder')" 
@@ -175,12 +175,12 @@
             </div>
 
             <!-- Socials -->
-            <div class="group flex flex-col gap-3 sm:gap-4 p-4 sm:p-5 md:p-6 rounded-2xl border border-gray-100 dark:border-gray-800 bg-gradient-to-br from-white to-gray-50/50 dark:from-gray-900/50 dark:to-gray-900/30 transition-all duration-300">
+            <div class="site-profile-field group flex flex-col gap-3 sm:gap-4 p-4 sm:p-5 md:p-6 rounded-xl border transition-colors">
               <div class="flex items-center justify-between">
                 <NIcon name="i-lucide-link" class="text-2xl sm:text-3xl group-hover:scale-110 transition-transform" />
-                <NBadge v-if="socialsSummary !== 'No socials'" badge="soft-lime" size="sm">{{ socialsSummary }}</NBadge>
+                <NBadge v-if="socialsSummary !== 'No socials'" badge="soft-gray" size="sm">{{ socialsSummary }}</NBadge>
               </div>
-              <div class="uppercase text-lg sm:text-xl font-bold">{{ $t('pages.profile.socials') }}</div>
+              <div class="site-profile-field-label">{{ $t('pages.profile.socials') }}</div>
               <NButton 
                 @click="openSocialsDialog" 
                 btn="outline-gray" 
@@ -193,11 +193,11 @@
             </div>
 
             <!-- Avatar URL -->
-            <div class="group flex flex-col gap-3 sm:gap-4 p-4 sm:p-5 md:p-6 rounded-2xl border border-gray-100 dark:border-gray-800 bg-gradient-to-br from-white to-gray-50/50 dark:from-gray-900/50 dark:to-gray-900/30 transition-all duration-300">
+            <div class="site-profile-field group flex flex-col gap-3 sm:gap-4 p-4 sm:p-5 md:p-6 rounded-xl border transition-colors">
               <div class="flex items-center justify-between">
                 <NIcon name="i-ph-image" class="text-2xl sm:text-3xl group-hover:scale-110 transition-transform" />
               </div>
-              <div class="uppercase text-lg sm:text-xl font-bold">{{ $t('pages.profile.avatarUrl') }}</div>
+              <div class="site-profile-field-label">{{ $t('pages.profile.avatarUrl') }}</div>
               <NInput 
                 v-model="form.avatar" 
                 :placeholder="$t('pages.profile.avatarUrlPlaceholder')" 
@@ -208,11 +208,11 @@
             </div>
 
             <!-- Biography (full-width) -->
-            <div class="md:col-span-2 lg:col-span-3 group flex flex-col gap-3 sm:gap-4 p-4 sm:p-5 md:p-6 rounded-2xl border border-gray-100 dark:border-gray-800 bg-gradient-to-br from-white to-gray-50/50 dark:from-gray-900/50 dark:to-gray-900/30 transition-all duration-300">
+            <div class="site-profile-field md:col-span-2 lg:col-span-3 group flex flex-col gap-3 sm:gap-4 p-4 sm:p-5 md:p-6 rounded-xl border transition-colors">
               <div class="flex items-center justify-between">
                 <NIcon name="i-lucide-align-left" class="text-2xl sm:text-3xl group-hover:scale-110 transition-transform" />
               </div>
-              <div class="uppercase text-lg sm:text-xl font-bold">{{ $t('pages.profile.biography') }}</div>
+              <div class="site-profile-field-label">{{ $t('pages.profile.biography') }}</div>
               <NInput 
                 v-model="form.biography" 
                 input="outline" 
@@ -229,7 +229,7 @@
             <NButton 
               :disabled="isSaving || !hasChanges" 
               type="submit" 
-              btn="solid" 
+              btn="solid-black"
               size="lg"
             >
               <NIcon :name="isSaving ? 'i-lucide-loader' : 'i-lucide-save'" :class="{ 'animate-spin': isSaving }" />
@@ -264,9 +264,9 @@
             <NButton 
               :disabled="isSaving || !hasChanges" 
               @click="onSubmit" 
-              btn="solid-blue" 
+              btn="solid-black"
               size="md"
-              class="flex-1"
+              class="site-profile-save flex-1"
             >
               <NIcon :name="isSaving ? 'i-lucide-loader' : 'i-lucide-save'" :class="{ 'animate-spin': isSaving }" />
               <span class="ml-2">{{ isSaving ? $t('common.saving') : $t('pages.profile.saveChanges') }}</span>
@@ -292,7 +292,7 @@
 
             <NButton
               @click="onAvatarChange"
-              btn="solid-blue"
+              btn="solid-black"
               size="md"
               class="w-full justify-center"
               :disabled="avatarUploading"
@@ -338,7 +338,7 @@
             </div>
             <div class="ml-auto flex items-center gap-2">
               <NButton @click="closeSocialsDialog" btn="ghost-gray" size="xs" :disabled="socialsSaving">{{ $t('common.cancel') }}</NButton>
-              <NButton @click="saveSocialsDialog" :disabled="socialsSaving" btn="soft-pink" size="xs">
+              <NButton @click="saveSocialsDialog" :disabled="socialsSaving" btn="solid-black" size="xs" class="site-profile-save">
                 <NIcon :name="socialsSaving ? 'i-lucide-loader' : 'i-lucide-save'" :class="{ 'animate-spin': socialsSaving }" />
                 <span class="ml-2">{{ $t('common.save') }}</span>
               </NButton>

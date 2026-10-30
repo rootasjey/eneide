@@ -1,7 +1,7 @@
 <template>
-  <div v-if="post" class="min-h-screen">
+  <div v-if="post" class="min-h-screen site-post-editor">
     <!-- Top action bar -->
-    <div class="sticky z-30 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-200" :style="{ top: `${toolbarTop}px` }">
+    <div class="sticky z-30 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-200 site-editor-toolbar" :style="{ top: `${toolbarTop}px` }">
       <div class="container mx-auto px-4 md:px-8 py-2 md:py-3">
         <div class="flex items-center justify-between gap-2">
           <NButton link to="/posts" btn="ghost-gray" size="xs" class="px-2">
@@ -32,21 +32,21 @@
             </NTooltip>
 
             <div class="hidden sm:flex items-center gap-2">
-              <NButton :to="`/posts/${post.slug}`" btn="~" size="xs" class="border b-dashed hover:b-solid" target="_blank">
+              <NButton :to="`/posts/${post.slug}`" btn="~" size="xs" class="site-editor-action" target="_blank">
                 <span class="i-lucide-external-link mr-2" /><span class="hidden sm:inline">{{ $t('common.preview') }}</span>
               </NButton>
               <NDropdownMenu :items="exportMenuItems" :_dropdownMenuContent="{ side: 'bottom' }">
-                <NButton btn="~" size="xs" class="border b-dashed hover:b-solid">
+                <NButton btn="~" size="xs" class="site-editor-action">
                   <NIcon :name="exportingZip ? 'i-lucide-loader' : 'i-ph-download-simple'" :class="{ 'animate-spin': exportingZip }" />
                 </NButton>
               </NDropdownMenu>
             </div>
 
-            <NButton @click="saveAll" btn="~" size="xs" :disabled="saving || !name || !slug" class="border b-dashed hover:b-solid" >
+            <NButton @click="saveAll" btn="~" size="xs" :disabled="saving || !name || !slug" class="site-editor-action">
               <NIcon :name="saving ? 'i-lucide-loader' : 'i-lucide-save'" :class="{ 'animate-spin': saving }" />
             </NButton>
             <NDropdownMenu :items="menuItems" class="menu-items">
-              <NButton icon label="i-ph-dots-three-vertical" btn="~" size="xs" class="border b-dashed hover:b-solid" />
+              <NButton icon label="i-ph-dots-three-vertical" btn="~" size="xs" class="site-editor-action" />
             </NDropdownMenu>
 
             <EditSlugDialog

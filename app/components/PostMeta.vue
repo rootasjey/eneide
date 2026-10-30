@@ -28,10 +28,10 @@
       </div>
     </div>
 
-    <div class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mt-2" v-else-if="layout === 'row'">
-      <time>{{ post.formattedDate }}</time>
+    <div class="site-post-row-meta flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mt-2" v-else-if="layout === 'row'">
+      <time class="site-post-row-date">{{ post.formattedDate }}</time>
       <span>•</span>
-      <span>{{ post.readingTime }}</span>
+      <span class="site-post-row-reading-time">{{ post.readingTime }}</span>
     </div>
   </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <div class="py-12 md:py-20">
     <div class="container mx-auto px-4 md:px-8">
-      <div class="max-w-4xl mx-auto text-center">
+      <div class="max-w-[700px] mx-auto text-center">
         <div class="font-600 text-md text-gray-400 flex items-center justify-center gap-3 mb-6">
           <time>{{ dateLabel }}</time>
           <span>—</span>
@@ -12,7 +12,7 @@
           ref="nameInput"
           v-model="nameProxy"
           rows="1"
-          class="w-full resize-none overflow-hidden text-4xl md:text-5xl lg:text-4xl font-serif font-700 text-center leading-tight bg-transparent outline-none focus:outline-none focus:ring-0"
+          class="site-editor-title w-full resize-none overflow-hidden text-center bg-transparent outline-none focus:outline-none focus:ring-0"
           :placeholder="$t('editor.postMetadataEditor.untitled')"
           @input="autoResize"
         />
@@ -22,7 +22,7 @@
           type="textarea"
           input="~"
           :placeholder="$t('editor.postMetadataEditor.descriptionPlaceholder')"
-          class="mt-4 max-w-3xl mx-auto text-center font-body font-600 color-gray-500 text-base md:text-lg leading-relaxed description-input"
+          class="site-editor-description mt-4 max-w-3xl mx-auto text-center description-input"
           :rows="-1"
           ref="descriptionInput"
           @input="autoResizeDescription"

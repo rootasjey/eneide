@@ -1,95 +1,6 @@
 <template>
   <div class="min-h-screen py-6 site-post-index" :class="{ 'site-post-index--public': !isAdmin && activeTab === 'published' }">
     <div class="container mx-auto px-4 md:px-8">
-      <!-- Admin Toolbar (sticky top) -->
-      <ClientOnly>
-        <div v-if="isAdmin" class="sticky z-12 mb-10 transition-all duration-200" :style="{ top: `${toolbarTop}px` }">
-          <div class="bg-background/60 backdrop-blur-sm border border-border rounded-2xl px-4 py-3 flex items-center justify-between gap-3 shadow-sm">
-            <div class="flex items-center gap-2">
-              <NButton @click="isNewDrawerOpen = true" btn="outline-gray" size="xs" rounded="2" leading="i-ph-plus-bold">
-                <span class="hidden md:inline">{{ $t('pages.posts.newPost') }}</span>
-              </NButton>
-              <NButton @click="triggerImportFile" btn="outline-gray" size="xs"  rounded="2" leading="i-ph-file-arrow-up">
-                <span class="hidden md:inline">{{ $t('pages.posts.import') }}</span>
-              </NButton>
-              <template v-if="selection.selectionMode.value">
-                <span>•</span>
-                <NDropdownMenu :items="exportDropdownItems" :_dropdownMenuContent="{ side: 'bottom', align: 'start' }">
-                  <NButton btn="outline-gray" size="xs" rounded="2" :disabled="!selection.hasSelection" :loading="exporting">
-                    <NIcon :name="exporting ? 'i-lucide-loader' : 'i-ph-download-simple'" :class="{ 'animate-spin': exporting }" />
-                    <span class="ml-2">{{ $t('pages.posts.export') }}</span>
-                  </NButton>
-                </NDropdownMenu>
-                <NBadge badge="soft" color="primary">{{ selection.selectedCount }}</NBadge>
-                <NButton @click="() => selection.toggleSelectAllVisible(visiblePosts)" btn="outline-gray" size="xs" rounded="2" 
-                  :leading="selection.allVisibleSelected(visiblePosts) ? 'i-ph-square-duotone' : 'i-ph-list-checks'">
-                  {{ selection.allVisibleSelected(visiblePosts) ? $t('pages.posts.clearAll') : $t('pages.posts.selectAll') }}
-                </NButton>
-                <NTooltip :content="$t('pages.posts.exitSelection')">
-                  <NButton btn="ghost-gray" icon label="i-ph-x" size="xs" @click="selection.clearSelection" />
-                </NTooltip>
-              </template>
-              <input ref="fileInput" type="file" accept=".zip,application/zip,application/json,application/*" class="hidden" @change="onImportFileSelected" />
-              <input ref="coverFileInput" type="file" accept="image/*" class="hidden" @change="onCoverFileSelected" />
-              <NewPostDrawer v-model="isNewDrawerOpen" @created="onPostCreated" />
-            </div>
-
-            <!-- Tabs (icons-only) aligned to the end/right -->
-            <div class="ml-auto flex items-center gap-2">
-              <NButton
-                :aria-label="$t('pages.posts.published')"
-                :btn="activeTab === 'published' ? 'soft' : 'ghost-gray'"
-                size="sm"
-                icon
-                label="i-ph-newspaper"
-                @click="setTab('published')"
-                class="w-9 h-9 flex items-center justify-center"
-              />
-              
-              <NButton
-                :aria-label="$t('pages.posts.drafts')"
-                :btn="activeTab === 'drafts' ? 'soft' : 'ghost-gray'"
-                size="sm"
-                icon
-                label="i-ph-file-text"
-                @click="setTab('drafts')"
-                class="w-9 h-9 flex items-center justify-center"
-              />
-
-              <NButton
-                :aria-label="$t('pages.posts.archived')"
-                :btn="activeTab === 'archived' ? 'soft' : 'ghost-gray'"
-                size="sm"
-                icon
-                label="i-ph-archive"
-                @click="setTab('archived')"
-                class="w-9 h-9 flex items-center justify-center"
-              />
-
-              <div class="text-xs opacity-60 ml-3" v-if="draftsPending || archivedPending">
-                <span v-if="draftsPending" class="flex items-center gap-1"><span class="i-lucide-loader animate-spin" />{{ $t('common.loading') }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </ClientOnly>
-
-      <!-- Language filter -->
-      <div v-if="isAdmin" class="flex items-center gap-2 mb-4">
-        <button
-          @click="showAllLanguages = !showAllLanguages"
-          class="px-3 py-1.5 rounded-full text-xs font-semibold transition-colors"
-          :class="showAllLanguages
-            ? 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200'
-            : 'bg-black dark:bg-white text-white dark:text-black'"
-        >
-          {{ currentLanguageLabel }}
-        </button>
-        <span v-if="!showAllLanguages" class="text-xs text-gray-500 dark:text-gray-400">
-          {{ $t('pages.posts.filteredByLanguage') }}
-        </span>
-      </div>
-      
       <CollectionIntro
         v-if="activeTab === 'published' && !isAdmin"
         :title="publicArchiveCopy.title"
@@ -97,71 +8,67 @@
       />
 
       <!-- Admin-only post controls -->
-      <div v-if="isAdmin" class="site-page-heading mb-12 md:mb-16">
-        <div v-if="activeTab === 'published'">
-          <div class="flex items-start justify-between gap-4">
-            <div>
-              <h1 class="font-title text-size-24 font-bold line-height-28">{{ $t('pages.posts.publishedHeading') }}</h1>
-              
-              <div class="flex items-center gap-2">
-                <NDropdownMenu v-if="isAdmin" :items="viewDropdownItems" :_dropdownMenuContent="{ side: 'bottom', align: 'end' }">
-                  <template #default>
-                    <NButton btn="outline-gray" size="xs" icon :aria-label="$t('common.changeView')">
-                      <NIcon :name="viewMode === 'cards' ? 'i-ph-squares-four' : 'i-ph-list-checks'" />
-                    </NButton>
-                  </template>
-                </NDropdownMenu>
-                <p class="text-lg md:text-xl text-slate-500 dark:text-slate-400 max-w-2xl">
-                  {{ $t('pages.posts.publishedDescription') }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div v-else-if="activeTab === 'drafts'">
-          <div class="flex items-start justify-between gap-4">
-            <div>
-              <h1 class="font-title text-size-24 font-bold line-height-24 overflow-hidden">
-                <TypewriterText :text="$t('pages.posts.draftsHeading')" :auto-hide-cursor="true" />
-              </h1>
-              <div class="flex items-center gap-2">
-                <NDropdownMenu :items="viewDropdownItems" :_dropdownMenuContent="{ side: 'bottom', align: 'end' }">
-                  <template #default>
-                    <NButton btn="outline-gray" size="xs" icon :aria-label="$t('common.changeView')">
-                      <NIcon :name="viewMode === 'cards' ? 'i-ph-squares-four' : 'i-ph-list-checks'" />
-                    </NButton>
-                  </template>
-                </NDropdownMenu>
-                <p class="text-lg md:text-xl text-slate-500 dark:text-slate-400 max-w-2xl">
-                  {{ $t('pages.posts.draftsDescription') }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div v-else-if="activeTab === 'archived'">
-          <div class="flex items-start justify-between gap-4">
-            <div>
-              <h1 class="font-title text-size-24 font-bold line-height-24 overflow-hidden">
-                <TypewriterText :text="$t('pages.posts.archivedHeading')" :auto-hide-cursor="true" />
-              </h1>
-              
-              <div class="flex items-center gap-2">
-                <NDropdownMenu :items="viewDropdownItems" :_dropdownMenuContent="{ side: 'bottom', align: 'end' }">
-                  <template #default>
-                    <NButton btn="outline-gray" size="xs" icon :aria-label="$t('common.changeView')">
-                      <NIcon :name="viewMode === 'cards' ? 'i-ph-squares-four' : 'i-ph-list-checks'" />
-                    </NButton>
-                  </template>
-                </NDropdownMenu>
-                <p class="text-lg md:text-xl text-slate-500 dark:text-slate-400 max-w-2xl">
-                  {{ $t('pages.posts.publishedDescription') }}
-                </p>
-              </div>
-            </div>
-          </div>
+      <div v-if="isAdmin" class="site-admin-list-header">
+        <div class="site-admin-list-header-copy">
+          <h1 class="site-admin-heading" v-if="activeTab === 'published'">{{ $t('pages.posts.publishedHeading') }}</h1>
+          <h1 class="site-admin-heading" v-else-if="activeTab === 'drafts'">{{ $t('pages.posts.draftsHeading') }}</h1>
+          <h1 class="site-admin-heading" v-else>{{ $t('pages.posts.archivedHeading') }}</h1>
+          <p class="site-admin-intro" v-if="activeTab === 'published'">{{ $t('pages.posts.publishedDescription') }}</p>
+          <p class="site-admin-intro" v-else-if="activeTab === 'drafts'">{{ $t('pages.posts.draftsDescription') }}</p>
+          <p class="site-admin-intro" v-else>{{ $t('pages.posts.archivedDescription') }}</p>
         </div>
       </div>
+
+      <ClientOnly>
+        <div v-if="isAdmin" class="site-admin-post-controls">
+          <nav class="site-admin-post-tabs" :aria-label="$t('pages.posts.publishedHeading')">
+            <button type="button" class="site-admin-post-tab" :aria-pressed="activeTab === 'published'" @click="setTab('published')">
+              {{ $t('pages.posts.published') }}
+            </button>
+            <button type="button" class="site-admin-post-tab" :aria-pressed="activeTab === 'drafts'" @click="setTab('drafts')">
+              {{ $t('pages.posts.drafts') }}
+            </button>
+            <button type="button" class="site-admin-post-tab" :aria-pressed="activeTab === 'archived'" @click="setTab('archived')">
+              {{ $t('pages.posts.archived') }}
+            </button>
+          </nav>
+
+          <div class="site-admin-post-actions">
+            <template v-if="selection.selectionMode.value">
+              <NDropdownMenu :items="exportDropdownItems" :_dropdownMenuContent="{ side: 'bottom', align: 'start' }">
+                <NButton btn="ghost-gray" size="sm" :disabled="!selection.hasSelection" :loading="exporting">
+                  <NIcon :name="exporting ? 'i-lucide-loader' : 'i-ph-download-simple'" :class="{ 'animate-spin': exporting }" />
+                  {{ $t('pages.posts.export') }}
+                </NButton>
+              </NDropdownMenu>
+              <NBadge badge="soft" color="primary">{{ selection.selectedCount }}</NBadge>
+              <NButton @click="() => selection.toggleSelectAllVisible(visiblePosts)" btn="ghost-gray" size="sm"
+                :leading="selection.allVisibleSelected(visiblePosts) ? 'i-ph-square-duotone' : 'i-ph-list-checks'">
+                {{ selection.allVisibleSelected(visiblePosts) ? $t('pages.posts.clearAll') : $t('pages.posts.selectAll') }}
+              </NButton>
+              <NTooltip :content="$t('pages.posts.exitSelection')">
+                <NButton btn="ghost-gray" icon label="i-ph-x" size="sm" @click="selection.clearSelection" />
+              </NTooltip>
+            </template>
+            <template v-else>
+              <NButton @click="isNewDrawerOpen = true" btn="primary" size="xs" leading="i-ph-plus-bold" class="site-admin-post-create">
+                {{ $t('pages.posts.newPost') }}
+              </NButton>
+            </template>
+
+            <NDropdownMenu :items="postOptionsDropdownItems" :_dropdownMenuContent="{ side: 'bottom', align: 'end' }">
+              <template #default>
+                <NButton btn="ghost-gray" size="xs" icon :aria-label="`${currentLanguageLabel}, ${$t('pages.posts.import')}, ${$t('common.changeView')}`" class="site-admin-post-options-trigger">
+                  <NIcon name="i-ph-dots-three-vertical" />
+                </NButton>
+              </template>
+            </NDropdownMenu>
+          </div>
+        </div>
+        <input ref="fileInput" type="file" accept=".zip,application/zip,application/json,application/*" class="hidden" @change="onImportFileSelected" />
+        <input ref="coverFileInput" type="file" accept="image/*" class="hidden" @change="onCoverFileSelected" />
+        <NewPostDrawer v-model="isNewDrawerOpen" @created="onPostCreated" />
+      </ClientOnly>
 
       <PostsList
         v-if="isAdmin && activeTab === 'published' && posts && posts.length > 0"
@@ -303,9 +210,7 @@ import type { Post } from '~~/shared/types/post'
 import { onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { usePostsApi } from '~/composables/usePostsApi'
-import TypewriterText from '~/components/TypewriterText.vue'
 import PublicPostArchive from '~/components/PublicPostArchive.vue'
-import { useHeaderToolbarOffset } from '~/composables/useHeaderToolbarOffset' 
 import EditPostDialog from '~/components/EditPostDialog.vue' 
 import PresentationPostGrid from '~/components/PresentationPostGrid.vue'
 import { localizedPath } from '~/utils/presentationPosts'
@@ -328,7 +233,6 @@ const { user, loggedIn } = useUserSession()
 
 // New post drawer state + handler
 const isNewDrawerOpen = ref(false)
-const { top: toolbarTop } = useHeaderToolbarOffset({ baseOffsetPx: 16 })
 function onPostCreated(p: Post) {
   // Insert into the currently visible list so the UI updates immediately
   if (activeTab.value === 'published') {
@@ -482,18 +386,28 @@ const publicArchiveCopy = computed(() => $getLocale() === 'fr'
     })
 
 const showAllLanguages = useStorage('posts.showAllLanguages', false)
+const selectedLanguage = useStorage<'en' | 'fr'>(
+  'posts.languageFilter.v2',
+  $getLocale() === 'fr' ? 'fr' : 'en',
+)
 
 const languageFilter = computed(() => {
   if (showAllLanguages.value) return undefined
-  return $getLocale()
+  return selectedLanguage.value
 })
 
 const currentLanguageLabel = computed(() => {
-  if (showAllLanguages.value) return 'All languages'
-  const locale = $getLocale()
-  const labels: Record<string, string> = { en: 'English', fr: 'Fran\u00e7ais', es: 'Espa\u00f1ol', de: 'Deutsch', it: 'Italiano' }
-  return labels[locale] || locale
+  if (showAllLanguages.value) {
+    return $getLocale() === 'fr' ? 'Toutes les langues' : 'All languages'
+  }
+
+  return selectedLanguage.value === 'fr' ? 'Français' : 'English'
 })
+
+function setLanguageFilter(language: 'en' | 'fr' | 'all') {
+  showAllLanguages.value = language === 'all'
+  if (language !== 'all') selectedLanguage.value = language
+}
 
 const { data: posts, pending, error } = await useFetch<Post[]>('/api/posts', {
   query: { language: languageFilter },
@@ -506,11 +420,49 @@ const { data: archived, pending: archivedPending, execute: fetchArchived } = use
 // Admin tab state – controls which list is shown for admins (published/drafts/archived)
 const activeTab = useStorage<'published'|'drafts'|'archived'>('posts.activeTab', 'published')
 // Persistent view preference: 'cards' or 'list'
-const viewMode = useStorage<'cards'|'list'>('posts.viewMode', 'cards')
+const viewMode = useStorage<'cards'|'list'>('posts.viewMode.v2', 'list')
 
 const viewDropdownItems = computed(() => [
   { label: $t('pages.posts.cardsView'), onSelect: () => (viewMode.value = 'cards'), leading: 'i-ph-squares-four', trailing: viewMode.value === 'cards' ? 'i-ph-check' : undefined },
   { label: $t('pages.posts.listView'), onSelect: () => (viewMode.value = 'list'), leading: 'i-ph-list-checks', trailing: viewMode.value === 'list' ? 'i-ph-check' : undefined },
+])
+
+const languageDropdownItems = computed(() => [
+  {
+    label: 'English',
+    onSelect: () => setLanguageFilter('en'),
+    leading: 'i-ph-translate',
+    trailing: !showAllLanguages.value && selectedLanguage.value === 'en' ? 'i-ph-check' : undefined,
+  },
+  {
+    label: 'Français',
+    onSelect: () => setLanguageFilter('fr'),
+    leading: 'i-ph-translate',
+    trailing: !showAllLanguages.value && selectedLanguage.value === 'fr' ? 'i-ph-check' : undefined,
+  },
+  { class: 'site-admin-post-options-separator', _dropdownMenuSeparator: { class: 'site-admin-post-options-separator' } },
+  {
+    label: $getLocale() === 'fr' ? 'Toutes les langues' : 'All languages',
+    onSelect: () => setLanguageFilter('all'),
+    leading: 'i-ph-globe-hemisphere-west',
+    trailing: showAllLanguages.value ? 'i-ph-check' : undefined,
+  },
+])
+
+const postOptionsDropdownItems = computed(() => [
+  {
+    label: $t('common.language'),
+    leading: 'i-ph-globe',
+    items: languageDropdownItems.value,
+  },
+  { class: 'site-admin-post-options-separator', _dropdownMenuSeparator: { class: 'site-admin-post-options-separator' } },
+  { label: $t('pages.posts.import'), onSelect: triggerImportFile, leading: 'i-ph-file-arrow-up' },
+  { class: 'site-admin-post-options-separator', _dropdownMenuSeparator: { class: 'site-admin-post-options-separator' } },
+  {
+    label: $t('common.changeView'),
+    leading: viewMode.value === 'cards' ? 'i-ph-squares-four' : 'i-ph-list-checks',
+    items: viewDropdownItems.value,
+  },
 ])
 
 function setTab(tab: 'published'|'drafts'|'archived') {

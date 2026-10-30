@@ -1,112 +1,100 @@
 <template>
-  <div class="site-page site-settings bg-white dark:bg-gray-950 text-gray-800 dark:text-gray-100">
-    <div class="max-w-3xl mx-auto px-4 py-6 space-y-6">
-      <div class="flex items-center justify-between">
-        <div>
-          <div class="text-sm text-slate-500 dark:text-slate-400">
-            <NuxtLink to="/settings" class="inline-flex items-center gap-2 hover:underline">
-              <span class="i-ph-arrow-left" aria-hidden="true" />
-              <span>{{ $t('pages.settings.heading') }}</span>
-            </NuxtLink>
-          </div>
-          <h1 class="text-2xl font-bold mt-1">{{ $t('pages.settingsAi.heading') }}</h1>
-          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            {{ $t('pages.settingsAi.description') }}
-          </p>
-        </div>
-      </div>
+  <div class="site-page site-settings site-settings--ai">
+    <div class="site-settings-content">
+      <header class="site-settings-header site-settings-header--detail">
+        <NuxtLink to="/settings" class="site-settings-back-link">
+          <span class="i-ph-arrow-left" aria-hidden="true" />
+          <span>{{ $t('pages.settingsAi.backToSettings') }}</span>
+        </NuxtLink>
+        <h1 class="site-admin-heading">{{ $t('pages.settingsAi.heading') }}</h1>
+        <p class="site-settings-intro">{{ $t('pages.settingsAi.description') }}</p>
+      </header>
 
-      <section class="rounded-2xl border border-gray-200/60 dark:border-gray-800/60 bg-white/60 dark:bg-gray-950/60 p-4">
-        <div class="flex items-center justify-between gap-3">
+      <section class="site-settings-section" aria-labelledby="ai-provider-heading">
+        <div class="site-settings-section-header">
           <div>
-            <div class="font-semibold">{{ $t('pages.settingsAi.defaultProvider') }}</div>
-            <div class="text-sm text-slate-500 dark:text-slate-400">{{ $t('pages.settingsAi.defaultProviderDesc') }}</div>
+            <h2 id="ai-provider-heading" class="site-settings-section-title">{{ $t('pages.settingsAi.defaultProvider') }}</h2>
+            <p class="site-settings-row-description">{{ $t('pages.settingsAi.defaultProviderDesc') }}</p>
           </div>
-          <NBadge badge="soft" color="primary">{{ provider }}</NBadge>
+          <NBadge badge="soft" color="gray">{{ provider }}</NBadge>
         </div>
 
-        <div class="grid gap-3 mt-4">
+        <div class="site-settings-ai-providers">
           <button
             type="button"
-            class="flex items-center justify-between gap-3 w-full rounded-xl border border-border bg-background px-4 py-3 text-left transition-all hover:border-primary/40 hover:shadow-sm"
-            :class="{ 'border-primary/60 shadow-sm': provider === 'cloudflare' }"
+            class="site-settings-ai-provider"
+            :class="{ 'site-settings-ai-provider--selected': provider === 'cloudflare' }"
             @click="setProvider('cloudflare')"
           >
-            <div class="flex items-center gap-3">
-              <span class="i-lucide-cloud" />
-              <div class="text-left">
-                <div class="font-semibold">{{ $t('pages.settingsAi.cloudflare') }}</div>
-                <div class="text-sm text-slate-600 dark:text-slate-400">{{ $t('pages.settingsAi.cloudflareDesc') }}</div>
-              </div>
+            <span class="i-lucide-cloud site-settings-ai-provider-icon" aria-hidden="true" />
+            <div class="site-settings-ai-provider-copy">
+              <span class="site-settings-row-title">{{ $t('pages.settingsAi.cloudflare') }}</span>
+              <span class="site-settings-row-description">{{ $t('pages.settingsAi.cloudflareDesc') }}</span>
             </div>
-            <span v-if="provider === 'cloudflare'" class="i-ph-check-fat text-primary" />
+            <span v-if="provider === 'cloudflare'" class="i-ph-check-fat site-settings-ai-check" aria-hidden="true" />
           </button>
 
           <button
             type="button"
-            class="flex items-center justify-between gap-3 w-full rounded-xl border border-border bg-background px-4 py-3 text-left transition-all hover:border-primary/40 hover:shadow-sm"
-            :class="{ 'border-primary/60 shadow-sm': provider === 'openrouter' }"
+            class="site-settings-ai-provider"
+            :class="{ 'site-settings-ai-provider--selected': provider === 'openrouter' }"
             @click="setProvider('openrouter')"
           >
-            <div class="flex items-center gap-3">
-              <span class="i-lucide-network" />
-              <div class="text-left">
-                <div class="font-semibold">{{ $t('pages.settingsAi.openrouter') }}</div>
-                <div class="text-sm text-slate-600 dark:text-slate-400">{{ $t('pages.settingsAi.openrouterDesc') }}</div>
-              </div>
+            <span class="i-lucide-network site-settings-ai-provider-icon" aria-hidden="true" />
+            <div class="site-settings-ai-provider-copy">
+              <span class="site-settings-row-title">{{ $t('pages.settingsAi.openrouter') }}</span>
+              <span class="site-settings-row-description">{{ $t('pages.settingsAi.openrouterDesc') }}</span>
             </div>
-            <span v-if="provider === 'openrouter'" class="i-ph-check-fat text-primary" />
+            <span v-if="provider === 'openrouter'" class="i-ph-check-fat site-settings-ai-check" aria-hidden="true" />
           </button>
         </div>
       </section>
 
-      <section class="rounded-2xl border border-gray-200/60 dark:border-gray-800/60 bg-white/60 dark:bg-gray-950/60 p-4 space-y-4">
-        <div class="flex items-center justify-between">
+      <section class="site-settings-section" aria-labelledby="cf-models-heading">
+        <div class="site-settings-section-header">
           <div>
-            <div class="font-semibold">{{ $t('pages.settingsAi.cfModels') }}</div>
-            <div class="text-sm text-slate-500 dark:text-slate-400">{{ $t('pages.settingsAi.cfModelsDesc') }}</div>
+            <h2 id="cf-models-heading" class="site-settings-section-title">{{ $t('pages.settingsAi.cfModels') }}</h2>
+            <p class="site-settings-row-description">{{ $t('pages.settingsAi.cfModelsDesc') }}</p>
           </div>
           <NButton btn="ghost-gray" size="xs" @click="resetModels('cloudflare')">{{ $t('pages.settingsAi.reset') }}</NButton>
         </div>
 
-        <div class="space-y-3">
-          <div v-for="action in actions" :key="`cf-${action.key}`" class="rounded-xl border border-border bg-background p-3">
-            <div class="flex items-center justify-between gap-2">
-              <div>
-                <div class="font-medium">{{ action.label }}</div>
-                <div class="text-sm text-slate-500 dark:text-slate-400">{{ action.description }}</div>
-              </div>
-              <NBadge v-if="action.key === 'translate' || action.key === 'summarize'" badge="soft" color="primary">{{ $t('pages.settingsAi.alwaysCf') }}</NBadge>
+        <div class="site-settings-model-list">
+          <div v-for="action in actions" :key="`cf-${action.key}`" class="site-settings-model-row">
+            <div class="site-settings-model-copy">
+              <div class="site-settings-row-title">{{ action.label }}</div>
+              <div class="site-settings-row-description">{{ action.description }}</div>
+              <NBadge v-if="action.key === 'translate' || action.key === 'summarize'" class="site-settings-always-cf" badge="soft" color="gray">{{ $t('pages.settingsAi.alwaysCf') }}</NBadge>
             </div>
             <NInput
               v-model="cloudflareModels[action.key]"
               input="outline"
-              class="mt-3"
+              class="site-settings-model-input"
               :placeholder="$t('pages.settingsAi.cfPlaceholder')"
             />
           </div>
         </div>
       </section>
 
-      <section class="rounded-2xl border border-gray-200/60 dark:border-gray-800/60 bg-white/60 dark:bg-gray-950/60 p-4 space-y-4">
-        <div class="flex items-center justify-between">
+      <section class="site-settings-section" aria-labelledby="or-models-heading">
+        <div class="site-settings-section-header">
           <div>
-            <div class="font-semibold">{{ $t('pages.settingsAi.orModels') }}</div>
-            <div class="text-sm text-slate-500 dark:text-slate-400">{{ $t('pages.settingsAi.orModelsDesc') }}</div>
+            <h2 id="or-models-heading" class="site-settings-section-title">{{ $t('pages.settingsAi.orModels') }}</h2>
+            <p class="site-settings-row-description">{{ $t('pages.settingsAi.orModelsDesc') }}</p>
           </div>
           <NButton btn="ghost-gray" size="xs" @click="resetModels('openrouter')">{{ $t('pages.settingsAi.reset') }}</NButton>
         </div>
 
-        <div class="space-y-3">
-          <div v-for="action in actions" :key="`or-${action.key}`" class="rounded-xl border border-border bg-background p-3">
-            <div>
-              <div class="font-medium">{{ action.label }}</div>
-              <div class="text-sm text-slate-500 dark:text-slate-400">{{ action.description }}</div>
+        <div class="site-settings-model-list">
+          <div v-for="action in actions" :key="`or-${action.key}`" class="site-settings-model-row">
+            <div class="site-settings-model-copy">
+              <div class="site-settings-row-title">{{ action.label }}</div>
+              <div class="site-settings-row-description">{{ action.description }}</div>
             </div>
             <NInput
               v-model="openrouterModels[action.key]"
               input="outline"
-              class="mt-3"
+              class="site-settings-model-input"
               :placeholder="$t('pages.settingsAi.orPlaceholder')"
             />
           </div>

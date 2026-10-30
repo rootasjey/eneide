@@ -3,9 +3,9 @@
     <div>
       <PresentationTagIndex v-if="!isAdmin && !tagsPending && !tagsError && publicTags.length" :tags="publicTags" />
       <PresentationTagIndex v-else-if="!isAdmin && !tagsPending && !tagsError" />
-      <section v-else class="site-page site-tags py-12 md:py-16 bg-white dark:bg-gray-950">
+      <section v-else class="site-page site-tags py-12 md:py-16 bg-white dark:bg-gray-950" :class="{ 'site-tags--admin': isAdmin }">
       <div class="container mx-auto px-6 max-w-7xl">
-        <h1 class="site-display-heading text-3xl md:text-4xl font-serif font-800 mb-2">{{ $t('pages.tags.heading') }}</h1>
+        <h1 :class="isAdmin ? 'site-admin-heading mb-2' : 'site-display-heading text-3xl md:text-4xl font-serif font-800 mb-2'">{{ $t('pages.tags.heading') }}</h1>
         <div class="flex items-center justify-between mb-8">
           <p class="text-sm text-gray-600 dark:text-gray-400 mr-4">{{ $t('pages.tags.description') }}</p>
           <div class="lg:hidden">
@@ -13,11 +13,11 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 site-tags-admin-grid">
           <!-- Tags column -->
-          <aside class="hidden md:block md:col-span-1">
+          <aside class="hidden md:block md:col-span-1 site-tags-admin-aside">
             <ClientOnly>
-              <div v-if="isAdmin" class="sticky z-20 mb-4 transition-all duration-200" :style="{ top: `${toolbarTop}px` }">
+              <div v-if="isAdmin" class="sticky z-20 mb-4 transition-all duration-200 site-tags-admin-toolbar" :style="{ top: `${toolbarTop}px` }">
                 <div class="bg-background/60 backdrop-blur-sm border border-border rounded-2xl px-3 py-2 flex items-center justify-between gap-3">
                   <div class="flex items-center gap-2">
                     <NButton @click="openNewTag" btn="outline-gray" size="xs" rounded="2" leading="i-ph-plus-bold">{{ $t('pages.tags.newTag') }}</NButton>
@@ -25,7 +25,7 @@
                 </div>
               </div>
             </ClientOnly>
-            <div class="bg-gray-50 dark:bg-gray-900 rounded-2xl p-6 sticky top-6">
+            <div class="bg-gray-50 dark:bg-gray-900 rounded-2xl p-6 sticky top-6 site-tags-admin-filter">
               <div class="flex items-center gap-3 mb-4">
                 <input
                   v-model="search"
@@ -56,20 +56,20 @@
                 :description="$t('pages.tags.unavailableDesc')"
               />
 
-              <TransitionGroup v-else name="tags" tag="ul" class="space-y-3 max-h-[60vh] overflow-y-auto" appear>
+              <TransitionGroup v-else name="tags" tag="ul" class="space-y-3 max-h-[60vh] overflow-y-auto site-tags-admin-list" appear>
                 <li v-for="(tag, i) in filteredTags" :key="tag.id" :style="{ '--enter-delay': `${i * 40}ms` }">
-                  <div class="flex items-center justify-between p-1 rounded-xl">
+                  <div class="flex items-center justify-between p-1 rounded-xl site-tags-admin-row">
                     <button
                       @click="selectTag(tag.name)"
                       :class="[
-                        'w-full flex items-center justify-between gap-4 p-3 rounded-xl transition-all text-left',
+                        'w-full flex items-center justify-between gap-4 p-3 rounded-xl transition-all text-left site-tags-admin-select',
                         selectedTag === tag.name ? 'bg-gray-100 dark:bg-gray-800 shadow-sm' : 'hover:shadow-sm'
                       ]"
                       :style="selectedTag === tag.name ? { borderLeft: `4px solid ${colorForTag(tag.name)}`, paddingLeft: '0.75rem' } : {}"
                       :aria-pressed="selectedTag === tag.name"
                     >
                       <div class="flex items-center gap-3">
-                        <span :style="{ backgroundColor: colorForTag(tag.name) }" class="w-9 h-9 rounded-lg inline-block flex-none"></span>
+                        <span :style="{ backgroundColor: colorForTag(tag.name) }" class="w-9 h-9 rounded-lg inline-block flex-none site-tags-admin-swatch"></span>
                         <div>
                           <div class="text-sm font-semibold">{{ tag.name }}</div>
                           <div class="text-xs text-gray-500 dark:text-gray-400">{{ tag.category || $t('pages.tags.general') }}</div>
@@ -96,7 +96,7 @@
           </aside>
 
           <!-- Posts column -->
-          <main class="md:col-span-2">
+          <main class="md:col-span-2 site-tags-admin-posts">
             <!-- Loading posts -->
             <div v-if="postsPending" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-x-6 gap-y-8">
               <CardSkeleton v-for="i in 4" :key="i" :lines="3" />
@@ -120,8 +120,8 @@
                   </div>
 
                   <div class="space-y-2 flex-1 flex flex-col">
-                    <span v-if="post.tags?.length" class="inline-block w-fit px-3 py-1.5 text-xs font-semibold tracking-wide bg-lime-300 dark:bg-lime-400 text-gray-900 rounded-full uppercase">{{ post.tags?.[0]?.name }}</span>
-                    <h3 class="text-lg md:text-xl font-serif font-bold leading-snug group-hover:opacity-80 transition-opacity line-clamp-2 flex-1">{{ post.name }}</h3>
+                    <span v-if="post.tags?.length" class="inline-block w-fit px-3 py-1.5 text-xs font-semibold tracking-wide bg-lime-300 dark:bg-lime-400 text-gray-900 rounded-full uppercase site-tags-admin-post-tag">{{ post.tags?.[0]?.name }}</span>
+                    <h3 class="text-lg md:text-xl font-serif font-bold leading-snug group-hover:opacity-80 transition-opacity line-clamp-2 flex-1 site-tags-admin-post-title">{{ post.name }}</h3>
                     <div class="flex items-center gap-2 font-600 text-xs text-gray-500 dark:text-gray-400 mt-auto">
                       <time>{{ post.formattedDate }}</time>
                       <span>—</span>
@@ -184,9 +184,9 @@
 
       <NDialogDescription>
         <div class="space-y-3">
-          <NInput v-model="tagName" :placeholder="$t('pages.tags.tagNamePlaceholder')" input="outline-blue" class="shadow-none ring-none" autofocus />
-          <NInput v-model="tagDescription" :placeholder="$t('pages.tags.descriptionPlaceholder')" input="outline-lime" />
-          <NInput v-model="tagCategory" :placeholder="$t('pages.tags.categoryPlaceholder')" input="outline-pink" />
+          <NInput v-model="tagName" :placeholder="$t('pages.tags.tagNamePlaceholder')" input="outline" class="shadow-none ring-none" autofocus />
+          <NInput v-model="tagDescription" :placeholder="$t('pages.tags.descriptionPlaceholder')" input="outline" />
+          <NInput v-model="tagCategory" :placeholder="$t('pages.tags.categoryPlaceholder')" input="outline" />
         </div>
       </NDialogDescription>
 

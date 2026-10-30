@@ -239,13 +239,25 @@
 
             <template v-else>
               <NDropdownMenu :items="dropdownItems">
-                <NButton btn="~" rounded="full" class="site-interactive-hover min-w-0 p-0">
-                  <img v-if="currentUser.value?.avatar" :src="currentUser.value.avatar" alt="avatar" class="w-8 h-8 rounded-full" />
-                  <NAvatar v-else :label="userInitial" avatar="solid-black" size="sm" class="important:font-600 font-title" />
+                <NButton btn="~" rounded="full" class="site-interactive-hover site-header-avatar-trigger min-w-0 p-0">
+                  <img
+                    v-if="currentUser.value?.avatar"
+                    :src="currentUser.value.avatar"
+                    :alt="currentUser.value?.name || $t('common.profile')"
+                    class="site-header-avatar-image w-6 h-6 rounded-full"
+                  />
+                  <img
+                    v-else-if="generatedAvatarUrl && !generatedAvatarFailed"
+                    :src="generatedAvatarUrl"
+                    :alt="currentUser.value?.name || $t('common.profile')"
+                    class="site-header-avatar-image w-6 h-6 rounded-full"
+                    @error="generatedAvatarFailed = true"
+                  />
+                  <NAvatar v-else :label="userInitial" avatar="solid-black" size="xs" class="important:font-600 font-title" />
                 </NButton>
               </NDropdownMenu>
             </template>
-            <NuxtLink :to="localizedPath('/donate', $getLocale())" class="site-interactive-hover uppercase px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-xs font-bold uppercase tracking-wide rounded-4 hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors">
+            <NuxtLink :to="localizedPath('/donate', $getLocale())" class="site-interactive-hover site-header-donate uppercase px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-xs font-bold uppercase tracking-wide rounded-4 hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors">
               {{ $t('nav.donate') }}
             </NuxtLink>
 
@@ -301,7 +313,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, isRef, onBeforeUnmount, ref } from 'vue'
+import { computed, isRef, onBeforeUnmount, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useHeaderScroll } from '../composables/useHeaderScroll'
 import useGlobalSearch from '~/composables/useGlobalSearch'
@@ -320,6 +332,14 @@ const orderedSocials = computed(() => [...siteSocials.value].filter((s) => s.ena
 const isLoggedIn = computed(() => (typeof loggedIn === 'boolean' ? loggedIn : loggedIn.value))
 const currentUser = computed(() => (isRef(user) ? (user.value as any) : user as any))
 const userInitial = computed(() => (currentUser.value?.name ? currentUser.value.name.charAt(0).toUpperCase() : ''))
+const generatedAvatarFailed = ref(false)
+const generatedAvatarUrl = computed(() => {
+  const name = currentUser.value?.name?.trim()
+  if (!name) return ''
+
+  return `https://tronche.cc/api/avatar/${encodeURIComponent(name)}?variant=marble&size=64`
+})
+watch(generatedAvatarUrl, () => { generatedAvatarFailed.value = false })
 const isAdmin = computed(() => isLoggedIn.value && currentUser.value?.role === 'admin')
 
 const isMobileMenuOpen = ref(false)
@@ -622,6 +642,17 @@ function iconClass(platform?: string) {
 .site-shell .site-header-controls > a:nth-child(2) { display: none; }
 .site-shell .site-header-controls button { color: var(--site-color-muted); }
 .site-shell .site-header-controls .combobox-trigger-trailing { display: none; }
+.site-shell .site-header-controls .site-header-control-trigger,
+.site-shell .site-header-controls .site-header-search,
+.site-shell .site-header-controls .site-header-avatar-trigger,
+.site-shell .site-header-controls .site-header-donate {
+  transition:
+    color 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
 .site-shell .site-header-controls .site-header-control-trigger {
   border: 0;
   background-color: transparent;
@@ -632,7 +663,12 @@ function iconClass(platform?: string) {
 .site-shell .site-header-controls .site-header-control-trigger:focus-visible {
   background-color: var(--site-color-hover-background);
   color: var(--site-color-heading);
+  transform: translateY(-1px);
 }
+.site-shell .site-header-controls .site-header-control-trigger:active,
+.site-shell .site-header-controls .site-header-search:active,
+.site-shell .site-header-controls .site-header-avatar-trigger:active,
+.site-shell .site-header-controls .site-header-donate:active { transform: scale(0.97); }
 .site-shell .site-header-controls .site-header-theme-trigger {
   display: inline-flex;
   align-items: center;
@@ -655,12 +691,48 @@ function iconClass(platform?: string) {
   padding: 0;
   border-radius: 10px;
 }
+.site-shell .site-header-controls .site-header-search:hover,
+.site-shell .site-header-controls .site-header-search:focus-visible,
+.site-shell .site-header-controls .site-header-avatar-trigger:hover,
+.site-shell .site-header-controls .site-header-avatar-trigger:focus-visible {
+  background-color: var(--site-color-hover-background);
+  color: var(--site-color-heading);
+  transform: translateY(-1px);
+}
+.site-shell .site-header-controls .site-header-avatar-image {
+  transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.site-shell .site-header-controls .site-header-avatar-trigger:hover .site-header-avatar-image,
+.site-shell .site-header-controls .site-header-avatar-trigger:focus-visible .site-header-avatar-image { transform: scale(1.04); }
 .site-shell .site-theme-icon { width: 16px; height: 16px; color: var(--site-color-text); }
 .site-shell .site-mobile-brand { background: transparent; border: 0; border-radius: 0; }
 .site-shell .site-mobile-brand .site-wordmark { color: var(--site-color-text); }
 .site-shell .site-masthead a:hover { color: var(--site-color-accent); }
 .site-shell .site-header-nav a:hover,
 .site-shell .site-header-nav button:hover { color: var(--site-color-heading); background: var(--site-color-hover-background); }
+@media (prefers-reduced-motion: reduce) {
+  .site-shell .site-header-controls .site-header-control-trigger,
+  .site-shell .site-header-controls .site-header-search,
+  .site-shell .site-header-controls .site-header-avatar-trigger,
+  .site-shell .site-header-controls .site-header-avatar-image,
+  .site-shell .site-header-controls .site-header-donate {
+    transition: none;
+  }
+  .site-shell .site-header-controls .site-header-control-trigger:hover,
+  .site-shell .site-header-controls .site-header-control-trigger:focus-visible,
+  .site-shell .site-header-controls .site-header-search:hover,
+  .site-shell .site-header-controls .site-header-search:focus-visible,
+  .site-shell .site-header-controls .site-header-avatar-trigger:hover,
+  .site-shell .site-header-controls .site-header-avatar-trigger:focus-visible,
+  .site-shell .site-header-controls .site-header-control-trigger:active,
+  .site-shell .site-header-controls .site-header-search:active,
+  .site-shell .site-header-controls .site-header-avatar-trigger:active,
+  .site-shell .site-header-controls .site-header-donate:active,
+  .site-shell .site-header-controls .site-header-avatar-trigger:hover .site-header-avatar-image,
+  .site-shell .site-header-controls .site-header-avatar-trigger:focus-visible .site-header-avatar-image {
+    transform: none;
+  }
+}
 @media (max-width: 1023px) {
   .site-shell .site-header-desktop { display: none; }
 }

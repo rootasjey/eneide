@@ -59,70 +59,52 @@
       />
 
       <!-- Admin-only project controls -->
-      <div v-if="isAdmin" class="site-page-heading mb-12 md:mb-16">
+      <div v-if="isAdmin" class="site-admin-list-header">
         <div v-if="activeTab === 'published'">
-          <div class="flex items-start justify-between gap-4">
-            <div>
-              <h1 class="font-title text-size-24 font-bold line-height-28">{{ $t('pages.projects.heading') }}</h1>
-
-              <div class="flex items-center gap-2">
-                <NDropdownMenu v-if="isAdmin" :items="viewDropdownItems" :_dropdownMenuContent="{ side: 'bottom', align: 'end' }">
-                  <template #default>
-                    <NButton btn="outline-gray" size="xs" icon :aria-label="$t('common.changeView')">
-                      <NIcon :name="viewMode === 'cards' ? 'i-ph-squares-four' : 'i-ph-list-checks'" />
-                    </NButton>
-                  </template>
-                </NDropdownMenu>
-                <p class="text-lg md:text-xl text-slate-500 dark:text-slate-400 max-w-2xl">
-                  {{ $t('pages.projects.description') }}
-                </p>
-              </div>
-            </div>
+          <div class="site-admin-list-header-copy">
+            <h1 class="site-admin-heading">{{ $t('pages.projects.heading') }}</h1>
+            <p class="site-admin-intro">{{ $t('pages.projects.description') }}</p>
+          </div>
+          <div class="site-admin-list-header-action">
+            <NDropdownMenu :items="viewDropdownItems" :_dropdownMenuContent="{ side: 'bottom', align: 'end' }">
+              <template #default>
+                <NButton btn="outline-gray" size="xs" icon :aria-label="$t('common.changeView')">
+                  <NIcon :name="viewMode === 'cards' ? 'i-ph-squares-four' : 'i-ph-list-checks'" />
+                </NButton>
+              </template>
+            </NDropdownMenu>
           </div>
         </div>
 
         <div v-else-if="activeTab === 'drafts'">
-          <div class="flex items-start justify-between gap-4">
-            <div>
-              <h1 class="font-title text-size-24 font-bold line-height-24 overflow-hidden">
-                <TypewriterText :text="$t('pages.posts.draftsHeading')" :auto-hide-cursor="true" />
-              </h1>
-              <div class="flex items-center gap-2">
-                <NDropdownMenu :items="viewDropdownItems" :_dropdownMenuContent="{ side: 'bottom', align: 'end' }">
-                  <template #default>
-                    <NButton btn="outline-gray" size="xs" icon :aria-label="$t('common.changeView')">
-                      <NIcon :name="viewMode === 'cards' ? 'i-ph-squares-four' : 'i-ph-list-checks'" />
-                    </NButton>
-                  </template>
-                </NDropdownMenu>
-                <p class="text-lg md:text-xl text-slate-500 dark:text-slate-400 max-w-2xl">
-                  {{ $t('pages.projects.archivedDescription') }}
-                </p>
-              </div>
-            </div>
+          <div class="site-admin-list-header-copy">
+            <h1 class="site-admin-heading">{{ $t('pages.posts.draftsHeading') }}</h1>
+            <p class="site-admin-intro">{{ $t('pages.projects.draftsDescription') }}</p>
+          </div>
+          <div class="site-admin-list-header-action">
+            <NDropdownMenu :items="viewDropdownItems" :_dropdownMenuContent="{ side: 'bottom', align: 'end' }">
+              <template #default>
+                <NButton btn="outline-gray" size="xs" icon :aria-label="$t('common.changeView')">
+                  <NIcon :name="viewMode === 'cards' ? 'i-ph-squares-four' : 'i-ph-list-checks'" />
+                </NButton>
+              </template>
+            </NDropdownMenu>
           </div>
         </div>
 
         <div v-else-if="activeTab === 'archived'">
-          <div class="flex items-start justify-between gap-4">
-            <div>
-              <h1 class="font-title text-size-24 font-bold line-height-24 overflow-hidden">
-                <TypewriterText :text="$t('pages.posts.archivedHeading')" :auto-hide-cursor="true" />
-              </h1>
-              
-              <div class="flex items-center gap-2">
-                <NDropdownMenu :items="viewDropdownItems" :_dropdownMenuContent="{ side: 'bottom', align: 'end' }">
-                  <template #default>
-                    <NButton btn="outline-gray" size="xs" icon :aria-label="$t('common.changeView')">
-                      <NIcon :name="viewMode === 'cards' ? 'i-ph-squares-four' : 'i-ph-list-checks'" />
-                    </NButton>
-                  </template>
-                </NDropdownMenu>
-                <p class="text-lg md:text-xl text-slate-500 dark:text-slate-400 max-w-2xl">
-                  {{ $t('pages.projects.draftsDescription') }}
-                </p>
-              </div>
-            </div>
+          <div class="site-admin-list-header-copy">
+            <h1 class="site-admin-heading">{{ $t('pages.posts.archivedHeading') }}</h1>
+            <p class="site-admin-intro">{{ $t('pages.projects.archivedDescription') }}</p>
+          </div>
+          <div class="site-admin-list-header-action">
+            <NDropdownMenu :items="viewDropdownItems" :_dropdownMenuContent="{ side: 'bottom', align: 'end' }">
+              <template #default>
+                <NButton btn="outline-gray" size="xs" icon :aria-label="$t('common.changeView')">
+                  <NIcon :name="viewMode === 'cards' ? 'i-ph-squares-four' : 'i-ph-list-checks'" />
+                </NButton>
+              </template>
+            </NDropdownMenu>
           </div>
         </div>
       </div> 
@@ -342,7 +324,7 @@ function setTab(tab: 'published'|'drafts'|'archived') {
 const isAdmin = computed(() => loggedIn.value && user.value?.role === 'admin') 
 
 // Persistent view preference for projects
-const viewMode = useStorage<'cards'|'list'>('projects.viewMode', 'cards')
+const viewMode = useStorage<'cards'|'list'>('projects.viewMode.v2', 'list')
 const isListView = computed(() => viewMode.value === 'list')
 const viewDropdownItems = computed(() => [
   { label: $t('pages.posts.cardsView'), onSelect: () => (viewMode.value = 'cards'), leading: 'i-ph-squares-four', trailing: viewMode.value === 'cards' ? 'i-ph-check' : undefined },

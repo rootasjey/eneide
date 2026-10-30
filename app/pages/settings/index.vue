@@ -1,89 +1,69 @@
 <template>
-  <div class="site-page site-settings bg-white dark:bg-gray-950 text-gray-800 dark:text-gray-100">
-    <div class="max-w-3xl mx-auto px-4 py-6">
-      <div class="flex items-center justify-between mb-4 animate-entrance" style="animation-delay:80ms;">
-        <h1 class="site-display-heading text-2xl font-bold">{{ $t('pages.settings.heading') }}</h1>
-        <p class="text-sm text-gray-500">v{{ appVersion }}</p>
-      </div>
+  <div class="site-page site-settings site-settings--index">
+    <div class="site-settings-content">
+      <header class="site-settings-header">
+        <h1 class="site-admin-heading">{{ $t('pages.settings.heading') }}</h1>
+      </header>
 
-      <div class="space-y-3 animate-entrance" style="animation-delay:180ms;">
-        <!-- Theme -->
-        <NuxtLink to="/settings/theme" class="p-4 rounded-xl border border-gray-200/60 dark:border-gray-800/60 bg-white/60 dark:bg-gray-950/60 flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <button
-              type="button"
-              class="w-9 h-9 inline-flex items-center justify-center rounded-lg hover:bg-gray-100/70 dark:hover:bg-gray-900/70 transition"
-              :aria-label="$t('pages.settings.switchTheme', { theme: themePreferenceLabel })"
-              @click.stop.prevent="cycleTheme"
-            >
-              <div :class="[themeIconClass, 'w-5 h-5 text-yellow-500']"></div>
-            </button>
-            <div>
-              <div class="font-medium">{{ $t('pages.settings.theme') }}</div>
-              <div class="text-sm text-gray-500">{{ $t('pages.settings.themeDescription') }}</div>
-            </div>
-          </div>
-          <div class="i-ph-caret-right text-gray-400" />
-        </NuxtLink>
-
-        <!-- Profile -->
-        <NuxtLink to="/profile" class="p-4 rounded-xl border border-gray-200/60 dark:border-gray-800/60 bg-white/60 dark:bg-gray-950/60 flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="i-ph-user-circle-duotone w-5 h-5 text-gray-700 dark:text-gray-300"></div>
-            <div>
-              <div class="font-medium">{{ $t('pages.settings.profile') }}</div>
-              <div class="text-sm text-gray-500">{{ $t('pages.settings.profileDescription') }}</div>
-            </div>
-          </div>
-          <div class="i-ph-caret-right text-gray-400" />
-        </NuxtLink>
-
-        <!-- AI -->
-        <NuxtLink to="/settings/ai" class="p-4 rounded-xl border border-gray-200/60 dark:border-gray-800/60 bg-white/60 dark:bg-gray-950/60 flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="i-ph-sparkle-duotone w-5 h-5 text-gray-700 dark:text-gray-300"></div>
-            <div>
-              <div class="font-medium">{{ $t('pages.settings.aiSettings') }}</div>
-              <div class="text-sm text-gray-500">{{ $t('pages.settings.aiSettingsDescription') }}</div>
-            </div>
-          </div>
-          <div class="i-ph-caret-right text-gray-400" />
-        </NuxtLink>
-
-        <!-- About -->
-        <NuxtLink to="/about" class="p-4 rounded-xl border border-gray-200/60 dark:border-gray-800/60 bg-white/60 dark:bg-gray-950/60 flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="i-ph-newspaper-duotone w-5 h-5 text-gray-700 dark:text-gray-300"></div>
-            <div>
-              <div class="font-medium">{{ $t('pages.settings.about') }}</div>
-              <div class="text-sm text-gray-500">{{ $t('pages.settings.aboutDescription') }}</div>
-            </div>
-          </div>
-          <div class="i-ph-caret-right text-gray-400" />
-        </NuxtLink>
-
-        <!-- Credits -->
-        <NuxtLink to="/credits" class="p-4 rounded-xl border border-gray-200/60 dark:border-gray-800/60 bg-white/60 dark:bg-gray-950/60 flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="i-ph-github-logo-duotone w-5 h-5 text-gray-700 dark:text-gray-300"></div>
-            <div>
-              <div class="font-medium">{{ $t('pages.settings.credits') }}</div>
-              <div class="text-sm text-gray-500">{{ $t('pages.settings.creditsDescription') }}</div>
-            </div>
-          </div>
-          <div class="i-ph-caret-right text-gray-400" />
-        </NuxtLink>
-
-        <!-- App version -->
-        <div class="p-4 rounded-xl border border-gray-200/60 dark:border-gray-800/60 bg-white/60 dark:bg-gray-950/60 flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="i-ph-info-duotone w-5 h-5 text-gray-700 dark:text-gray-300"></div>
-            <div>
-              <div class="font-medium">{{ $t('pages.settings.appVersion') }}</div>
-              <div class="text-sm text-gray-500">{{ $t('pages.settings.appVersionDescription', { version: appVersion }) }}</div>
-            </div>
-          </div>
+      <nav class="site-settings-list" :aria-label="$t('pages.settings.heading')">
+        <div class="site-settings-item site-settings-theme-item">
+          <button
+            type="button"
+            class="site-settings-theme-cycle"
+            :aria-label="$t('pages.settings.switchTheme', { theme: themePreferenceLabel })"
+            @click="cycleTheme"
+          >
+            <span :class="[themeIconClass, 'site-settings-row-icon']" aria-hidden="true" />
+          </button>
+          <NuxtLink to="/settings/theme" class="site-settings-row-link">
+            <span class="site-settings-row-copy">
+              <span class="site-settings-row-title">{{ $t('pages.settings.theme') }}</span>
+              <span class="site-settings-row-description">{{ $t('pages.settings.themeDescription') }}</span>
+            </span>
+            <span class="i-ph-caret-right site-settings-row-chevron" aria-hidden="true" />
+          </NuxtLink>
         </div>
+
+        <NuxtLink to="/profile" class="site-settings-item site-settings-row-link">
+          <span class="i-ph-user-circle-duotone site-settings-row-icon" aria-hidden="true" />
+          <span class="site-settings-row-copy">
+            <span class="site-settings-row-title">{{ $t('pages.settings.profile') }}</span>
+            <span class="site-settings-row-description">{{ $t('pages.settings.profileDescription') }}</span>
+          </span>
+          <span class="i-ph-caret-right site-settings-row-chevron" aria-hidden="true" />
+        </NuxtLink>
+
+        <NuxtLink to="/settings/ai" class="site-settings-item site-settings-row-link">
+          <span class="i-ph-sparkle-duotone site-settings-row-icon" aria-hidden="true" />
+          <span class="site-settings-row-copy">
+            <span class="site-settings-row-title">{{ $t('pages.settings.aiSettings') }}</span>
+            <span class="site-settings-row-description">{{ $t('pages.settings.aiSettingsDescription') }}</span>
+          </span>
+          <span class="i-ph-caret-right site-settings-row-chevron" aria-hidden="true" />
+        </NuxtLink>
+
+        <NuxtLink to="/about" class="site-settings-item site-settings-row-link">
+          <span class="i-ph-newspaper-duotone site-settings-row-icon" aria-hidden="true" />
+          <span class="site-settings-row-copy">
+            <span class="site-settings-row-title">{{ $t('pages.settings.about') }}</span>
+            <span class="site-settings-row-description">{{ $t('pages.settings.aboutDescription') }}</span>
+          </span>
+          <span class="i-ph-caret-right site-settings-row-chevron" aria-hidden="true" />
+        </NuxtLink>
+
+        <NuxtLink to="/credits" class="site-settings-item site-settings-row-link">
+          <span class="i-ph-github-logo-duotone site-settings-row-icon" aria-hidden="true" />
+          <span class="site-settings-row-copy">
+            <span class="site-settings-row-title">{{ $t('pages.settings.credits') }}</span>
+            <span class="site-settings-row-description">{{ $t('pages.settings.creditsDescription') }}</span>
+          </span>
+          <span class="i-ph-caret-right site-settings-row-chevron" aria-hidden="true" />
+        </NuxtLink>
+      </nav>
+
+      <div class="site-settings-version-row">
+        <span class="site-settings-row-title">{{ $t('pages.settings.appVersion') }}</span>
+        <span class="site-settings-row-description">{{ $t('pages.settings.appVersionDescription', { version: appVersion }) }}</span>
       </div>
     </div>
   </div>

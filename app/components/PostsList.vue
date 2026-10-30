@@ -21,8 +21,8 @@
       />
     </div>
 
-    <!-- List view -->
-    <div v-else class="mx-auto space-y-4">
+    <!-- Editorial list view mirrors the public archive while retaining admin actions. -->
+    <div v-else class="site-admin-editorial-grid">
       <PostRow
         v-for="(post, i) in posts"
         :key="post.slug"
@@ -35,6 +35,7 @@
         :duplicatingPosts="duplicatingPosts"
         :menuItemsForPost="menuItemsForPost"
         :entered="entered"
+        compact
         @toggle-selected="$emit('toggle-selected', $event)"
         @long-press-start="$emit('long-press-start', $event)"
         @long-press-cancel="$emit('long-press-cancel')"
@@ -93,5 +94,6 @@ const emit = defineEmits<{
   outline: 2px solid rgba(59,130,246,0.12);
   outline-offset: 2px;
 }
+
 }
 </style>

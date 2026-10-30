@@ -1,78 +1,76 @@
 <template>
-  <div class="site-page site-auth-page min-h-screen flex flex-col items-center py-12 px-6 bg-gray-50 dark:bg-gray-950">
-    <!-- Logo -->
-    <NuxtLink to="/" class="mb-12">
-      <span class="font-title text-4xl font-bold text-black dark:text-white">
-        {{ $t('pages.signup.startJourney') }}
-      </span>
-    </NuxtLink>
+  <section class="site-page site-auth-page site-auth-page--signup">
+    <section class="site-auth-card" aria-labelledby="auth-title">
+      <header class="site-auth-heading">
+        <h1 id="auth-title">{{ $t('pages.signup.heading') }}</h1>
+        <span>{{ $t('pages.signup.description') }}</span>
+      </header>
 
-    <!-- Card -->
-    <div class="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-10">
-      <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-black dark:text-white mb-2">{{ $t('pages.signup.heading') }}</h1>
-        <p class="text-sm text-gray-500 dark:text-gray-400">{{ $t('pages.signup.description') }}</p>
-      </div>
-
-      <form @submit.prevent="onSubmit" class="space-y-4">
-        <div>
+      <form class="site-auth-form" @submit.prevent="onSubmit">
+        <div class="site-auth-field">
+          <label class="site-auth-label" for="signup-name">{{ $t('pages.signup.namePlaceholder') }}</label>
           <input
+            id="signup-name"
             v-model="form.name"
             type="text"
             autocomplete="name"
-            class="w-full rounded-full px-6 py-4 bg-gray-50 dark:bg-gray-800 border-0 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-lime-400"
+            required
+            minlength="2"
+            :aria-invalid="Boolean(errors.name)"
+            :aria-describedby="errors.name ? 'signup-name-error' : undefined"
             :placeholder="$t('pages.signup.namePlaceholder')"
           />
-          <p v-if="errors.name" class="text-xs text-red-500 mt-2 px-2">{{ errors.name }}</p>
+          <p v-if="errors.name" id="signup-name-error" class="site-auth-error">{{ errors.name }}</p>
         </div>
 
-        <div>
+        <div class="site-auth-field">
+          <label class="site-auth-label" for="signup-email">{{ $t('pages.signup.emailPlaceholder') }}</label>
           <input
+            id="signup-email"
             v-model="form.email"
             type="email"
             autocomplete="email"
-            class="w-full rounded-full px-6 py-4 bg-gray-50 dark:bg-gray-800 border-0 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-lime-400"
+            required
+            :aria-invalid="Boolean(errors.email)"
+            :aria-describedby="errors.email ? 'signup-email-error' : undefined"
             :placeholder="$t('pages.signup.emailPlaceholder')"
           />
-          <p v-if="errors.email" class="text-xs text-red-500 mt-2 px-2">{{ errors.email }}</p>
+          <p v-if="errors.email" id="signup-email-error" class="site-auth-error">{{ errors.email }}</p>
         </div>
 
-        <div>
+        <div class="site-auth-field">
+          <label class="site-auth-label" for="signup-password">{{ $t('pages.signup.passwordPlaceholder') }}</label>
           <input
+            id="signup-password"
             v-model="form.password"
             :type="showPassword ? 'text' : 'password'"
             autocomplete="new-password"
-            class="w-full rounded-full px-6 py-4 bg-gray-50 dark:bg-gray-800 border-0 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-lime-400"
+            required
+            minlength="8"
+            :aria-invalid="Boolean(errors.password)"
+            :aria-describedby="errors.password ? 'signup-password-error' : undefined"
             :placeholder="$t('pages.signup.passwordPlaceholder')"
           />
-          <div class="flex items-center justify-between mt-2">
-            <label class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-              <input type="checkbox" v-model="showPassword" class="w-4 h-4" />
-              {{ $t('pages.signup.showPassword') }}
-            </label>
-          </div>
-          <p v-if="errors.password" class="text-xs text-red-500 mt-2 px-2">{{ errors.password }}</p>
+          <label class="site-auth-checkbox">
+            <input type="checkbox" v-model="showPassword" />
+            {{ $t('pages.signup.showPassword') }}
+          </label>
+          <p v-if="errors.password" id="signup-password-error" class="site-auth-error">{{ errors.password }}</p>
         </div>
 
-        <div v-if="errorMessage" class="text-sm text-red-600 dark:text-red-400">{{ errorMessage }}</div>
+        <p v-if="errorMessage" class="site-auth-error site-auth-form-error" role="alert">{{ errorMessage }}</p>
 
-        <div>
-          <button
-            :disabled="isSubmitting"
-            type="submit"
-            class="w-full rounded-full px-6 py-4 bg-lime-300 hover:bg-lime-400 text-black font-bold text-sm uppercase tracking-wide transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            <span v-if="!isSubmitting">{{ $t('pages.signup.submit') }}</span>
-            <span v-else>{{ $t('pages.signup.submitting') }}</span>
-          </button>
-        </div>
+        <button class="site-interactive-hover site-outline-action site-auth-submit" :disabled="isSubmitting" type="submit">
+          {{ isSubmitting ? $t('pages.signup.submitting') : $t('pages.signup.submit') }}
+        </button>
       </form>
 
-      <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-        {{ $t('pages.signup.hasAccount') }} <NuxtLink to="/signin" class="text-black dark:text-white font-medium underline hover:no-underline">{{ $t('pages.signup.signInLink') }}</NuxtLink>
+      <p class="site-auth-switch">
+        {{ $t('pages.signup.hasAccount') }}
+        <NuxtLink to="/signin">{{ $t('pages.signup.signInLink') }}</NuxtLink>
       </p>
-    </div>
-  </div>
+    </section>
+  </section>
 </template>
 
 <script setup lang="ts">
@@ -144,4 +142,4 @@ async function onSubmit() {
 }
 </script>
 
-<style scoped></style>
+<style src="~/styles/auth-page.css"></style>

@@ -17,5 +17,10 @@
 
 /* Component and page styles moved from the global stylesheets. */
 .site-shell .site-banner { position: relative; top: auto; transform: none; box-shadow: none; }
+.site-shell > main:has(> .site-auth-page),
+.site-shell > main:has(> .site-error-page) {
+  display: flex;
+  flex-direction: column;
+}
 }
 </style>

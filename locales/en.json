@@ -87,8 +87,10 @@
   },
   "error": {
     "pageNotFound": "Page Not Found",
+    "notFoundTitle": "Looks like this page left the journal.",
+    "returnHome": "Back to home",
     "somethingWentWrong": "Something Went Wrong",
-    "notFoundDescription": "The page you're looking for doesn't exist or has been moved.",
+    "notFoundDescription": "The link may be outdated, or the page may have moved.",
     "genericErrorDescription": "An unexpected error occurred. We're looking into it.",
     "debugInfo": "Debug Info (Admin)"
   },

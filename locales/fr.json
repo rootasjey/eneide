@@ -87,8 +87,10 @@
   },
   "error": {
     "pageNotFound": "Page introuvable",
+    "notFoundTitle": "On dirait que cette page a quitté le journal.",
+    "returnHome": "Revenir à l’accueil",
     "somethingWentWrong": "Une erreur est survenue",
-    "notFoundDescription": "La page que vous cherchez n'existe pas ou a été déplacée.",
+    "notFoundDescription": "Le lien est peut-être ancien, ou la page a été déplacée.",
     "genericErrorDescription": "Une erreur inattendue s'est produite. Nous enquêtons.",
     "debugInfo": "Infos de débogage (Admin)"
   },

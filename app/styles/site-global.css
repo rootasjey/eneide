@@ -18,6 +18,9 @@
   --site-color-accent: #5343df;
   --site-color-border: #e5e5e7;
   --site-color-focus-ring: #737378;
+  --site-color-input-focus-background: #f2f2f2;
+  --site-color-selection-background: #d4d4d8;
+  --site-color-selection-foreground: #171719;
   --site-color-hover-background: #f2f2f2;
   --site-font-heading: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", sans-serif;
   --site-font-body: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", sans-serif;
@@ -33,6 +36,8 @@
   --site-color-accent: #5343df;
   --site-color-border: #39393c;
   --site-color-focus-ring: #858589;
+  --site-color-input-focus-background: #343437;
+  --site-color-selection-background: #858589;
   --site-color-hover-background: #343437;
 }
 
@@ -52,11 +57,6 @@ body {
   font-size: 16px;
   line-height: 1.5;
   text-rendering: optimizeLegibility;
-}
-
-::selection {
-  color: #fff;
-  background: #5343df;
 }
 
 .site-shell {
@@ -83,6 +83,35 @@ body {
   background: var(--site-color-hover-background);
   transform: translateY(-2px);
   text-decoration: none;
+}
+
+.site-shell .site-outline-action {
+  display: inline-flex;
+  box-sizing: border-box;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  border: 1px solid var(--site-color-border);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--site-color-heading);
+  cursor: pointer;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.site-shell .site-outline-action:hover,
+.site-shell .site-outline-action:focus-visible {
+  border-color: transparent;
+}
+
+.site-shell .site-outline-action:focus-visible {
+  outline: 2px solid var(--site-color-focus-ring);
+  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -379,5 +408,45 @@ body {
 :focus-visible {
   outline: 2px solid var(--site-color-focus-ring);
   outline-offset: 3px;
+}
+
+::selection {
+  color: var(--site-color-selection-foreground);
+  background: var(--site-color-selection-background);
+}
+
+.site-shell :is(
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+  textarea,
+  select
+):focus {
+  background-color: var(--site-color-input-focus-background);
+}
+
+.site-shell :is(
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+  textarea,
+  select
+):focus-visible {
+  border-color: transparent;
+  outline-offset: 0;
+}
+
+.site-shell :is(
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+  textarea,
+  select
+):-webkit-autofill {
+  -webkit-box-shadow: inset 0 0 0 1000px var(--site-color-background);
+  -webkit-text-fill-color: var(--site-color-heading);
+  caret-color: var(--site-color-heading);
+}
+
+.site-shell :is(
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+  textarea,
+  select
+):-webkit-autofill:focus {
+  -webkit-box-shadow: inset 0 0 0 1000px var(--site-color-input-focus-background);
 }
 }

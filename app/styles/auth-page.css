@@ -1,0 +1,173 @@
+@layer theme-overrides {
+  .site-auth-page {
+    display: flex;
+    box-sizing: border-box;
+    flex: 1;
+    min-height: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background: var(--site-color-background);
+    color: var(--site-color-text);
+  }
+
+  .site-auth-page--signup {
+    justify-content: flex-start;
+    padding-top: 72px;
+  }
+
+  .site-auth-card {
+    width: min(100%, 440px);
+    padding: 32px;
+    border: 1px solid var(--site-color-border);
+    border-radius: 20px;
+    background: var(--site-color-surface);
+  }
+
+  .site-auth-heading {
+    margin-bottom: 28px;
+    text-align: center;
+  }
+
+  .site-auth-heading > p {
+    margin: 0 0 8px;
+    color: var(--site-color-muted);
+    font-size: 13px;
+  }
+
+  .site-auth-heading h1 {
+    margin: 0;
+    color: var(--site-color-heading);
+    font-size: 26px;
+    font-weight: 550;
+    line-height: 1.25;
+  }
+
+  .site-auth-heading > span {
+    display: block;
+    margin-top: 10px;
+    color: var(--site-color-muted);
+    font-size: 14px;
+  }
+
+  .site-auth-form {
+    display: grid;
+    gap: 18px;
+  }
+
+  .site-auth-field {
+    display: grid;
+    gap: 8px;
+  }
+
+  .site-auth-label {
+    color: var(--site-color-text);
+    font-size: 13px;
+    font-weight: 550;
+  }
+
+  .site-auth-field input:not([type="checkbox"]) {
+    width: 100%;
+    min-height: 48px;
+    box-sizing: border-box;
+    padding: 0 15px;
+    border: 1px solid var(--site-color-border);
+    border-radius: 12px;
+    background: var(--site-color-background);
+    color: var(--site-color-heading);
+    font: inherit;
+    font-size: 15px;
+    transition: border-color 160ms ease, background-color 160ms ease;
+  }
+
+  .site-auth-field input::placeholder {
+    color: var(--site-color-muted);
+  }
+
+  .site-auth-field input:focus-visible {
+    border-color: var(--site-color-muted);
+    outline: 2px solid var(--site-color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  .site-auth-checkbox {
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    gap: 9px;
+    color: var(--site-color-muted);
+    cursor: pointer;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .site-auth-checkbox input {
+    accent-color: var(--site-color-heading);
+  }
+
+  .site-auth-checkbox input:focus-visible {
+    outline: 2px solid var(--site-color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  .site-auth-error {
+    margin: 0;
+    color: #d26b6b;
+    font-size: 13px;
+  }
+
+  .site-auth-form-error {
+    padding: 10px 12px;
+    border: 1px solid color-mix(in srgb, #d26b6b 40%, transparent);
+    border-radius: 10px;
+    background: color-mix(in srgb, #d26b6b 8%, transparent);
+  }
+
+  .site-auth-submit {
+    width: 100%;
+  }
+
+  .site-auth-submit:active:not(:disabled) {
+    transform: scale(0.99);
+  }
+
+  .site-auth-submit:disabled {
+    cursor: wait;
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  .site-auth-switch a:focus-visible {
+    outline: 2px solid var(--site-color-focus-ring);
+    outline-offset: 3px;
+  }
+
+  .site-auth-switch {
+    margin: 24px 0 0;
+    color: var(--site-color-muted);
+    font-size: 13px;
+    text-align: center;
+  }
+
+  .site-auth-switch a {
+    color: var(--site-color-heading);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @media (max-width: 480px) {
+    .site-auth-card {
+      padding: 26px 20px;
+    }
+  }
+
+  @media (max-height: 720px) {
+    .site-auth-page--signup {
+      justify-content: center;
+      padding-top: 40px;
+    }
+  }
+}
+

@@ -1,67 +1,55 @@
 <template>
-  <div class="site-page site-auth-page min-h-screen flex flex-col items-center py-12 px-6 bg-gray-50 dark:bg-gray-950">
+  <section class="site-page site-auth-page">
+    <section class="site-auth-card" aria-labelledby="auth-title">
+      <header class="site-auth-heading">
+        <h1 id="auth-title">{{ $t('pages.signin.heading') }}</h1>
+        <span>{{ $t('pages.signin.description') }}</span>
+      </header>
 
-    <!-- Logo -->
-    <NuxtLink to="/" class="mb-12">
-      <span class="font-title text-4xl font-bold text-black dark:text-white">{{ $t('pages.signin.welcomeBack') }}</span>
-    </NuxtLink>
-
-    <!-- Card -->
-    <div class="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-10">
-      <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-black dark:text-white mb-2">{{ $t('pages.signin.heading') }}</h1>
-        <p class="text-sm text-gray-500 dark:text-gray-400">{{ $t('pages.signin.description') }}</p>
-      </div>
-
-      <form @submit.prevent="onSubmit" class="space-y-4">
-        <div>
+      <form class="site-auth-form" @submit.prevent="onSubmit">
+        <div class="site-auth-field">
+          <label class="site-auth-label" for="signin-email">{{ $t('pages.signin.emailPlaceholder') }}</label>
           <input
+            id="signin-email"
             v-model="form.email"
             type="email"
             autocomplete="email"
-            class="w-full rounded-full px-6 py-4 bg-gray-50 dark:bg-gray-800 border-0 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-lime-400"
+            required
+            :aria-invalid="Boolean(errors.email)"
+            :aria-describedby="errors.email ? 'signin-email-error' : undefined"
             :placeholder="$t('pages.signin.emailPlaceholder')"
           />
-          <p v-if="errors.email" class="text-xs text-red-500 mt-2 px-2">{{ errors.email }}</p>
+          <p v-if="errors.email" id="signin-email-error" class="site-auth-error">{{ errors.email }}</p>
         </div>
 
-        <div>
+        <div class="site-auth-field">
+          <label class="site-auth-label" for="signin-password">{{ $t('pages.signin.passwordPlaceholder') }}</label>
           <input
+            id="signin-password"
             v-model="form.password"
-            :type="showPassword ? 'text' : 'password'"
+            type="password"
             autocomplete="current-password"
-            class="w-full rounded-full px-6 py-4 bg-gray-50 dark:bg-gray-800 border-0 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-lime-400"
+            required
+            :aria-invalid="Boolean(errors.password)"
+            :aria-describedby="errors.password ? 'signin-password-error' : undefined"
             :placeholder="$t('pages.signin.passwordPlaceholder')"
           />
-          <div class="flex items-center justify-between mt-2">
-            <label class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-              <input type="checkbox" v-model="form.remember" class="w-4 h-4" />
-              {{ $t('pages.signin.rememberMe') }}
-            </label>
-            <NuxtLink to="/forgot-password" class="text-sm text-gray-700 dark:text-gray-300 hover:underline">{{ $t('pages.signin.forgotPassword') }}</NuxtLink>
-          </div>
-          <p v-if="errors.password" class="text-xs text-red-500 mt-2 px-2">{{ errors.password }}</p>
+          <p v-if="errors.password" id="signin-password-error" class="site-auth-error">{{ errors.password }}</p>
         </div>
 
-        <div v-if="errorMessage" class="text-sm text-red-600 dark:text-red-400">{{ errorMessage }}</div>
+        <p v-if="errorMessage" class="site-auth-error site-auth-form-error" role="alert">{{ errorMessage }}</p>
 
-        <div>
-          <button
-            :disabled="isSubmitting"
-            type="submit"
-            class="w-full rounded-full px-6 py-4 bg-lime-300 hover:bg-lime-400 text-black font-bold text-sm uppercase tracking-wide transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            <span v-if="!isSubmitting">{{ $t('pages.signin.submit') }}</span>
-            <span v-else>{{ $t('pages.signin.submitting') }}</span>
-          </button>
-        </div>
+        <button class="site-interactive-hover site-outline-action site-auth-submit" :disabled="isSubmitting" type="submit">
+          {{ isSubmitting ? $t('pages.signin.submitting') : $t('pages.signin.submit') }}
+        </button>
       </form>
 
-      <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-        {{ $t('pages.signin.noAccount') }} <NuxtLink to="/signup" class="text-black dark:text-white font-medium underline hover:no-underline">{{ $t('pages.signin.signUpLink') }}</NuxtLink>
+      <p class="site-auth-switch">
+        {{ $t('pages.signin.noAccount') }}
+        <NuxtLink to="/signup">{{ $t('pages.signin.signUpLink') }}</NuxtLink>
       </p>
-    </div>
-  </div>
+    </section>
+  </section>
 </template>
 
 <script setup lang="ts">
@@ -71,12 +59,11 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const { $t } = useI18n()
 
-const { loggedIn, fetch: refreshSession } = useUserSession()
+const { fetch: refreshSession } = useUserSession()
 
-const form = reactive({ email: '', password: '', remember: false })
+const form = reactive({ email: '', password: '' })
 const errors = reactive<{ email?: string; password?: string }>({})
 const isSubmitting = ref(false)
-const showPassword = ref(false)
 const errorMessage = ref('')
 
 function validate() {
@@ -117,4 +104,4 @@ async function onSubmit() {
 }
 </script>
 
-<style scoped></style>
+<style src="~/styles/auth-page.css"></style>

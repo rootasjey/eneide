@@ -14,7 +14,7 @@
         <img class="site-intro-mark" src="/images/presentation/jc-pp.jpg" alt="Jérémie Corpinot" width="100" height="100">
         <h1>Jérémie Corpinot</h1>
         <p v-for="(paragraph, index) in homeIntroParagraphs" :key="index">{{ paragraph }}</p>
-        <a class="site-interactive-hover site-intro-subscribe" href="#newsletter">{{ $t('common.subscribe') }}</a>
+        <a class="site-interactive-hover site-outline-action site-intro-subscribe" href="#newsletter">{{ $t('common.subscribe') }}</a>
       </section>
       <div class="animate-entrance"><FeaturedPostsGrid /></div>
       <div class="animate-entrance"><TrendingTagsCarousel /></div>
@@ -106,11 +106,8 @@ useHead({
 }
 .site-shell .site-intro h1 { margin: 0 0 12px; font-family: var(--site-font-heading); color: var(--site-color-heading); font-size: 20px; font-weight: 550; line-height: 1.4; }
 .site-shell .site-intro p { max-width: 700px; margin: 0 0 8px; font-family: var(--site-font-heading); color: var(--site-color-text); line-height: 1.5; }
-.site-shell .site-intro a { color: var(--site-color-accent); text-decoration: underline; text-underline-offset: 2px; }
-.site-shell .site-intro .site-intro-subscribe { display: inline-flex; min-height: 44px; align-items: center; margin-top: 41px; padding-inline: 14px; border: 1px solid var(--site-color-border); border-radius: 12px; color: var(--site-color-heading); text-decoration: none; }
-.site-shell .site-intro-subscribe:hover,
-.site-shell .site-intro-subscribe:focus-visible { border-color: transparent; }
-.site-shell .site-intro-subscribe:focus-visible { outline: 2px solid var(--site-color-accent); outline-offset: 3px; }
+.site-shell .site-intro a:not(.site-outline-action) { color: var(--site-color-accent); text-decoration: underline; text-underline-offset: 2px; }
+.site-shell .site-intro .site-intro-subscribe { margin-top: 41px; }
 .site-shell:has(.site-home):not(:has(.site-home-recommendations)) > .site-footer { padding-top: 48px; }
 @media (max-width: 1023px) {
   .site-shell .site-intro { padding-block: 40px 52px; }

@@ -105,6 +105,8 @@ useHead({
 </script>
 
 <style scoped>
+@layer components {
+
 /* subtle entrance animation */
 .animate-entrance {
   opacity: 0;
@@ -121,10 +123,39 @@ useHead({
 
 @media (prefers-reduced-motion: reduce) {
   .animate-entrance {
-    transition: none !important;
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
+    transition: none;
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
+}
+}
+</style>
+
+<style>
+@layer components {
+
+/* Component and page styles moved from the global stylesheets. */
+.site-shell .site-about > section:first-child { width: min(700px, calc(100vw - 32px)); margin-inline: auto; padding: 60px 0 64px; }
+.site-shell .site-about > section:first-child > div { display: flex; flex-direction: column; gap: 52px; }
+.site-shell .site-about > section:first-child > div > div:first-child { order: 1; max-width: 700px; }
+.site-shell .site-about > section:first-child > div > div:last-child { order: 2; }
+.site-shell .site-about h1.site-display-heading { max-width: 700px; margin: 0; color: var(--site-color-heading); font-size: 20px; font-weight: 550; letter-spacing: 0; line-height: 28px; }
+.site-shell .site-about > section:first-child p:not(.site-about-eyebrow) { max-width: 700px; margin-block: 20px 0; color: var(--site-color-text); font-size: 16px; line-height: 24px; }
+.site-shell .site-about .site-about-cover { width: 720px; max-width: calc(100vw - 32px); margin-left: -10px; overflow: hidden; border-radius: 24px; }
+.site-shell .site-about .site-about-cover img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+.site-shell .site-about > section:first-child .btn { min-height: auto; padding: 0; border: 0; background: transparent; color: var(--site-color-accent); font-size: 14px; text-decoration: underline; text-underline-offset: 3px; }
+.site-shell .site-about > section:not(:first-child) { width: min(700px, calc(100vw - 32px)); margin-inline: auto; padding: 40px 0; border-color: var(--site-color-border); }
+.site-shell .site-about > section:not(:first-child) > div { max-width: 700px; margin-inline: auto; padding-inline: 0; }
+.site-shell .site-about h2 { margin: 0 0 16px; color: var(--site-color-heading); font-family: var(--site-font-body); font-size: 20px; font-weight: 550; line-height: 28px; }
+.site-shell .site-about .text-8xl { font-size: 20px; line-height: 28px; }
+.site-shell .site-about .text-2xl { font-size: 16px; line-height: 24px; }
+.site-shell .site-about .text-gray-600,
+.site-shell .site-about .text-gray-700 { color: var(--site-color-muted); }
+.site-shell .site-about > section:last-child > div { text-align: left; }
+.site-shell .site-about-copy { width: min(700px, calc(100vw - 32px)); margin-inline: auto; padding: 0 0 40px; color: var(--site-color-text); font-size: 16px; line-height: 1.7; }
+.site-shell .site-about-copy p { margin: 0 0 24px; }
+.site-shell .site-about-copy a { color: var(--site-color-accent); }
+.site-shell .site-about > section:first-child { width: min(700px, calc(100% - 32px)); max-width: 700px; margin-inline: auto; }
 }
 </style>

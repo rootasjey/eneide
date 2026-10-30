@@ -158,6 +158,8 @@ function donateAgain() {
 </script>
 
 <style scoped>
+@layer components {
+
 .confetti-icon {
   display: inline-block;
   color: #34D399; /* start green */
@@ -209,5 +211,6 @@ function donateAgain() {
   .confetti-icon { animation: none; }
   .page-entrance-enter-active,
   .page-entrance-appear-active { transition: none; }
+}
 }
 </style>

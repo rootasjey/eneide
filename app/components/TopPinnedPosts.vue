@@ -111,3 +111,27 @@ const dummyHero = computed(() => PRESENTATION_POSTS.slice(0, 4).map((post, index
   img: { src: post.image },
 })))
 </script>
+
+<style>
+@layer components {
+
+/* Component and page styles moved from the global stylesheets. */
+.site-shell .home-pinned-posts { padding-block: 6px; background: var(--site-color-background); border-bottom: 1px solid var(--site-color-border); }
+.site-shell .home-pinned-posts > div {
+  width: min(700px, calc(100% - 32px));
+  max-width: 700px;
+  margin-inline: auto;
+  padding-inline: 0;
+}
+.site-shell .home-pinned-posts > div > div { display: flex; gap: 20px; overflow-x: auto; scrollbar-width: none; }
+.site-shell .home-pinned-posts > div > div::-webkit-scrollbar { display: none; }
+.site-shell .home-pinned-posts article { flex: 0 0 230px; min-width: 0; }
+.site-shell .home-pinned-posts article a { align-items: center; color: var(--site-color-text); text-decoration: none; }
+.site-shell .home-pinned-posts article a > div:first-child { width: 60px; height: 60px; border-radius: 50%; }
+.site-shell .home-pinned-posts article h2 { margin-bottom: 2px; font-size: 14px; font-weight: 550; }
+.site-shell .home-pinned-posts article span { color: var(--site-color-muted); }
+@media (max-width: 600px) {
+  .site-shell .home-pinned-posts article { flex-basis: min(72vw, 270px); }
+}
+}
+</style>

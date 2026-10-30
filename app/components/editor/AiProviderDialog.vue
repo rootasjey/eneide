@@ -82,10 +82,13 @@ function confirm() {
 </script>
 
 <style scoped>
+@layer components {
+
 .provider-tile {
   @apply flex items-center justify-between gap-3 w-full rounded-xl border border-border bg-background px-4 py-3 text-left transition-all hover:border-primary/40 hover:shadow-sm;
 }
 .provider-tile.is-active {
   @apply border-primary/60 shadow-sm;
+}
 }
 </style>

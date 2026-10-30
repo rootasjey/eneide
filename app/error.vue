@@ -127,6 +127,8 @@ const quickLinks = [
 </script>
 
 <style scoped>
+@layer components {
+
 .error-code {
   color: transparent;
   /* -webkit-text-stroke: 2px #e5e7eb; */
@@ -178,5 +180,6 @@ const quickLinks = [
   100% {
     -webkit-text-stroke-color: #FF8F8F;
   }
+}
 }
 </style>

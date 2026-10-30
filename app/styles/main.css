@@ -1,2 +1,5 @@
-@import './editor.css';
-@import './site.css';
+@layer reset, tokens, base, unaui, fonts, icons, shortcuts, utilities, components, theme-overrides;
+
+@import '@unocss/reset/tailwind.css' layer(reset);
+@import '@una-ui/preset/una.css' layer(unaui);
+@import './site-global.css';

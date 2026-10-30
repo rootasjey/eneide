@@ -37,6 +37,8 @@ function onToggle(value: boolean) {
 </script>
 
 <style scoped>
+@layer components {
+
 .task-item {
   display: flex;
   gap: 0.5rem;
@@ -62,5 +64,6 @@ function onToggle(value: boolean) {
 .task-item.is-checked .task-content {
   text-decoration: line-through;
   opacity: 0.65;
+}
 }
 </style>

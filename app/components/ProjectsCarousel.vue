@@ -2,10 +2,10 @@
   <section class="home-projects animate-entrance">
     <div class="container mx-auto">
       <div class="home-project-heading">
-        <NuxtLink :to="localizedPath('/projects', $getLocale())">
-          <h2>{{ $t('components.projectsCarousel.heading') }}</h2>
-          <span class="i-ph-arrow-right" aria-hidden="true" />
-        </NuxtLink>
+        <HomeSectionHeading
+          :to="localizedPath('/projects', $getLocale())"
+          :title="$t('components.projectsCarousel.heading')"
+        />
       </div>
 
       <div v-if="pending" class="site-home-project-grid" aria-hidden="true">
@@ -29,7 +29,7 @@
             </div>
             <h3>{{ project.title }}</h3>
             <div class="site-home-project-meta">
-              <span>{{ project.tag }}</span>
+              <ProjectTag :label="project.tag" />
               <span>{{ project.year }}</span>
             </div>
           </NuxtLink>
@@ -69,7 +69,7 @@ const projects = computed(() => {
       year: post.formattedDate.match(/\d{4}/)?.[0] || '',
     }))
   }
-  
+
   // Presentation projects keep the portfolio navigable before CMS content exists.
   const locale = $getLocale() === 'fr' ? 'fr' : 'en'
   return PRESENTATION_POSTS.filter(project => project.isProject).map(project => ({
@@ -82,3 +82,122 @@ const projects = computed(() => {
   }))
 })
 </script>
+
+<style>
+@layer components {
+
+/* Component and page styles moved from the global stylesheets. */
+.site-shell .home-projects > div {
+  width: min(700px, calc(100% - 32px));
+  max-width: 700px;
+  margin-inline: auto;
+  padding-inline: 0;
+}
+.site-shell .home-projects {
+  margin-top: 81px;
+  padding: 0;
+  background: var(--site-color-background);
+  color: var(--site-color-text);
+}
+.site-shell .home-projects > div {
+  padding-inline: 0;
+}
+.site-shell .home-project-heading {
+  margin-bottom: 24px;
+}
+.site-shell .site-home-project-grid {
+  display: grid;
+  width: 720px;
+  max-width: calc(100vw - 32px);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin: 0 0 0 -10px;
+}
+.site-shell .home-projects .site-home-project-card {
+  width: auto;
+  min-width: 0;
+}
+.site-shell .site-home-project-card > a {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+.site-shell .home-projects .site-home-project-image {
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+  background: #2b2b30;
+}
+.site-shell .site-home-project-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1);
+  transition: transform 300ms cubic-bezier(0.4, 0, 0.21, 1.8);
+}
+.site-shell .site-home-project-card:hover .site-home-project-image img,
+.site-shell .site-home-project-card:focus-within .site-home-project-image img {
+  transform: scale(1.03);
+}
+.site-shell .home-projects .site-home-project-card h3 {
+  display: -webkit-box;
+  margin: 14px 0 4px;
+  overflow: hidden;
+  color: var(--site-color-heading);
+  font-size: 18px;
+  font-weight: 550;
+  line-height: 24px;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.site-shell .site-home-project-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--site-color-muted);
+  font-size: 13px;
+  line-height: 20px;
+}
+.site-shell .site-home-project-meta > span:last-child {
+  font-weight: 500;
+}
+.site-shell .site-home-project-skeleton {
+  aspect-ratio: 4 / 3;
+  border-radius: 16px;
+  background: var(--site-color-border);
+}
+@media (max-width: 1023px) {
+  .site-shell .home-projects article {
+    width: min(78vw, 348px);
+  }
+}
+@media (max-width: 1023px) {
+  .site-shell .home-projects {
+    margin-top: 40px;
+    padding-block: 0;
+  }
+}
+@media (max-width: 1023px) {
+  .site-shell .site-home-project-grid {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+  }
+}
+@media (max-width: 600px) {
+  .site-shell .site-home-project-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-shell .site-home-project-image img {
+    transition: none;
+  }
+
+  .site-shell .site-home-project-card:hover .site-home-project-image img,
+  .site-shell .site-home-project-card:focus-within .site-home-project-image img {
+    transform: none;
+  }
+}
+}
+</style>

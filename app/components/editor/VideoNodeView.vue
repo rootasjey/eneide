@@ -434,6 +434,8 @@ function removeNode() {
 </script>
 
 <style scoped>
+@layer components {
+
 .video-figure {
   position: relative;
   margin: 2rem 0;
@@ -759,5 +761,6 @@ function removeNode() {
 
 .hidden {
   display: none;
+}
 }
 </style>

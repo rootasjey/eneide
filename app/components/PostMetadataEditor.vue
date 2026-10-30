@@ -373,8 +373,11 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+@layer components {
+
 .description-input textarea {
   overflow: hidden;
   resize: none;
+}
 }
 </style>

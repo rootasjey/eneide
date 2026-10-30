@@ -771,6 +771,8 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+@layer components {
+
 .color-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.25rem; }
 .color-swatch { width: 1.25rem; height: 1.25rem; border-radius: 0.45rem; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 0 0 1px rgba(0,0,0,0.02) inset; transition: all 0.2s; }
 .color-swatch.clear { display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: var(--un-foreground-color, #111827); background: transparent; }
@@ -778,4 +780,5 @@ onBeforeUnmount(() => {
 .color-swatch:hover { transform: scale(1.2); }
 .color-swatch:active { transform: scale(0.9); }
 .color-preview { display: inline-block; width: 0.9rem; height: 0.9rem; margin-left: 0.375rem; border-radius: 9999px; border: 2px solid transparent; }
+}
 </style>

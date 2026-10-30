@@ -2,6 +2,10 @@
 import { execSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 
+const nitroPreset = process.env.NITRO_PRESET
+  || (process.env.NODE_ENV === 'development' ? 'node-server' : 'cloudflare_module')
+const usesCloudflarePreset = nitroPreset === 'cloudflare_module'
+
 export default defineNuxtConfig({
   app: {
     head: {
@@ -27,12 +31,14 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
   nitro: {
-    preset: 'cloudflare_module',
+    preset: nitroPreset,
   },
 
   hub: {
     blob: true,
-    cache: true,
+    cache: usesCloudflarePreset
+      ? { driver: 'cloudflare-kv-binding', binding: 'CACHE' }
+      : true,
     db: 'sqlite',
     kv: true,
   },
@@ -55,6 +61,15 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
     '@vueuse/nuxt',
     'nuxt-i18n-micro',
+    (_options, nuxt) => {
+      // UnaUI injects these styles unlayered; main.css imports them into named layers.
+      nuxt.options.css = nuxt.options.css.filter((entry) => {
+        const source = typeof entry === 'string' ? entry : entry.src || ''
+        const normalizedSource = source.replaceAll('\\', '/')
+        return !normalizedSource.includes('@unocss/reset/tailwind.css')
+          && !normalizedSource.includes('@una-ui/preset/una.css')
+      })
+    },
   ],
 
   i18n: {
@@ -106,7 +121,8 @@ export default defineNuxtConfig({
   },
   
   unocss: {
-    preflight: true,
+    preflight: false,
+    autoImport: false,
     icons: {
       scale: 1.0,
       extraProperties: {

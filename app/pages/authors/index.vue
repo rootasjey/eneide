@@ -84,3 +84,48 @@ const copy = computed(() => locale.value === 'fr'
 const { data, pending, error } = await useFetch<Author[]>('/api/authors')
 const authors = computed(() => data.value ?? [])
 </script>
+
+<style>
+@layer components {
+
+/* Component and page styles moved from the global stylesheets. */
+.site-shell .site-author-index { padding: 70px 0 64px; }
+.site-shell .site-author-index > div { width: min(960px, calc(100vw - 32px)); max-width: 960px; margin-inline: auto; }
+.site-shell .site-author-index .site-collection-intro { margin: 0 0 104px; }
+.site-shell .site-author-index .site-collection-avatar { margin-bottom: 48px; }
+.site-shell .site-author-index-list { display: grid; gap: 72px; }
+.site-shell .site-author-index-entry { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; gap: 0; color: var(--site-color-text); text-decoration: none; }
+.site-shell .site-author-index-avatar { display: grid; width: 128px; height: 128px; margin-bottom: 32px; place-items: center; border-radius: 50%; background: var(--site-color-hover-background); color: var(--site-color-muted); font-size: 24px; object-fit: cover; }
+.site-shell .site-author-index-copy { display: grid; gap: 12px; min-width: 0; }
+.site-shell .site-author-index-name { color: var(--site-color-heading); font-size: 20px; font-weight: 550; line-height: 28px; }
+.site-shell .site-author-index-biography { color: var(--site-color-text); font-size: 16px; line-height: 24px; }
+.site-shell .site-author-index-count { color: var(--site-color-muted); font-size: 14px; line-height: 20px; }
+.site-shell .site-author-index-entry:hover .site-author-index-name { text-decoration: underline; text-underline-offset: 3px; }
+.site-shell .site-author-index-entry:focus-visible { outline: 2px solid var(--site-color-accent); outline-offset: 6px; border-radius: 3px; }
+.site-shell .site-author-index-message { color: var(--site-color-muted); }
+.site-shell .site-author-index-skeleton { width: 100%; height: 104px; border-radius: 16px; background: var(--site-color-hover-background); animation: pulse 1.5s ease-in-out infinite; }
+.site-shell .site-public-authors-footer .home-newsletter { margin-top: 120px; }
+.site-shell .site-author-index > div { width: min(700px, calc(100% - 32px)); max-width: 700px; margin-inline: auto; }
+@media (max-width: 1023px) {
+  .site-shell .site-author-index { padding-top: 40px; }
+}
+@media (max-width: 1023px) {
+  .site-shell .site-author-index .site-collection-intro { margin-bottom: 56px; }
+}
+@media (max-width: 1023px) {
+  .site-shell .site-author-index .site-collection-avatar { margin-bottom: 32px; }
+}
+@media (max-width: 1023px) {
+  .site-shell .site-author-index-list { gap: 48px; }
+}
+@media (max-width: 1023px) {
+  .site-shell .site-author-index-entry { grid-template-columns: minmax(0, 1fr); gap: 0; }
+}
+@media (max-width: 1023px) {
+  .site-shell .site-author-index-avatar { width: 96px; height: 96px; margin-bottom: 24px; }
+}
+@media (max-width: 1023px) {
+  .site-shell .site-public-authors-footer .home-newsletter { margin-top: 80px; }
+}
+}
+</style>

@@ -42,7 +42,7 @@
     <section v-if="!post.isProject" class="site-post-end">
       <div class="container">
         <div class="site-post-author-card">
-          <img src="/images/presentation/jc-pp.jpg" :alt="authorName" width="48" height="48" loading="lazy">
+          <img src="/images/presentation/jc-pp.jpg" :alt="$t('components.postEndMatter.authorName')" width="48" height="48" loading="lazy">
           <div class="site-post-author-copy">
             <NuxtLink :to="localizedPath('/about', locale)">{{ $t('components.postEndMatter.authorName') }}</NuxtLink>
             <p>{{ $t('components.postEndMatter.authorBio') }}</p>
@@ -94,3 +94,11 @@ useSeoMeta({
   description: () => post.value?.description[locale.value],
 })
 </script>
+
+<style>
+@layer components {
+
+/* Component and page styles moved from the global stylesheets. */
+.site-shell .site-preview-back { color: var(--site-color-accent); text-decoration: underline; text-underline-offset: 2px; }
+}
+</style>

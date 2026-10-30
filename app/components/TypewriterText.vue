@@ -96,6 +96,8 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+@layer components {
+
 .typewriter-text {
   display: inline-block;
 }
@@ -109,5 +111,6 @@ onUnmounted(() => {
 @keyframes blink {
   0%, 49% { opacity: 1; }
   50%, 100% { opacity: 0; }
+}
 }
 </style>

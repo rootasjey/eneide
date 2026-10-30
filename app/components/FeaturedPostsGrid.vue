@@ -106,3 +106,132 @@ function updateActivePost() {
   activeIndex.value = closestIndex
 }
 </script>
+
+<style>
+@layer components {
+
+/* Component and page styles moved from the global stylesheets. */
+.site-shell .home-featured-posts > div {
+  width: min(700px, calc(100% - 32px));
+  max-width: 700px;
+  margin-inline: auto;
+  padding-inline: 0;
+}
+.site-shell .home-featured-posts { overflow: hidden; padding: 52px 0 15px; background: var(--site-color-background); color: var(--site-color-text); }
+.site-shell .home-featured-posts > div { overflow: visible; }
+.site-shell .home-featured-posts > .home-featured-track { width: 100vw; max-width: 100vw; box-sizing: border-box; padding: 0 max(16px, calc(50vw - 360px)) 8px; }
+.site-shell .home-featured-posts > .home-featured-track { gap: 10px; }
+.site-shell .home-featured-card { flex-basis: min(720px, calc(100vw - 32px)); }
+.site-shell .home-featured-posts > div > h2 {
+  margin: 0 0 20px;
+  color: var(--site-color-text);
+  font-family: var(--site-font-body);
+  font-size: 16px;
+  font-weight: 550;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.site-shell .home-featured-track {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 0 max(16px, calc(50vw - 360px)) 8px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.site-shell .home-featured-posts > .home-featured-track { width: 100vw; max-width: 100vw; margin: 0; overflow-x: auto; }
+.site-shell .home-featured-track::-webkit-scrollbar { display: none; }
+.site-shell .home-featured-card { flex: 0 0 min(720px, calc(100vw - 32px)); scroll-snap-align: center; transform: scale(.9); transform-origin: center; transition: transform 300ms ease; }
+.site-shell .home-featured-card.is-active { transform: scale(1); }
+.site-shell .home-featured-card > a { display: block; color: inherit; text-decoration: none; }
+.site-shell .home-featured-card .home-featured-image { aspect-ratio: 16 / 9; overflow: hidden; border-radius: 24px; background: #2b2b30; }
+.site-shell .home-featured-card .home-featured-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 250ms ease; }
+.site-shell .home-featured-card > a:hover .home-featured-image img { transform: scale(1.025); }
+.site-shell .home-featured-card h3 { margin: 12px 0 8px; color: var(--site-color-heading); font-size: 18px; font-weight: 550; line-height: 1.4; }
+.site-shell .home-featured-card p { display: -webkit-box; max-width: 620px; min-height: 3em; margin: 0 0 8px; overflow: hidden; color: var(--site-color-text); font-size: 16px; line-height: 1.5; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+.site-shell .home-featured-card .home-featured-meta { display: block; color: var(--site-color-muted); font-size: 13px; }
+.site-shell .home-featured-controls { display: flex; justify-content: flex-start; width: min(700px, calc(100% - 32px)); margin: 30px auto 0; overflow: visible; }
+.site-shell .home-featured-control-group {
+  display: flex;
+  width: 86px;
+  height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 4px;
+  border: 1px solid var(--site-color-border);
+  border-radius: 999px;
+}
+.site-shell .home-featured-controls button {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--site-color-heading);
+}
+.site-shell .home-featured-controls button span { width: 16px; height: 16px; }
+@media (max-width: 1023px) {
+  .site-shell .home-featured-card { flex-basis: min(88vw, 620px); }
+}
+@media (max-width: 1023px) {
+  .site-shell .home-featured-card:not(:first-child) { flex-basis: min(88vw, 620px); margin: 0; }
+}
+@media (max-width: 1023px) {
+  .site-shell .home-featured-track { gap: 20px; padding-left: 16px; scroll-padding-left: 16px; }
+}
+@media (max-width: 600px) {
+  .site-shell .home-featured-card .home-featured-image { border-radius: 16px; }
+}
+@media (max-width: 600px) {
+  .site-shell .home-featured-posts { padding-bottom: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-shell .home-featured-card .home-featured-image img { transition: none; }
+}
+}
+</style>
+
+<style>
+/* Keep the hover-state override above UnoCSS's unlayered button defaults. */
+.site-shell .home-featured-controls button {
+  position: relative;
+  isolation: isolate;
+  transition: transform 100ms ease-out;
+}
+.site-shell .home-featured-controls button:active { transform: scale(.95); }
+.site-shell .home-featured-controls button::before {
+  position: absolute;
+  z-index: 0;
+  inset: 1px;
+  display: block;
+  border-radius: inherit;
+  background-color: color-mix(in srgb, var(--site-color-text) 8%, transparent);
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(.9);
+  transition: opacity 120ms ease-out, transform 140ms ease-out;
+}
+.site-shell .home-featured-controls button:hover::before,
+.site-shell .home-featured-controls button:focus-visible::before {
+  animation: carousel-control-fill-pop 320ms ease-out both;
+}
+.site-shell .home-featured-controls button span { position: relative; z-index: 1; }
+@keyframes carousel-control-fill-pop {
+  0% { opacity: .7; transform: scale(.9); }
+  72% { opacity: 1; transform: scale(1.08); }
+  88% { opacity: 1; transform: scale(.99); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-shell .home-featured-controls button { transition: none; }
+  .site-shell .home-featured-controls button::before { transition: none; }
+  .site-shell .home-featured-controls button:hover::before,
+  .site-shell .home-featured-controls button:focus-visible::before { animation: none; }
+  .site-shell .home-featured-controls button:hover::before,
+  .site-shell .home-featured-controls button:focus-visible::before { opacity: 1; transform: scale(1); }
+}
+</style>

@@ -223,6 +223,8 @@ watch(slides, async () => {
 </script>
 
 <style scoped>
+@layer components {
+
 :global(.scrollbar-hide::-webkit-scrollbar) {
   display: none;
 }
@@ -230,5 +232,6 @@ watch(slides, async () => {
 :global(.scrollbar-hide) {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
 }
 </style>

@@ -67,3 +67,190 @@ const tags = computed(() => {
   return [...sampleCounts].slice(0, 4).map(([name, count]) => ({ name, count }))
 })
 </script>
+
+<style>
+@layer components {
+  /* Component and page styles moved from the global stylesheets. */
+  .site-shell .home-trending-tags > div {
+    display: grid;
+    width: min(700px, calc(100% - 32px));
+    max-width: 700px;
+    row-gap: 32px;
+    margin-inline: auto;
+    padding-inline: 0;
+  }
+  .site-shell .home-trending-tags h2 {
+    margin: 0 0 20px;
+    color: var(--site-color-text);
+    font-family: var(--site-font-body);
+    font-size: 16px;
+    font-weight: 550;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .site-shell .home-trending-tags {
+    background: var(--site-color-background);
+    color: var(--site-color-text);
+  }
+  .site-shell .home-trending-tags {
+    margin-top: 62px;
+    padding: 0;
+  }
+  .site-shell .home-trending-tags h2 {
+    display: flex;
+    width: 100%;
+    margin: 0;
+    color: var(--site-color-muted);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+  }
+  .site-shell .home-trending-tags-heading {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    width: fit-content;
+    align-items: center;
+    gap: 2px;
+    color: var(--site-color-muted);
+    text-decoration: none;
+    transition:
+      color 200ms ease,
+      transform 300ms cubic-bezier(0.4, 0, 0.2, 2.4);
+  }
+  .site-shell .home-trending-tags-heading::before {
+    position: absolute;
+    z-index: -1;
+    inset: -3px -8px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background: transparent;
+    content: "";
+    transition: background-color 150ms ease;
+  }
+  .site-shell .home-trending-tags-heading > span:last-child {
+    width: 1em;
+    height: 1em;
+    transition: transform 200ms ease;
+  }
+  .site-shell .home-trending-tags-heading:hover {
+    color: var(--site-color-heading);
+    transform: translateY(-1px);
+  }
+  .site-shell .home-trending-tags-heading:hover::before {
+    border-color: var(--site-color-hover-background);
+    background: var(--site-color-hover-background);
+  }
+  .site-shell .home-trending-tags-heading:hover > span:last-child {
+    transform: translateX(1px);
+  }
+  .site-shell .home-trending-tags nav {
+    display: flex;
+    width: 720px;
+    max-width: calc(100% + 20px);
+    flex-direction: column;
+    gap: 12px;
+    margin: 0 0 0 -10px;
+  }
+  .site-shell .home-trending-tags nav a {
+    display: flex;
+    min-width: 0;
+    height: 44px;
+    flex: 0 0 44px;
+    align-items: center;
+    gap: 12px;
+    padding-inline: 10px;
+    color: var(--site-color-heading);
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .site-shell .home-trending-tag-icon {
+    display: grid;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    place-items: center;
+    outline: none;
+    border: 1px solid color-mix(in srgb, var(--tag-icon-color) 28%, transparent);
+    border-radius: 12px;
+    color: var(--tag-icon-color);
+    transition:
+      transform 300ms cubic-bezier(0.4, 0, 0.21, 1.8),
+      background-color 200ms ease,
+      border-color 200ms ease;
+  }
+  .site-shell .home-trending-tags nav a:nth-child(1) {
+    --tag-icon-color: #a467d5;
+  }
+  .site-shell .home-trending-tags nav a:nth-child(2) {
+    --tag-icon-color: #ef716e;
+  }
+  .site-shell .home-trending-tags nav a:nth-child(3) {
+    --tag-icon-color: #e9ac70;
+  }
+  .site-shell .home-trending-tags nav a:nth-child(4) {
+    --tag-icon-color: #77b9ec;
+  }
+  .site-shell .home-trending-tag-icon > span {
+    width: 16px;
+    height: 16px;
+  }
+  .site-shell .home-trending-tags nav a:hover .home-trending-tag-icon {
+    background: color-mix(
+      in srgb,
+      var(--tag-icon-color) 6%,
+      var(--site-color-background)
+    );
+    border-color: transparent;
+    transform: scale(1.05);
+  }
+  .site-shell .home-trending-tag-name {
+    min-width: 0;
+    overflow: hidden;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: transform 250ms ease;
+  }
+  .site-shell .home-trending-tags nav a:hover .home-trending-tag-name {
+    transform: translateX(2px);
+  }
+  .site-shell .home-trending-tag-count {
+    color: var(--site-color-muted);
+    font-size: 12px;
+    font-weight: 400;
+  }
+  @media (max-width: 600px) {
+    .site-shell .home-trending-tags {
+      margin-top: 40px;
+      padding: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .site-shell .home-trending-tags-heading,
+    .site-shell .home-trending-tags-heading > span:last-child,
+    .site-shell .home-trending-tag-icon,
+    .site-shell .home-trending-tag-name {
+      transition: none;
+      transform: none;
+    }
+  }
+}
+</style>
+
+<style>
+/* Keep the custom tag-chip border above unlayered UnoCSS resets. */
+.site-shell .home-trending-tags .home-trending-tag-icon {
+  border: 1px solid color-mix(in srgb, var(--tag-icon-color) 28%, transparent);
+  transition:
+    transform 300ms cubic-bezier(.4, 0, .21, 1.8),
+    background-color 200ms ease,
+    border-color 200ms ease;
+}
+.site-shell .home-trending-tags nav a:hover .home-trending-tag-icon {
+  background: color-mix(in srgb, var(--tag-icon-color) 6%, var(--site-color-background));
+  border-color: transparent;
+  transform: scale(1.05);
+}
+</style>

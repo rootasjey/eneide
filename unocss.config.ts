@@ -14,6 +14,24 @@ import {
 } from 'unocss'
 
 export default {
+  layers: {
+    preflights: -2,
+    tokens: -1,
+    base: 0,
+    shortcuts: 1,
+    default: 2,
+    components: 3,
+    'theme-overrides': 4,
+  },
+  outputToCssLayers: {
+    allLayers: true,
+    cssLayerName: (layer: string) => {
+      if (layer === 'preflights') return 'reset'
+      if (layer === 'default') return 'utilities'
+      if (layer === 'una-base') return 'unaui'
+      return layer
+    },
+  },
   presets: [
     presetWind3(),
     presetAttributify(),
@@ -29,10 +47,16 @@ export default {
       provider: 'google',
       fonts: {
         title: 'Oi',
-        text: 'Manrope',
+        text: {
+          name: 'Manrope',
+          weights: ['400', '500', '600', '700'],
+        },
         body: 'Playwrite FR Moderne',
         serif: 'Fraunces',
-        sans: 'Manrope',
+        sans: {
+          name: 'Manrope',
+          weights: ['400', '500', '600', '700'],
+        },
       },
     }),
     presetAnimations(),

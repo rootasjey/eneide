@@ -184,5 +184,8 @@ const create = async () => {
 </script>
 
 <style scoped>
+@layer components {
+
 .grid { max-width: 720px; }
+}
 </style>

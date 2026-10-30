@@ -125,6 +125,8 @@ function insertLink() {
 </script>
 
 <style scoped>
+@layer components {
+
 .media-insert-dialog {
   min-width: 400px;
   padding: 1rem;
@@ -182,5 +184,6 @@ function insertLink() {
 
 .link-section {
   padding: 1rem 0;
+}
 }
 </style>

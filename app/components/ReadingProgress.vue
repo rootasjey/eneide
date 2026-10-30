@@ -185,3 +185,88 @@ onBeforeUnmount(() => {
   if (frameId) cancelAnimationFrame(frameId)
 })
 </script>
+
+<style>
+@layer components {
+
+/* Component and page styles moved from the global stylesheets. */
+.site-shell .site-reading-progress {
+  position: fixed;
+  z-index: 12;
+  top: 10px;
+  left: 50%;
+  width: min(320px, calc(100vw - 32px));
+  max-width: 240px;
+  height: 40px;
+  box-sizing: border-box;
+  padding-inline: 12px;
+  overflow: hidden;
+  transform: translateX(-50%) scale(.9);
+  border-radius: 20px;
+  background: var(--site-color-hover-background);
+  color: var(--site-color-heading);
+  opacity: 0;
+  pointer-events: none;
+  transition: max-width .35s cubic-bezier(.4, 0, .2, 1.3), height .25s ease, opacity .2s ease, transform .35s cubic-bezier(.4, 0, .2, 1.8), background-color .25s ease;
+}
+.site-shell .site-reading-progress.is-visible,
+.site-shell .site-reading-progress:focus-within { transform: translateX(-50%) scale(1); opacity: 1; pointer-events: auto; }
+.site-shell .site-reading-progress-head {
+  display: flex;
+  width: 100%;
+  height: 40px;
+  align-items: center;
+  gap: 12px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+.site-shell .site-reading-progress-title { display: flex; flex: 1; align-items: center; gap: 4px; white-space: nowrap; font-size: 14px; font-weight: 550; }
+.site-shell .site-reading-progress-title svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; transition: transform .25s ease; }
+.site-shell .site-reading-progress-time { color: var(--site-color-muted); font-size: 14px; white-space: nowrap; }
+.site-shell .site-reading-progress-ring { width: 16px; height: 16px; flex: none; transform: rotate(-90deg); }
+.site-shell .site-reading-progress-ring circle { fill: none; stroke-width: 2; }
+.site-shell .site-reading-progress-ring-track { stroke: var(--site-color-border); }
+.site-shell .site-reading-progress-ring-value { stroke: var(--site-color-heading); stroke-dasharray: 44; stroke-linecap: round; transition: stroke-dashoffset .12s linear; }
+.site-shell .site-reading-progress-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  display: flex;
+  max-height: calc(100vh - 64px);
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 20px 16px;
+  overflow: auto;
+  border-radius: 0 0 18px 18px;
+  background: var(--site-color-background);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-2px);
+  transition: opacity .2s ease, transform .2s ease;
+}
+.site-shell .site-reading-progress-menu a { margin-left: calc((var(--heading-level) - 1) * 10px); color: var(--site-color-text); font-size: 14px; font-weight: 500; line-height: 1.4; text-decoration: none; }
+.site-shell .site-reading-progress-menu a.active { color: var(--site-color-accent); }
+.site-shell .site-reading-progress:hover,
+.site-shell .site-reading-progress:focus-within,
+.site-shell .site-reading-progress.is-open { max-width: 320px; height: 52px; overflow: visible; background: var(--site-color-background); box-shadow: 0 8px 28px rgb(0 0 0 / 12%); }
+.site-shell .site-reading-progress:hover .site-reading-progress-head,
+.site-shell .site-reading-progress:focus-within .site-reading-progress-head,
+.site-shell .site-reading-progress.is-open .site-reading-progress-head { height: 52px; padding-inline: 4px; }
+.site-shell .site-reading-progress:hover .site-reading-progress-title svg,
+.site-shell .site-reading-progress:focus-within .site-reading-progress-title svg,
+.site-shell .site-reading-progress.is-open .site-reading-progress-title svg { transform: rotate(90deg); }
+.site-shell .site-reading-progress:hover .site-reading-progress-menu,
+.site-shell .site-reading-progress:focus-within .site-reading-progress-menu,
+.site-shell .site-reading-progress.is-open .site-reading-progress-menu { opacity: 1; pointer-events: auto; transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) {
+  .site-shell .site-reading-progress,
+.site-shell .site-reading-progress * { transition-duration: .01ms; }
+}
+}
+</style>

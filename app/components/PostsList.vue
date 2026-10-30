@@ -71,6 +71,8 @@ const emit = defineEmits<{
 </script>
 
 <style scoped>
+@layer components {
+
 .post-list-row {
   display: flex;
   gap: 1rem;
@@ -90,5 +92,6 @@ const emit = defineEmits<{
 .post-list-row a:focus {
   outline: 2px solid rgba(59,130,246,0.12);
   outline-offset: 2px;
+}
 }
 </style>

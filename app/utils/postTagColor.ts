@@ -11,5 +11,5 @@ const postTagAccents: Record<string, string> = {
 }
 
 export function postTagColor(name: string) {
-  return postTagAccents[name.trim().toLocaleLowerCase()] || 'var(--corpinot-link)'
+  return postTagAccents[name.trim().toLocaleLowerCase()] || 'var(--site-color-accent)'
 }

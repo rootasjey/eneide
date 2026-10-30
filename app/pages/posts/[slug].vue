@@ -467,6 +467,8 @@ useHead({
 </script>
 
 <style scoped>
+@layer components {
+
 .social-btn {
   transition: all 0.3s ease;
 }
@@ -501,5 +503,33 @@ useHead({
   height: auto;
   display: block;
 }
+}
+</style>
 
+<style>
+@layer components {
+
+/* Component and page styles moved from the global stylesheets. */
+.site-shell .site-preview-topic-nav .site-post-nav-spacer { display: block; width: 28px; height: 28px; flex: none; }
+.site-shell .site-post-author-heading { display: flex; width: fit-content; align-items: center; gap: 12px; color: var(--site-color-heading); font-size: 16px; font-weight: 550; }
+.site-shell .site-post-author-heading > img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+.site-shell .site-post-author-card:hover .site-post-author-heading > span { text-decoration: underline; text-underline-offset: 3px; }
+.site-shell .site-post-author-bio { margin: 14px 0 0; color: var(--site-color-muted); font-size: 14px; line-height: 1.55; }
+.site-shell .site-post-share-row { width: min(700px, calc(100% - 32px)); margin: 20px auto 0; }
+.site-shell .site-post-end-meta { display: flex; width: min(700px, calc(100% - 32px)); align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 12px; margin: 18px auto 0; color: var(--site-color-muted); font-size: 13px; }
+.site-shell .site-post-end-meta time { margin-left: auto; }
+.site-shell .site-post-language-switcher { display: flex; flex-wrap: wrap; gap: 6px; }
+.site-shell .site-post-language-switcher a,
+.site-shell .site-post-language-switcher span,
+.site-shell .site-post-edit-link { padding: 4px 9px; border: 1px solid var(--site-color-border); border-radius: 999px; color: var(--site-color-muted); font-size: 12px; text-decoration: none; }
+.site-shell .site-post-language-switcher .is-active { color: var(--site-color-heading); }
+.site-shell .site-post-language-switcher a:hover,
+.site-shell .site-post-edit-link:hover { background: var(--site-color-hover-background); color: var(--site-color-heading); }
+@media (max-width: 640px) {
+  .site-shell .site-post-author-heading { gap: 10px; }
+}
+@media (max-width: 640px) {
+  .site-shell .site-post-share-row { margin-top: 16px; }
+}
+}
 </style>

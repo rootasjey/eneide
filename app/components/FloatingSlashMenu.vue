@@ -530,6 +530,8 @@ watch(
 </script>
 
 <style scoped>
+@layer components {
+
 .floating-menu--vertical {
   @apply flex flex-col gap-1 p-2 max-h-[60vh] overflow-y-auto scroll-smooth;
 }
@@ -617,5 +619,6 @@ watch(
 
 .ai-ask-input {
   @apply w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/60;
+}
 }
 </style>

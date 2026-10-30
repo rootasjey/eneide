@@ -797,6 +797,8 @@ function onPostCardClick(evt: MouseEvent, post: Post) {
 </script>
 
 <style scoped>
+@layer components {
+
 .error-code {
   color: transparent;
   -webkit-text-stroke: 2px #F5E5E1;
@@ -879,5 +881,35 @@ function onPostCardClick(evt: MouseEvent, post: Post) {
   page-break-inside: avoid;
   display: inline-block;
   width: 100%;
+}
+}
+</style>
+
+<style>
+@layer components {
+
+/* Component and page styles moved from the global stylesheets. */
+.site-shell .site-post-index { padding-top: 70px; }
+.site-shell .site-post-index.site-post-index > .container { box-sizing: border-box; width: min(700px, calc(100% - 32px)); max-width: 700px; padding-inline: 0; }
+.site-shell .site-post-index .site-collection-intro { width: 100%; margin: 0 0 80px; }
+.site-shell .site-post-index .site-collection-avatar { margin-bottom: 40px; }
+.site-shell .site-post-index--public { min-height: 0; padding-bottom: 0; }
+.site-shell .site-post-index--public .site-public-post-archive { margin-bottom: 0; }
+.site-shell .site-public-tag-empty { margin: 0 auto 64px; color: var(--site-color-text); text-align: center; }
+.site-shell .site-public-tag-empty > a { display: inline-block; margin: 12px 0 28px; color: var(--site-color-accent); }
+.site-shell .site-public-tag-empty .site-public-post-archive { text-align: left; }
+.site-shell .site-post-index { background: var(--site-color-background); color: var(--site-color-text); }
+.site-shell .site-post-index > .container { width: min(700px, calc(100% - 32px)); max-width: 700px; margin-inline: auto; }
+.site-shell .site-post-index > .container { padding-inline: 0; }
+.site-shell .site-post-index [class~="border-gray-200"] { border-color: var(--site-color-border); }
+@media (max-width: 1023px) {
+  .site-shell .site-post-index { padding-top: 40px; }
+}
+@media (max-width: 1023px) {
+  .site-shell .site-post-index .site-collection-avatar { margin-bottom: 32px; }
+}
+@media (max-width: 1023px) {
+  .site-shell .site-post-index .site-collection-intro { margin-bottom: 52px; }
+}
 }
 </style>

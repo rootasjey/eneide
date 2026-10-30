@@ -108,3 +108,36 @@ async function revertToLink() {
     .run()
 }
 </script>
+
+<style>
+@layer components {
+
+/* Tiptap styles for this component. */
+.light .post-content .ProseMirror.ProseMirror-hideselection p.horizontal-card__text::selection { @apply bg-black; }
+.dark .post-content .ProseMirror.ProseMirror-hideselection p.horizontal-card__text::selection { @apply bg-white; }
+.horizontal-card {
+  @apply relative flex items-stretch gap-4 border-1.5 border-border rounded-xl p-3 md:p-4 bg-background;
+}
+.horizontal-card--image-right { @apply flex-row-reverse; }
+.horizontal-card--image-left { @apply flex-row; }
+.post-content .horizontal-card__media {
+  @apply relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 flex-shrink-0 overflow-hidden rounded-lg bg-muted flex items-center justify-center shadow-sm transition-shadow duration-300 ease-in-out;
+}
+.post-content .horizontal-card__media:hover { @apply shadow-xl; }
+.post-content .horizontal-card__media:active { @apply shadow-none; }
+.post-content .horizontal-card__image { @apply w-full h-full object-cover; }
+.post-content .horizontal-card__image.is-square { @apply aspect-square; }
+.post-content .horizontal-card__placeholder { @apply text-xs text-slate-500 dark:text-slate-400 text-center px-2; }
+.horizontal-card__replace-btn {
+  @apply absolute bottom-1 right-1 text-xs px-2 py-1 rounded-md bg-background/90 border border-border shadow-sm hover:bg-muted transition-colors;
+}
+.horizontal-card__revert-btn {
+  @apply absolute top-1 right-1 text-xs px-2 py-1 rounded-md bg-background/90 border border-border shadow-sm hover:bg-muted transition-colors;
+}
+.post-content .horizontal-card__body { @apply flex-1 min-w-0; }
+.post-content .horizontal-card__text { @apply text-sm sm:text-base text-foreground leading-relaxed whitespace-pre-wrap; }
+.post-content .horizontal-card__body h3 { @apply m-0; }
+.post-content .horizontal-card__body p { @apply mb-0; }
+.post-content .horizontal-card__content { @apply focus:outline-none; }
+}
+</style>

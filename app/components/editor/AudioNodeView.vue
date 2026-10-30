@@ -351,6 +351,8 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+@layer components {
+
 .audio-figure { display:block; margin:1rem auto; max-width:820px; border-radius:12px; padding:10px; transition: all 0.2s ease; }
 .dark .audio-figure { background: rgba(9,9,11,0.45); box-shadow: 0 8px 30px rgba(2,6,23,0.65); }
 
@@ -445,4 +447,22 @@ onBeforeUnmount(() => {
 
 .editor-audio.sr-only { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
 .caption-input { width:100%; background:transparent; border:0; color:inherit }
+}
+</style>
+
+<style>
+@layer components {
+
+/* Tiptap styles for this component. */
+.dark .post-content .ProseMirror.ProseMirror-hideselection .audio-container .title::selection,
+.dark .post-content .ProseMirror.ProseMirror-hideselection .audio-container .time-left::selection,
+.dark .post-content .ProseMirror.ProseMirror-hideselection .audio-container .time-right::selection { @apply color-white; }
+.light .post-content .ProseMirror.ProseMirror-hideselection .audio-container .title::selection,
+.light .post-content .ProseMirror.ProseMirror-hideselection .audio-container .time-left::selection,
+.light .post-content .ProseMirror.ProseMirror-hideselection div::selection,
+.light .post-content .ProseMirror.ProseMirror-hideselection span::selection,
+.light .post-content .ProseMirror.ProseMirror-hideselection label::selection,
+.light .post-content .ProseMirror.ProseMirror-hideselection strong::selection,
+.light .post-content .ProseMirror.ProseMirror-hideselection .audio-container .time-right::selection { @apply color-black; }
+}
 </style>

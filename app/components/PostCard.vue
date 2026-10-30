@@ -71,3 +71,14 @@ const emit = defineEmits<{
 }>()
 </script>
 
+<style>
+@layer components {
+
+/* Component and page styles moved from the global stylesheets. */
+.site-shell .site-post-card { margin-bottom: 16px; }
+.site-shell .site-post-card-link { border: 0; border-bottom: 1px solid var(--site-color-border); border-radius: 0; background: transparent; box-shadow: none; }
+.site-shell .site-post-card-link:hover { border-color: var(--site-color-accent); box-shadow: none; transform: none; }
+.site-shell .site-post-card-link h2,
+.site-shell .site-post-card-link h3 { color: var(--site-color-heading); font-family: var(--site-font-body); font-weight: 550; letter-spacing: 0; }
+}
+</style>

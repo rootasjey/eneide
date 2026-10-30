@@ -100,3 +100,303 @@ watch(() => props.content, (newContent) => {
   }
 })
 </script>
+
+<style>
+@layer components {
+
+/* Tiptap styles for this component. */
+.post-content { @apply text-foreground; }
+.post-content .ProseMirror { @apply focus:outline-none border-none ring-none shadow-none; }
+.post-content .ProseMirror.ProseMirror-noderangeselection.ProseMirror-hideselection { @apply bg-[#000] p-2 transition-all; }
+.post-content .ProseMirror.ProseMirror-noderangeselection.ProseMirror-hideselection { @apply color-white transition-all; }
+.post-content .ProseMirror.ProseMirror-noderangeselection.ProseMirror-hideselection p { @apply color-white transition-all; }
+.dark .post-content .ProseMirror.ProseMirror-noderangeselection.ProseMirror-hideselection { @apply bg-[#F5E5E1]; }
+.dark .post-content .ProseMirror.ProseMirror-noderangeselection.ProseMirror-hideselection { @apply color-black transition-all; }
+.dark .post-content .ProseMirror.ProseMirror-noderangeselection.ProseMirror-hideselection p { @apply color-black transition-all; }
+.post-content .ProseMirror [data-placeholder].is-editor-empty,
+.post-content .ProseMirror [data-placeholder].is-empty { position: relative; }
+.post-content .ProseMirror p[data-placeholder].is-editor-empty::after,
+.post-content .ProseMirror p[data-placeholder].is-empty::after,
+.post-content .ProseMirror h1[data-placeholder].is-editor-empty::after,
+.post-content .ProseMirror h1[data-placeholder].is-empty::after,
+.post-content .ProseMirror h2[data-placeholder].is-editor-empty::after,
+.post-content .ProseMirror h2[data-placeholder].is-empty::after,
+.post-content .ProseMirror h3[data-placeholder].is-editor-empty::after,
+.post-content .ProseMirror h3[data-placeholder].is-empty::after,
+.post-content .ProseMirror h4[data-placeholder].is-editor-empty::after,
+.post-content .ProseMirror h4[data-placeholder].is-empty::after,
+.post-content .ProseMirror li[data-placeholder].is-editor-empty::after,
+.post-content .ProseMirror li[data-placeholder].is-empty::after,
+.post-content .ProseMirror blockquote[data-placeholder].is-editor-empty::after,
+.post-content .ProseMirror blockquote[data-placeholder].is-empty::after {
+  content: attr(data-placeholder);
+  color: #adb5bd;
+  position: absolute;
+  left: 0.125rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  opacity: 0.9;
+  white-space: pre-wrap;
+  z-index: 0;
+}
+.post-content .ProseMirror h1 { @apply text-4xl font-serif font-800 mt-12 mb-6 leading-tight; }
+.post-content .ProseMirror h2 { @apply text-3xl font-serif font-800 mt-10 mb-5 leading-snug; }
+.post-content .ProseMirror h3 { @apply text-2xl font-serif font-500 mt-8 mb-4; }
+.post-content .ProseMirror h4 { @apply text-xl font-serif font-500 mt-6 mb-3; }
+.post-content .ProseMirror p { @apply text-base md:text-lg leading-relaxed mb-8 text-foreground/80 font-body font-400; }
+.post-content .ProseMirror ul[data-type="taskList"] p { @apply mb-0; line-height: 1rem; }
+.post-content .ProseMirror a { @apply text-primary hover:text-primary/80 underline decoration-2 underline-offset-2 transition-colors; }
+.post-content .ProseMirror strong { @apply font-800 text-foreground; }
+.post-content .ProseMirror em { @apply italic; }
+.post-content .ProseMirror blockquote { @apply border-l-4 border-primary/40 pl-6 py-4 my-8 italic text-lg md:text-xl text-slate-500 dark:text-slate-400 bg-muted/20 rounded-r-lg font-body font-400; }
+.post-content .ProseMirror blockquote p { @apply mb-0; }
+.post-content .ProseMirror ul, .post-content .ProseMirror ol { @apply my-6 pl-6 space-y-2; }
+.post-content .ProseMirror ul { @apply list-disc; }
+.post-content .ProseMirror ol { @apply list-decimal; }
+.post-content .ProseMirror li { @apply text-base md:text-lg leading-relaxed text-foreground/90 font-body font-400; }
+.post-content .ProseMirror li > p { @apply mb-2; }
+.post-content .ProseMirror code { @apply bg-muted px-2 py-1 rounded text-sm font-mono text-primary; }
+.post-content .ProseMirror pre { @apply bg-muted rounded-lg overflow-x-auto my-6; }
+.post-content .ProseMirror pre code { @apply bg-transparent p-0 text-foreground; }
+.post-content .ProseMirror img { @apply w-full h-auto rounded-xl my-8 shadow-lg cursor-pointer; }
+.post-content .ProseMirror td,
+.post-content .ProseMirror th {
+  @apply font-text;
+}
+.post-content img.ProseMirror-selectednode {
+  outline: 2px solid var(--un-primary-color, #3b82f6);
+  outline-offset: 2px;
+  border-radius: 6px;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.15);
+  transition: outline-offset 0.2s ease, box-shadow 0.2s ease;
+}
+.ProseMirror figure.image-figure--full-bleed {
+  width: 100vw;
+  max-width: none;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding-inline: 1rem;
+  box-sizing: border-box;
+}
+.ProseMirror figure.image-figure--full-bleed img {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  border-radius: 0;
+}
+.post-content .ProseMirror hr { @apply my-12 border-t-none border-b border-border h-[16px] bg-transparent transition-colors duration-800 ease-in-out; }
+.post-content .ProseMirror hr:hover { @apply border-blue; }
+.post-content .ProseMirror hr.separator { @apply; }
+.post-content .ProseMirror hr.separator--dashed { @apply border-border/60 border-b-dashed opacity-80; }
+.post-content .ProseMirror ul[data-type="taskList"] { @apply list-none ml-0 p-0; }
+.post-content .ProseMirror ul[data-type="taskList"] li { @apply flex items-start gap-2; }
+.post-content .ProseMirror ul[data-type="taskList"] li > label { @apply flex-shrink-0 mt-1 select-none mr-2; }
+.post-content .ProseMirror ul[data-type="taskList"] li > div { @apply flex-auto; }
+.post-content .ProseMirror table { @apply w-full my-8 border-collapse; }
+.post-content .ProseMirror th { @apply bg-muted font-semibold text-left p-3 border border-border font-text; }
+.post-content .ProseMirror td { @apply p-3 border border-border font-text; }
+.post-content .horizontal-card__toolbar { @apply flex items-center gap-2 mb-2; }
+.post-content .horizontal-card__toolbar button { @apply px-2 py-1 rounded border border-border bg-background text-sm; }
+.post-content .horizontal-card__toolbar button.is-active { @apply bg-primary text-white border-transparent; }
+/* Code syntax highlighting theme */
+/* Shared Tiptap Editor Styles extracted from legacy PostContent.vue */
+/* Placeholder handling */
+/* Typography */
+/* Use Manrope for body content in both editor and viewer */
+/* Highlight selected image node */
+/* Figure/caption (node view) styling */
+/* Full-bleed images (editor/read-only ProseMirror context) */
+/* Task list */
+/* Table */
+/* Drag handle */
+/* Horizontal card node */
+/* Auto link preview styles */
+/* .horizontal-card__textarea removed in favor of rich content editing */
+/* Menus */
+.post-content pre {
+  position: relative;
+  padding: 2.5rem 1rem 1rem 1rem; /* Extra top padding for buttons */
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  background: var(--code-bg, #1e1e1e);
+  border: 1px solid var(--code-border, #333);
+  font-family: 'Fira Code', 'JetBrains Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  tab-size: 2;
+}
+.post-content pre code {
+  display: block;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: var(--code-text, #d4d4d4);
+}
+.post-content {
+  --code-bg: #f8f8f8;
+  --code-border: #e5e5e5;
+  --code-text: #333;
+
+  /* Syntax tokens - light theme */
+  --code-comment: #6a737d;
+  --code-keyword: #d73a49;
+  --code-string: #032f62;
+  --code-number: #005cc5;
+  --code-function: #6f42c1;
+  --code-class: #22863a;
+  --code-variable: #e36209;
+  --code-operator: #d73a49;
+  --code-punctuation: #24292e;
+  --code-tag: #22863a;
+  --code-attr: #6f42c1;
+  --code-builtin: #005cc5;
+}
+.dark .post-content {
+  --code-bg: #1e1e1e;
+  --code-border: #333;
+  --code-text: #d4d4d4;
+
+  /* Syntax tokens - dark theme */
+  --code-comment: #6a9955;
+  --code-keyword: #c586c0;
+  --code-string: #ce9178;
+  --code-number: #b5cea8;
+  --code-function: #dcdcaa;
+  --code-class: #4ec9b0;
+  --code-variable: #9cdcfe;
+  --code-operator: #d4d4d4;
+  --code-punctuation: #d4d4d4;
+  --code-tag: #569cd6;
+  --code-attr: #9cdcfe;
+  --code-builtin: #4ec9b0;
+}
+.hljs-comment,
+.hljs-quote {
+  color: var(--code-comment);
+  font-style: italic;
+}
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst {
+  color: var(--code-keyword);
+  font-weight: 600;
+}
+.hljs-string,
+.hljs-doctag,
+.hljs-regexp {
+  color: var(--code-string);
+}
+.hljs-number,
+.hljs-literal,
+.hljs-meta .hljs-string {
+  color: var(--code-number);
+}
+.hljs-title,
+.hljs-section,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class {
+  color: var(--code-function);
+  font-weight: 600;
+}
+.hljs-type,
+.hljs-class .hljs-title {
+  color: var(--code-class);
+}
+.hljs-variable,
+.hljs-template-variable,
+.hljs-attr {
+  color: var(--code-variable);
+}
+.hljs-params {
+  color: var(--code-attr);
+}
+.hljs-built_in,
+.hljs-builtin-name {
+  color: var(--code-builtin);
+}
+.hljs-tag,
+.hljs-meta-keyword {
+  color: var(--code-tag);
+}
+.hljs-attribute {
+  color: var(--code-attr);
+}
+.hljs-operator,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link {
+  color: var(--code-operator);
+}
+.hljs-punctuation {
+  color: var(--code-punctuation);
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: 700;
+}
+.hljs-deletion {
+  background: rgba(255, 0, 0, 0.1);
+}
+.hljs-addition {
+  background: rgba(0, 255, 0, 0.1);
+}
+.post-content pre[data-language]::before {
+  content: attr(data-language);
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: var(--code-comment);
+  background: var(--code-bg);
+  border: 1px solid var(--code-border);
+  border-radius: 0.25rem;
+  opacity: 0.6;
+}
+.tiptap pre {
+  background: var(--code-bg);
+  color: var(--code-text);
+  font-family: 'Fira Code', 'JetBrains Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--code-border);
+}
+.tiptap pre code {
+  background: none;
+  color: inherit;
+  font-size: 0.875rem;
+  padding: 0;
+}
+.post-content pre::-webkit-scrollbar,
+.tiptap pre::-webkit-scrollbar {
+  height: 8px;
+}
+.post-content pre::-webkit-scrollbar-track,
+.tiptap pre::-webkit-scrollbar-track {
+  background: var(--code-bg);
+}
+.post-content pre::-webkit-scrollbar-thumb,
+.tiptap pre::-webkit-scrollbar-thumb {
+  background: var(--code-border);
+  border-radius: 4px;
+}
+.post-content pre::-webkit-scrollbar-thumb:hover,
+.tiptap pre::-webkit-scrollbar-thumb:hover {
+  background: var(--code-comment);
+}
+/* Code syntax highlighting theme - minimal & accessible */
+/* Base code block styles */
+/* Light theme variables */
+/* Dark theme variables */
+/* Highlight.js/lowlight token classes */
+/* Code block with language label */
+/* Editor-specific overrides */
+/* Scrollbar for code blocks */
+}
+</style>

@@ -99,6 +99,8 @@ async function copyCode() {
 </script>
 
 <style scoped>
+@layer components {
+
 .code-block-wrapper {
   position: relative;
   margin: 1rem 0;
@@ -109,5 +111,6 @@ async function copyCode() {
   padding-top: 3.5rem;
   padding-bottom: 2rem;
   padding-left: 1.5rem;
+}
 }
 </style>

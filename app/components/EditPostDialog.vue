@@ -196,5 +196,8 @@ function onCancel() {
 </script>
 
 <style scoped>
+@layer components {
+
 /* small tweaks for dialog layout */
+}
 </style>

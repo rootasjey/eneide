@@ -38,3 +38,30 @@ const emit = defineEmits<{ 'update:content': [json: object]; 'editor-ready': [ed
 function forwardContent(json: object) { emit('update:content', json) }
 function forwardEditor(ed: any) { emit('editor-ready', ed) }
 </script>
+
+<style>
+@layer components {
+
+/* Component and page styles moved from the global stylesheets. */
+.site-shell .site-post-content .post-content { color: var(--site-color-text); font-family: var(--site-font-body); font-size: 16px; line-height: 1.7; }
+.site-shell .site-post-content .post-content > .ProseMirror { max-width: none; color: var(--site-color-text); font-family: var(--site-font-body); font-size: 16px; line-height: 1.7; }
+.site-shell .site-post-content .post-content .ProseMirror p { margin-block: 0 24px; color: var(--site-color-text); font-family: var(--site-font-body); font-size: 16px; line-height: 1.7; }
+.site-shell .site-post-content .post-content .ProseMirror li { color: var(--site-color-text); font-family: var(--site-font-body); font-size: 16px; font-weight: 400; line-height: 1.7; }
+.site-shell .site-post-content .post-content .ProseMirror h1 { margin-block: 48px 20px; color: var(--site-color-heading); font-family: var(--site-font-body); font-size: 28px; font-weight: 550; letter-spacing: 0; line-height: 1.3; }
+.site-shell .site-post-content .post-content .ProseMirror h2 { margin-block: 40px 18px; color: var(--site-color-heading); font-family: var(--site-font-body); font-size: 20px; font-weight: 550; letter-spacing: 0; line-height: 1.4; }
+.site-shell .site-post-content .post-content .ProseMirror h3 { margin-block: 32px 16px; color: var(--site-color-heading); font-family: var(--site-font-body); font-size: 18px; font-weight: 550; letter-spacing: 0; line-height: 1.45; }
+.site-shell .site-post-content .post-content .ProseMirror h4 { margin-block: 28px 14px; color: var(--site-color-heading); font-family: var(--site-font-body); font-size: 16px; font-weight: 600; letter-spacing: 0; line-height: 1.5; }
+.site-shell .site-post-content .post-content .ProseMirror ul,
+.site-shell .site-post-content .post-content .ProseMirror ol { margin-block: 0 24px; padding-inline-start: 24px; }
+.site-shell .site-post-content .post-content .ProseMirror blockquote { margin-block: 32px; border-color: var(--site-color-accent); background: transparent; color: var(--site-color-muted); font-family: var(--site-font-body); font-size: 18px; line-height: 1.6; }
+.site-shell .site-post-content .post-content h1,
+.site-shell .site-post-content .post-content h2,
+.site-shell .site-post-content .post-content h3 { color: var(--site-color-heading); font-family: var(--site-font-body); font-weight: 550; letter-spacing: 0; }
+.site-shell .site-post-content .post-content p { margin-block: 0 24px; font-size: 16px; line-height: 1.7; }
+.site-shell .site-post-content .post-content a { color: var(--site-color-accent); }
+.site-shell .site-post-content .post-content blockquote { border-color: var(--site-color-accent); background: transparent; color: var(--site-color-muted); }
+.site-shell .site-post-content .post-content img { border-radius: 12px; }
+.post-content figure.image-figure--full-bleed { width: 100vw; max-width: none; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw); padding-inline: 16px; box-sizing: border-box; }
+.post-content figure.image-figure--full-bleed img { width: 100%; max-width: none; margin: 0; border-radius: 0; }
+}
+</style>

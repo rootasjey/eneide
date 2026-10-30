@@ -152,7 +152,7 @@
           </div>
           <h2>{{ project.title }}</h2>
           <p class="site-demo-project-meta">
-            <span>{{ project.category }}</span>
+            <ProjectTag :label="project.category" />
             <time :datetime="project.date">{{ project.year }}</time>
           </p>
         </NuxtLink>
@@ -615,6 +615,8 @@ async function duplicatePost(post: Post) {
 </script>
 
 <style scoped>
+@layer components {
+
 .error-code {
   color: transparent;
   -webkit-text-stroke: 2px #F5E5E1;
@@ -684,5 +686,61 @@ async function duplicatePost(post: Post) {
   border-radius: 0.375rem;
   overflow: hidden;
 }
+}
+</style>
 
+<style>
+@layer components {
+
+/* Component and page styles moved from the global stylesheets. */
+.site-shell .site-demo-projects { display: grid; width: 100%; max-width: 700px; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 24px; margin: 0 auto 64px; }
+.site-shell .site-demo-project { color: var(--site-color-text); text-decoration: none; }
+.site-shell .site-demo-project-image { overflow: hidden; aspect-ratio: 4 / 3; border-radius: 12px; background: #2b2b30; }
+.site-shell .site-demo-project-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 250ms ease; }
+.site-shell .site-demo-project:hover .site-demo-project-image img { transform: scale(1.02); }
+.site-shell .site-demo-project h2 { margin: 14px 0 6px; color: var(--site-color-heading); font-family: var(--site-font-body); font-size: 16px; font-weight: 550; }
+.site-shell .site-demo-project p { margin: 0; color: var(--site-color-muted); font-size: 14px; line-height: 1.5; }
+.site-shell .site-project-index { padding-top: 70px; }
+.site-shell .site-project-index > .container { box-sizing: border-box; width: min(700px, calc(100% - 32px)); max-width: 700px; padding-inline: 0; }
+.site-shell .site-project-index .site-collection-intro { width: 100%; margin: 0 0 106px; }
+.site-shell .site-project-index .site-collection-avatar { margin-bottom: 48px; }
+.site-shell .site-project-index .site-demo-projects { display: grid; width: 100%; max-width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px; margin: 0; }
+.site-shell .site-demo-project { min-width: 0; color: var(--site-color-text); text-decoration: none; }
+.site-shell .site-demo-project-image { aspect-ratio: 16 / 9; overflow: hidden; border-radius: 16px; }
+.site-shell .site-demo-project-image img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .35s cubic-bezier(.2, .7, .2, 1); }
+.site-shell .site-demo-project h2 { margin: 16px 0 4px; color: var(--site-color-heading); font-size: 18px; font-weight: 550; line-height: 24px; }
+.site-shell .site-demo-project-meta { display: flex; gap: 14px; margin: 0; color: var(--site-color-muted); font-size: 14px; line-height: 20px; }
+.site-shell .site-demo-project:hover .site-demo-project-image img { transform: scale(1.025); }
+.site-shell .site-demo-project:focus-visible { outline: 2px solid var(--site-color-accent); outline-offset: 5px; border-radius: 3px; }
+.site-shell .site-project-index-footer .home-newsletter { margin-top: 120px; }
+.site-shell .site-project-index { background: var(--site-color-background); color: var(--site-color-text); }
+.site-shell .site-project-index > .container { width: min(700px, calc(100% - 32px)); max-width: 700px; margin-inline: auto; }
+.site-shell .site-project-index > .container { padding-inline: 0; }
+.site-shell .site-project-index [class~="border-gray-200"] { border-color: var(--site-color-border); }
+.site-shell .site-project-index.site-project-index > .container { width: min(700px, calc(100% - 32px)); max-width: 700px; }
+@media (max-width: 1023px) {
+  .site-shell .site-project-index { padding-top: 40px; }
+}
+@media (max-width: 1023px) {
+  .site-shell .site-project-index .site-collection-avatar { margin-bottom: 32px; }
+}
+@media (max-width: 1023px) {
+  .site-shell .site-project-index .site-collection-intro { margin-bottom: 52px; }
+}
+@media (max-width: 1023px) {
+  .site-shell .site-project-index .site-demo-projects { width: 100%; max-width: 100%; margin: 0; }
+}
+@media (max-width: 1023px) {
+  .site-shell .site-project-index-footer .home-newsletter { margin-top: 80px; }
+}
+@media (max-width: 600px) {
+  .site-shell .site-demo-projects { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  .site-shell .site-project-index .site-demo-projects { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  .site-shell .site-project-index .site-demo-projects { gap: 28px; }
+}
+}
 </style>

@@ -337,6 +337,8 @@ const selected = computed(() => !!props.selected)
 </script>
 
 <style scoped>
+@layer components {
+
 .conway-figure {
   margin: 1.5rem 0;
   padding: 1.25rem;
@@ -528,5 +530,6 @@ const selected = computed(() => !!props.selected)
 
 @media (max-width: 420px) {
   .cell { width: 12px; height: 12px; margin: 1px; }
+}
 }
 </style>

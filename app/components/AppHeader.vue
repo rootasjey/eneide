@@ -160,21 +160,14 @@
       </div>
 
       <!-- Desktop Header -->
-      <div class="site-header-desktop hidden lg:block py-6 border-b"
-        :class="{
-          'bg-[#F8F9FA] dark:bg-gray-900': !isScrolled,
-          'bg-white/80 dark:bg-gray-950/80 backdrop-blur': isScrolled
-        }"
-      >
+      <div class="site-header-desktop">
         <!-- Row 1: Centered Logo -->
         <div
-          class="site-header-brand flex justify-center px-6 border-b border-gray-200 dark:border-gray-800 transition-all duration-300"
-          :class="isScrolled ? 'mb-2 pb-3' : 'mb-6 pb-6'"
+          class="site-header-brand"
         >
           <NuxtLink :to="localizedPath('/', $getLocale())" class="flex items-center">
             <span
-              class="site-wordmark font-title font-bold text-black dark:text-white transition-all duration-300"
-              :class="isScrolled ? 'text-3xl' : 'text-4xl'"
+              class="site-wordmark"
             >
               {{ $t('nav.brand') }}
             </span>
@@ -184,7 +177,7 @@
         <!-- Row 2: Social | Navigation | Auth -->
         <div class="site-header-grid grid items-center px-6 max-w-7xl mx-auto grid-cols-3">
           <!-- Left: Social Icons -->
-          <div class="site-header-social flex items-center gap-3 justify-self-start">
+          <div class="site-header-social">
             <a
               v-for="s in orderedSocials"
               :key="s.platform + s.url"
@@ -198,14 +191,14 @@
           </div>
 
           <!-- Center: Navigation Links -->
-          <nav class="site-header-nav flex items-center gap-8 text-sm font-medium justify-self-center">
-            <NuxtLink :to="localizedPath('/', $getLocale())" class="site-interactive-hover font-600 hover:underline decoration-offset-6 text-gray-700 dark:text-gray-100 hover:text-black dark:hover:text-white transition-colors">
+          <nav class="site-header-nav">
+            <NuxtLink :to="localizedPath('/', $getLocale())" class="site-interactive-hover font-600 text-gray-700 dark:text-gray-100 hover:text-black dark:hover:text-white transition-colors">
               {{ $t('nav.home') }}
             </NuxtLink>
-            <NuxtLink :to="localizedPath('/posts', $getLocale())" class="site-interactive-hover font-600 hover:underline decoration-offset-6 text-gray-700 dark:text-gray-100 hover:text-black dark:hover:text-white transition-colors">
+            <NuxtLink :to="localizedPath('/posts', $getLocale())" class="site-interactive-hover font-600 text-gray-700 dark:text-gray-100 hover:text-black dark:hover:text-white transition-colors">
               {{ $t('nav.posts') }}
             </NuxtLink>
-            <NuxtLink :to="localizedPath('/projects', $getLocale())" class="site-interactive-hover font-600 hover:underline decoration-offset-6 text-gray-700 dark:text-gray-100 hover:text-black dark:hover:text-white transition-colors">
+            <NuxtLink :to="localizedPath('/projects', $getLocale())" class="site-interactive-hover font-600 text-gray-700 dark:text-gray-100 hover:text-black dark:hover:text-white transition-colors">
               {{ $t('nav.projects') }}
             </NuxtLink>
             <div
@@ -262,13 +255,12 @@
               :model-value="currentThemeObj"
               @update:model-value="onThemeChange"
               size="xs"
-              class="w-auto"
-              :_combobox-trigger="{ class: 'site-interactive-hover w-auto min-w-10 border-none shadow-none hover:shadow-none focus:shadow-none', trailing: 'hidden' }"
-              :_combobox-list="{ class: 'w-44 min-w-44' }"
+              :una="{ combobox: 'w-auto min-w-0', comboboxList: 'w-44 min-w-44 site-header-combobox-menu' }"
+              :_combobox-trigger="{ trailing: '', una: { comboboxTrigger: 'site-interactive-hover site-header-control-trigger site-header-theme-trigger w-7 h-7 min-w-7 min-h-7 p-0 border-none shadow-none hover:shadow-none focus:shadow-none', comboboxTriggerTrailing: 'hidden', btnTrailing: 'hidden' } }"
               :_combobox-input="{ class: 'border-none' }"
             >
               <template #trigger="{ modelValue }">
-                <div :class="modelValue?.icon || 'i-ph-sun'" class="w-3.5 h-3.5 mx-auto" />
+                <div :class="modelValue?.icon || 'i-ph-sun'" class="site-theme-icon" />
               </template>
               <template #label="{ item }">
                 <div class="flex items-center gap-2 text-xs">
@@ -286,13 +278,12 @@
               :model-value="currentLocaleObj"
               @update:model-value="onLocaleChange"
               size="xs"
-              class="w-auto"
-              :_combobox-trigger="{ class: 'site-interactive-hover w-auto min-w-0 border-none shadow-none hover:shadow-none focus:shadow-none', trailing: 'hidden' }"
-              :_combobox-list="{ class: 'w-auto cursor-pointer' }"
+              :una="{ combobox: 'w-auto min-w-0', comboboxList: 'w-auto cursor-pointer site-header-combobox-menu' }"
+              :_combobox-trigger="{ trailing: '', una: { comboboxTrigger: 'site-interactive-hover site-header-control-trigger site-header-locale-trigger w-auto min-w-0 border-none shadow-none hover:shadow-none focus:shadow-none', comboboxTriggerTrailing: 'hidden', btnTrailing: 'hidden' } }"
               :_combobox-input="{ class: 'border-none' }"
             >
               <template #trigger="{ modelValue }">
-                <span class="text-sm font-bold uppercase tracking-wide">{{ modelValue?.code?.toUpperCase() || 'EN' }}</span>
+                <span class="text-sm font-semibold uppercase tracking-wide">{{ modelValue?.code?.toUpperCase() || 'EN' }}</span>
               </template>
               <template #label="{ item }">
                 <span class="text-xs">{{ item.displayName }}</span>
@@ -557,3 +548,129 @@ function iconClass(platform?: string) {
   return 'i-ph-link'
 }
 </script>
+
+<style>
+@layer components {
+
+/* Component and page styles moved from the global stylesheets. */
+.site-shell .site-wordmark { font-family: var(--site-font-body); }
+.site-shell .site-masthead { background: var(--site-color-background); color: var(--site-color-text); }
+.site-shell .site-header-desktop {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  width: min(700px, calc(100% - 32px));
+  max-width: 700px;
+  height: 60px;
+  box-sizing: border-box;
+  margin-inline: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.site-shell .site-header-brand {
+  grid-column: 1;
+  grid-row: 1;
+  justify-content: flex-start;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.site-shell .site-header-brand .site-wordmark { color: var(--site-color-heading); font-family: var(--site-font-body); font-size: 16px; font-weight: 600; letter-spacing: 0; line-height: 24px; white-space: nowrap; }
+.site-shell .site-header-grid { display: contents; }
+.site-shell .site-header-social { display: none; }
+.site-shell .site-header-nav {
+  display: flex;
+  grid-column: 2;
+  grid-row: 1;
+  align-items: center;
+  justify-self: center;
+  gap: 2px;
+  color: var(--site-color-text);
+  font-family: var(--site-font-body);
+  font-size: 14px;
+  font-weight: 400;
+  text-transform: lowercase;
+  white-space: nowrap;
+}
+.site-shell .site-header-nav a::first-letter { text-transform: uppercase; }
+.site-shell .site-header-nav a[aria-current="page"] { border-color: var(--site-color-border); color: var(--site-color-heading); }
+.site-shell .site-header-nav a,
+.site-shell .site-header-nav button,
+.site-shell .site-header-controls a { color: var(--site-color-text); font-weight: 400; text-decoration: none; }
+.site-shell .site-header-nav a,
+.site-shell .site-header-nav button { display: inline-flex; min-height: 30px; align-items: center; padding: 4px 7px; border: 1px solid transparent; border-radius: 10px; background: transparent; font-weight: 500; }
+.site-shell .site-header-nav button { font: inherit; font-weight: 500; text-transform: capitalize; cursor: pointer; }
+.site-shell .site-header-pages { position: relative; }
+.site-shell .site-header-pages-menu { position: absolute; z-index: 30; top: calc(100% + 8px); left: 50%; display: grid; width: max-content; min-width: 160px; gap: 0; padding: 8px; border: 1px solid var(--site-color-border); border-radius: 10px; background: var(--site-color-background); box-shadow: 0 8px 24px rgb(0 0 0 / 8%); opacity: 0; visibility: hidden; pointer-events: none; transform: translate(-50%, 5px); transition: opacity 160ms ease, transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s linear 180ms; }
+.site-shell .site-header-pages::after { position: absolute; top: 100%; left: calc(50% - 80px); width: 160px; height: 13px; content: ""; }
+.site-shell .site-header-pages:hover .site-header-pages-menu,
+.site-shell .site-header-pages:focus-within .site-header-pages-menu,
+.site-shell .site-header-pages[data-open="true"] .site-header-pages-menu { opacity: 1; visibility: visible; pointer-events: auto; transform: translate(-50%, 0); transition-delay: 0s; }
+@media (prefers-reduced-motion: reduce) {
+  .site-shell .site-header-pages-menu { transition: none; }
+}
+.site-shell .site-header-pages-menu a { display: block; padding: 8px 14px; border: 0; border-radius: 6px; color: var(--site-color-text); line-height: 20px; }
+.site-shell .site-header-pages-menu a:hover { background: var(--site-color-hover-background); color: var(--site-color-heading); }
+.site-shell .site-header-controls {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  gap: 2px;
+}
+.site-shell .site-header-controls > a:first-child,
+.site-shell .site-header-controls > a:nth-child(2) { display: none; }
+.site-shell .site-header-controls button { color: var(--site-color-muted); }
+.site-shell .site-header-controls .combobox-trigger-trailing { display: none; }
+.site-shell .site-header-controls .site-header-control-trigger {
+  border: 0;
+  background-color: transparent;
+  color: var(--site-color-text);
+  box-shadow: none;
+}
+.site-shell .site-header-controls .site-header-control-trigger:hover,
+.site-shell .site-header-controls .site-header-control-trigger:focus-visible {
+  background-color: var(--site-color-hover-background);
+  color: var(--site-color-heading);
+}
+.site-shell .site-header-controls .site-header-theme-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+.site-shell .site-header-controls .site-header-locale-trigger {
+  min-height: 31px;
+  padding: 5px 11px;
+  border-radius: 8px;
+}
+.site-shell .site-header-controls .site-header-search {
+  display: inline-flex;
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 10px;
+}
+.site-shell .site-theme-icon { width: 16px; height: 16px; color: var(--site-color-text); }
+.site-shell .site-mobile-brand { background: transparent; border: 0; border-radius: 0; }
+.site-shell .site-mobile-brand .site-wordmark { color: var(--site-color-text); }
+.site-shell .site-masthead a:hover { color: var(--site-color-accent); }
+.site-shell .site-header-nav a:hover,
+.site-shell .site-header-nav button:hover { color: var(--site-color-heading); background: var(--site-color-hover-background); }
+@media (max-width: 1023px) {
+  .site-shell .site-header-desktop { display: none; }
+}
+@media (max-width: 1023px) {
+  .site-shell .site-masthead > div > div:first-child { border: 0; background: var(--site-color-background); }
+}
+}
+@layer theme-overrides {
+  .site-header-combobox-menu .input-input:focus-visible {
+    outline-offset: 0;
+  }
+}
+</style>

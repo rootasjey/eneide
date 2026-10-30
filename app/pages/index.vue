@@ -1,5 +1,5 @@
 <template>
-  <div class="site-home bg-gray-50 dark:bg-gray-950">
+  <div class="site-home">
     <!-- Client-only mobile experience -->
     <ClientOnly>
       <component
@@ -67,6 +67,8 @@ useHead({
 </script>
 
 <style>
+@layer components {
+
 /* Hide scrollbar for Chrome, Safari and Opera */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
@@ -76,5 +78,53 @@ useHead({
 .scrollbar-hide {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
+}
+}
+</style>
+
+<style>
+@layer components {
+
+/* Component and page styles moved from the global stylesheets. */
+.site-shell .site-home { background: var(--site-color-background); color: var(--site-color-text); }
+.site-shell .site-intro {
+  width: min(700px, calc(100% - 32px));
+  box-sizing: border-box;
+  margin-inline: auto;
+  padding-block: 70px 49px;
+  color: var(--site-color-text);
+}
+.site-shell .site-intro-mark {
+  display: grid;
+  width: 100px;
+  height: 100px;
+  place-items: center;
+  margin-bottom: 38px;
+  border: 0;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.site-shell .site-intro h1 { margin: 0 0 12px; font-family: var(--site-font-heading); color: var(--site-color-heading); font-size: 20px; font-weight: 550; line-height: 1.4; }
+.site-shell .site-intro p { max-width: 700px; margin: 0 0 8px; font-family: var(--site-font-heading); color: var(--site-color-text); line-height: 1.5; }
+.site-shell .site-intro a { color: var(--site-color-accent); text-decoration: underline; text-underline-offset: 2px; }
+.site-shell .site-intro .site-intro-subscribe { display: inline-flex; min-height: 44px; align-items: center; margin-top: 41px; padding-inline: 14px; border: 1px solid var(--site-color-border); border-radius: 12px; color: var(--site-color-heading); text-decoration: none; }
+.site-shell .site-intro-subscribe:hover,
+.site-shell .site-intro-subscribe:focus-visible { border-color: transparent; }
+.site-shell .site-intro-subscribe:focus-visible { outline: 2px solid var(--site-color-accent); outline-offset: 3px; }
+.site-shell:has(.site-home):not(:has(.site-home-recommendations)) > .site-footer { padding-top: 48px; }
+@media (max-width: 1023px) {
+  .site-shell .site-intro { padding-block: 40px 52px; }
+}
+@media (max-width: 1023px) {
+  .site-shell .site-intro-mark { width: 72px; height: 72px; margin-bottom: 28px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-shell .site-intro-subscribe { transition: border-color 160ms ease; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-shell .site-intro-subscribe:hover,
+.site-shell .site-intro-subscribe:focus-visible,
+.site-shell .site-intro-subscribe:active { transform: none; }
+}
 }
 </style>

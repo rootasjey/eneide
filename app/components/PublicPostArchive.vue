@@ -42,14 +42,12 @@
       </article>
     </div>
 
-    <button
+    <LoadMoreButton
       v-if="visibleCount < posts.length"
-      class="site-public-post-load-more site-interactive-hover"
-      type="button"
       @click="visibleCount += pageSize"
     >
       {{ locale === 'fr' ? 'Charger plus' : 'Load More' }}
-    </button>
+    </LoadMoreButton>
   </section>
 </template>
 
@@ -73,6 +71,8 @@ function formatDate(value: string) {
 </script>
 
 <style scoped>
+@layer components {
+
 .site-public-post-archive {
   width: 100%;
   margin-bottom: 64px;
@@ -96,7 +96,7 @@ function formatDate(value: string) {
   align-content: center;
   column-gap: 16px;
   row-gap: 6px;
-  color: var(--corpinot-ink);
+  color: var(--site-color-text);
 }
 
 .site-public-post-image-link {
@@ -140,8 +140,8 @@ function formatDate(value: string) {
 
 .site-public-post-title {
   overflow: hidden;
-  color: var(--corpinot-strong);
-  font-family: var(--corpinot-body);
+  color: var(--site-color-heading);
+  font-family: var(--site-font-body);
   font-size: 18px;
   font-weight: 600;
   line-height: 18px;
@@ -156,7 +156,7 @@ function formatDate(value: string) {
   align-items: center;
   gap: 12px;
   color: #bdbdbd;
-  font-family: var(--corpinot-body);
+  font-family: var(--site-font-body);
   font-size: 13px;
   font-weight: 500;
   line-height: 20px;
@@ -192,8 +192,8 @@ function formatDate(value: string) {
 
 .site-public-post-tag:hover::before,
 .site-public-post-tag:focus-visible::before {
-  border-color: color-mix(in srgb, var(--tag-accent), var(--corpinot-paper) 90%);
-  background-color: color-mix(in srgb, var(--tag-accent), var(--corpinot-paper) 90%);
+  border-color: color-mix(in srgb, var(--tag-accent), var(--site-color-background) 90%);
+  background-color: color-mix(in srgb, var(--tag-accent), var(--site-color-background) 90%);
 }
 
 .site-public-post-tag:focus-visible {
@@ -203,59 +203,14 @@ function formatDate(value: string) {
 }
 
 .site-public-post-image-link:focus-visible .site-public-post-image {
-  outline: 2px solid var(--corpinot-link);
+  outline: 2px solid var(--site-color-accent);
   outline-offset: 4px;
 }
 
 .site-public-post-title:focus-visible {
-  outline: 2px solid var(--corpinot-link);
+  outline: 2px solid var(--site-color-accent);
   outline-offset: 3px;
   border-radius: 2px;
-}
-
-.site-public-post-load-more {
-  display: block;
-  grid-column: 1 / -1;
-  justify-self: center;
-  margin: 44px auto 0;
-  padding: 8px 14px;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  background: transparent;
-  color: var(--corpinot-strong);
-  font-family: system-ui, sans-serif;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  cursor: pointer;
-  transition:
-    background-color 200ms ease,
-    color 200ms ease,
-    border-color 200ms ease,
-    opacity 200ms ease,
-    transform 300ms cubic-bezier(.4, 0, .2, 2.4),
-    translate 300ms cubic-bezier(.4, 0, .2, 2.4);
-}
-
-.site-public-post-load-more:hover,
-.site-public-post-load-more:focus-visible {
-  translate: 0 -2px;
-}
-
-.site-public-post-load-more:active {
-  transform: scale(.98);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .site-public-post-load-more {
-    transition: none;
-  }
-
-  .site-public-post-load-more:hover,
-  .site-public-post-load-more:focus-visible {
-    transform: none;
-    translate: none;
-  }
 }
 
 @media (max-width: 1023px) {
@@ -285,5 +240,6 @@ function formatDate(value: string) {
   .site-public-post-tag {
     transition: none;
   }
+}
 }
 </style>

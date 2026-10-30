@@ -11,3 +11,11 @@
     <MobileBottomNav class="lg:hidden" />
   </div>
 </template>
+
+<style>
+@layer components {
+
+/* Component and page styles moved from the global stylesheets. */
+.site-shell .site-banner { position: relative; top: auto; transform: none; box-shadow: none; }
+}
+</style>

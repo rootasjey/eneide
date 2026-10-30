@@ -408,25 +408,73 @@ const dragMenuItems = [
 </script>
 
 <style scoped>
+@layer components {
+
 .drag-handle-dropdown { display: inline-block }
 .drag-button-wrap { display: inline-flex; align-items: center; gap: 0.35rem }
 .add-new-block-btn { display: inline-flex; align-items: center; justify-content:center; width:28px; height:28px; border-radius:6px }
 .add-new-block-btn span { font-size: 14px; line-height: 1 }
+}
 </style>
 
 <style>
+@layer components {
+
 /* Global styles for dropdown menu items - controls visibility based on node type */
 /* When hovering a text block, hide image-only items */
 .drag-button-wrap[data-node-type="text"] ~ [data-reka-popper-content-wrapper] .image-only-item,
 .drag-button-wrap[data-node-type="text"] ~ * .image-only-item,
 body:has(.drag-button-wrap[data-node-type="text"]) [data-reka-popper-content-wrapper] .image-only-item {
-  display: none !important;
+  display: none;
 }
 
 /* When hovering an image block, hide text-only items */
 .drag-button-wrap[data-node-type="image"] ~ [data-reka-popper-content-wrapper] .text-only-item,
 .drag-button-wrap[data-node-type="image"] ~ * .text-only-item,
 body:has(.drag-button-wrap[data-node-type="image"]) [data-reka-popper-content-wrapper] .text-only-item {
-  display: none !important;
+  display: none;
+}
+}
+</style>
+
+<style>
+@layer components {
+
+/* Component and page styles moved from the global stylesheets. */
+.color-letter::before { content: 'A'; display: inline-block; width: .875rem; height: .875rem; line-height: .875rem; font-size: .875rem; font-weight: 700; text-align: center; margin-right: .5rem; vertical-align: middle; color: currentColor; }
+.color-dot,
+.dot-clear { display: inline-block; width: .875rem; height: .875rem; border-radius: 9999px; margin-right: .5rem; vertical-align: middle; }
+.color-dot { background-color: currentColor; }
+.dot-clear { background: transparent; border: 1px solid rgba(0,0,0,.12); box-sizing: border-box; }
+.color-111827 { color: #111827 } .color-374151 { color: #374151 } .color-6b7280 { color: #6b7280 }
+.color-ef4444 { color: #ef4444 } .color-f97316 { color: #f97316 } .color-f59e0b { color: #f59e0b }
+.color-10b981 { color: #10b981 } .color-3b82f6 { color: #3b82f6 } .color-6366f1 { color: #6366f1 }
+.color-8b5cf6 { color: #8b5cf6 } .color-ec4899 { color: #ec4899 } .color-fff7ed { color: #fff7ed }
+.color-ffedd5 { color: #ffedd5 } .color-fef3c7 { color: #fef3c7 } .color-ecfeff { color: #ecfeff }
+.color-ecfccb { color: #ecfccb } .color-eef2ff { color: #eef2ff } .color-feebf6 { color: #feebf6 }
+.color-ebd6fb { color: #ebd6fb } .color-8f87f1 { color: #8f87f1 } .color-c68efd { color: #c68efd }
+}
+</style>
+
+<style>
+@layer components {
+
+/* Tiptap styles for this component. */
+.post-content :is(.tiptap-drag-handle, .drag-handle) {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: rgba(0,0,0,0.02);
+  cursor: grab;
+  transition: background-color .12s ease, transform .12s ease;
+  z-index: 60;
+}
+.post-content :is(.tiptap-drag-handle:hover, .drag-handle:hover) { background: rgba(0,0,0,0.06); }
+.drag-handle-dropdown .n-dropdown-menu__menu { z-index: 70; min-width: 200px; }
+.drag-handle-dropdown .n-dropdown-menu__trigger { display: inline-flex; align-items: center; justify-content: center; padding: 0.25rem; }
 }
 </style>

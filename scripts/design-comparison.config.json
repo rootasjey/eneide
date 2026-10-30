@@ -1,4 +1,42 @@
 {
+  "home": {
+    "description": "Selected Works section compared with the Core homepage.",
+    "localUrl": "http://localhost:3000/fr/",
+    "referenceUrl": "https://core.primedirection.org/",
+    "viewport": {
+      "width": 1496,
+      "height": 850
+    },
+    "elements": [
+      {
+        "name": "Selected Works heading",
+        "local": ".home-project-heading h2",
+        "reference": "section.section-works h2"
+      },
+      {
+        "name": "Project thumbnail",
+        "local": ".site-home-project-image img",
+        "reference": "section.section-works article img"
+      },
+      {
+        "name": "Project tag",
+        "local": ".site-home-project-meta > span:first-child",
+        "reference": "section.section-works article .card-meta a[href*='/tag/']"
+      }
+    ],
+    "hoverStates": [
+      {
+        "name": "Project thumbnail hover",
+        "local": ".site-home-project-card:first-of-type .site-home-project-image img",
+        "reference": "section.section-works article:first-of-type .image img"
+      },
+      {
+        "name": "Project tag hover",
+        "local": ".site-home-project-card:first-of-type .site-home-project-meta > span:first-child",
+        "reference": "section.section-works article:first-of-type .card-meta a[href*='/tag/']"
+      }
+    ]
+  },
   "posts": {
     "description": "Public posts archive compared with the Core journal.",
     "localUrl": "http://localhost:3000/posts",

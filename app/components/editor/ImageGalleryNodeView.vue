@@ -294,6 +294,8 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+@layer components {
+
 .image-gallery {
   position: relative;
   margin: 1.5rem 0;
@@ -376,5 +378,5 @@ onBeforeUnmount(() => {
   justify-content: flex-end;
   align-items: flex-start;
 }
-
+}
 </style>

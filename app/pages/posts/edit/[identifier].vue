@@ -864,6 +864,8 @@ onMounted(() => {
 </script>
 
 <style>
+@layer components {
+
 .dropdown-menu-group button {
   font-weight: 500;
 }
@@ -875,5 +877,6 @@ onMounted(() => {
 .description-input textarea {
   overflow: hidden; /* prevent scrollbars so we can size by content */
   resize: none; /* disable manual dragging */
+}
 }
 </style>

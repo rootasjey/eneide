@@ -34,6 +34,8 @@ function onChange(e: Event) {
 </script>
 
 <style scoped>
+@layer components {
+
 .checkbox-wrapper-43 input[type="checkbox"] {
   display: none;
   visibility: hidden;
@@ -100,5 +102,6 @@ function onChange(e: Event) {
   stroke-dashoffset: 42;
   transition: all 0.2s linear;
   transition-delay: 0.15s;
+}
 }
 </style>

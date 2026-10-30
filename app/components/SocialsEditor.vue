@@ -117,9 +117,12 @@ function emitCancel() {
 </script>
 
 <style scoped>
+@layer components {
+
 :deep(.social-input) {
   &::selection {
     background-color: black;
   }
+}
 }
 </style>

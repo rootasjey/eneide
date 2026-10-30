@@ -474,6 +474,8 @@ async function confirmDelete() {
 </script>
 
 <style scoped>
+@layer components {
+
 .line-clamp-2 {
   display: -webkit-box;
   line-clamp: 2;
@@ -502,8 +504,8 @@ async function confirmDelete() {
   .page-enter-from,
   .page-enter-to,
   .page-enter-active {
-    transition: none !important;
-    transform: none !important;
+    transition: none;
+    transform: none;
   }
 }
 
@@ -526,8 +528,8 @@ async function confirmDelete() {
   .list-enter-from,
   .list-enter-to,
   .list-enter-active {
-    transition: none !important;
-    transform: none !important;
+    transition: none;
+    transform: none;
   }
 }
 
@@ -549,9 +551,18 @@ async function confirmDelete() {
   .tags-enter-from,
   .tags-enter-to,
   .tags-enter-active {
-    transition: none !important;
-    transform: none !important;
+    transition: none;
+    transform: none;
   }
 }
+}
+</style>
 
+<style>
+@layer components {
+
+/* Component and page styles moved from the global stylesheets. */
+.site-shell .site-public-tags-footer .home-newsletter { margin-top: 120px; }
+.site-shell .site-tags > div { width: min(700px, calc(100% - 32px)); max-width: 700px; margin-inline: auto; }
+}
 </style>

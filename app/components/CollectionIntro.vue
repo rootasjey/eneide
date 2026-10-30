@@ -9,3 +9,20 @@
 <script setup lang="ts">
 defineProps<{ title: string; description: string }>()
 </script>
+
+<style>
+@layer components {
+
+/* Component and page styles moved from the global stylesheets. */
+.site-shell .site-collection-intro { width: min(700px, calc(100vw - 32px)); margin: 0 auto 80px; color: var(--site-color-text); }
+.site-shell .site-collection-avatar { display: block; width: 100px; height: 100px; margin-bottom: 40px; border-radius: 50%; object-fit: cover; }
+.site-shell .site-collection-intro h1 { margin: 0 0 14px; color: var(--site-color-heading); font-size: 20px; font-weight: 550; line-height: 28px; }
+.site-shell .site-collection-intro p { margin: 0; color: var(--site-color-text); font-size: 16px; line-height: 24px; }
+@media (max-width: 1023px) {
+  .site-shell .site-collection-intro { margin-bottom: 44px; }
+}
+@media (max-width: 1023px) {
+  .site-shell .site-collection-avatar { width: 72px; height: 72px; margin-bottom: 28px; }
+}
+}
+</style>

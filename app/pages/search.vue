@@ -153,12 +153,15 @@
 </template>
 
 <style>
+@layer components {
+
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
 }
 </style>
 
@@ -276,3 +279,11 @@ function addRecent(term: string) {
   recentSearches.value = [value, ...filtered].slice(0, 10)
 }
 </script>
+
+<style>
+@layer components {
+
+/* Component and page styles moved from the global stylesheets. */
+.site-shell .site-search > div { width: min(700px, calc(100% - 32px)); max-width: 700px; margin-inline: auto; }
+}
+</style>

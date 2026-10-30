@@ -278,6 +278,8 @@ useHead({
 </script>
 
 <style scoped>
+@layer components {
+
 .animate-entrance {
   opacity: 0;
   transform: translateY(8px) scale(0.996);
@@ -293,10 +295,44 @@ useHead({
 
 @media (prefers-reduced-motion: reduce) {
   .animate-entrance {
-    transition: none !important;
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
+    transition: none;
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
+}
+}
+</style>
+
+<style>
+@layer components {
+
+/* Component and page styles moved from the global stylesheets. */
+.site-shell .site-credits { box-sizing: border-box; width: min(700px, calc(100% - 32px)); max-width: 700px; margin-inline: auto; padding: 70px 0 64px; }
+.site-shell .site-credits-intro { margin: 0 0 64px; text-align: left; }
+.site-shell .site-credits-intro h1 { margin: 0 0 14px; }
+.site-shell .site-credits-intro p { max-width: 620px; margin: 0; color: var(--site-color-muted); font-family: var(--site-font-body); font-size: 16px; line-height: 24px; }
+.site-shell .site-credits-sections { display: grid; gap: 0; }
+.site-shell .site-credits-section { min-width: 0; padding: 28px 0; border: 0; border-bottom: 1px solid var(--site-color-border); border-radius: 0; background: transparent; box-shadow: none; }
+.site-shell .site-credits-section:first-child { padding-top: 0; }
+.site-shell .site-credits-section:last-child { border-bottom: 0; }
+.site-shell .site-credits-section > div { padding: 0; }
+.site-shell .site-credits-section h2 { margin: 0 0 16px; color: var(--site-color-heading); font-size: 16px; font-weight: 550; line-height: 24px; }
+.site-shell .site-credits-section ul:not(.site-credits-media-list) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; margin: 0; padding: 0; list-style: none; color: var(--site-color-text); font-family: var(--site-font-body); font-size: 14px; line-height: 21px; }
+.site-shell .site-credits-section ul:not(.site-credits-media-list) a { color: var(--site-color-heading); font-weight: 550; text-decoration: none; }
+.site-shell .site-credits-section ul:not(.site-credits-media-list) a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.site-shell .site-credits-section ul:not(.site-credits-media-list) li > span { color: var(--site-color-muted); }
+.site-shell .site-credits-section .site-credits-media-list { display: flex; flex-wrap: wrap; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.site-shell .site-credits-section .site-credits-media-list img { display: block; width: 64px; height: 64px; border: 1px solid var(--site-color-border); border-radius: 10px; object-fit: cover; }
+.site-shell .site-credits-section > div > p { margin: 0; color: var(--site-color-text); font-family: var(--site-font-body); font-size: 15px; line-height: 24px; }
+@media (max-width: 600px) {
+  .site-shell .site-credits { padding-block: 40px 48px; }
+}
+@media (max-width: 600px) {
+  .site-shell .site-credits-intro { margin-bottom: 40px; }
+}
+@media (max-width: 600px) {
+  .site-shell .site-credits-section ul:not(.site-credits-media-list) { grid-template-columns: minmax(0, 1fr); }
+}
 }
 </style>

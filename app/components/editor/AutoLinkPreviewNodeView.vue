@@ -117,3 +117,26 @@ function onMetaClick(e: MouseEvent) {
   if (href.value) openInNewTab(href.value)
 }
 </script>
+
+<style>
+@layer components {
+
+/* Tiptap styles for this component. */
+.post-content .ProseMirror .auto-link-preview { @apply relative flex items-start gap-4 border-1.5 border-border rounded-xl p-3 my-2 md:p-4 bg-background hover:scale-102 active:scale-99 transition-transform duration-200 ease-in; }
+.dark .post-content .ProseMirror .auto-link-preview ::selection { @apply bg-transparent color-white; }
+.post-content .ProseMirror .auto-link-preview a { @apply decoration-none color-inherit; }
+.post-content .ProseMirror .auto-link-preview__media { @apply relative w-24 h-24 flex-shrink-0 overflow-hidden rounded-lg bg-muted flex items-center justify-center; }
+.post-content .ProseMirror .auto-link-preview__image { @apply w-full h-full object-cover; }
+.post-content .ProseMirror .auto-link-preview__placeholder { @apply text-xs text-slate-500 dark:text-slate-400; }
+.post-content .ProseMirror .auto-link-preview__spinner { @apply absolute inset-0 flex items-center justify-center bg-background/40; }
+.post-content .ProseMirror .spinner { @apply w-4 h-4 border-2 border-slate-300 border-t-transparent rounded-full animate-spin; }
+.post-content .ProseMirror .auto-link-preview__meta { @apply flex-1; }
+.post-content .ProseMirror .auto-link-preview__title { @apply font-title text-lg font-semibold mb-1 truncate mt-0; }
+.post-content .ProseMirror .auto-link-preview__description { @apply text-xs text-slate-500 dark:text-slate-400; }
+.post-content .ProseMirror .auto-link-preview__title-input { @apply w-full font-title text-lg font-semibold px-2 py-1 rounded mb-1 bg-background; }
+.post-content .ProseMirror .auto-link-preview__desc-input { @apply w-full text-xs px-2 py-1 rounded bg-background; }
+.post-content .ProseMirror .auto-link-preview__revert-btn { @apply absolute top-1 right-1 text-xs px-2 py-1 rounded-md bg-background/90 border border-border shadow-sm; }
+.post-content .ProseMirror .auto-link-preview__media.is-clickable { cursor: pointer; }
+.post-content .ProseMirror .auto-link-preview__meta.is-clickable { cursor: pointer; }
+}
+</style>

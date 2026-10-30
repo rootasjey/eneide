@@ -633,3 +633,15 @@ function resetEditor() {
   } catch (err) { /* swallow any errors for robustness */ }
 }
 </script>
+
+<style>
+@layer components {
+
+/* Tiptap styles for this component. */
+.bubble-menu, .floating-menu, .link-popover { @apply bg-background border border-border rounded-lg shadow-lg flex items-center gap-1 p-1; }
+.bubble-menu button, .floating-menu > button, .link-popover button { @apply p-1.5 rounded-md text-foreground/80 hover:bg-muted hover:text-primary transition-colors flex items-center justify-center min-w-[28px]; }
+.bubble-menu button.is-active, .floating-menu > button.is-active, .link-popover button.is-active { @apply bg-primary/10 text-primary; }
+.bubble-menu .divider, .link-popover .divider { @apply w-px h-5 bg-border mx-1; }
+.menu-block-type .n-dropdown-menu__trigger { @apply p-0 min-w-[120px]; }
+}
+</style>

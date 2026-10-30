@@ -70,3 +70,16 @@ async function copyLink() {
   }
 }
 </script>
+
+<style>
+@layer components {
+
+/* Component and page styles moved from the global stylesheets. */
+.site-shell .site-post-share-actions { position: relative; display: flex; flex: 0 0 auto; align-items: center; gap: 6px; }
+.site-shell .site-post-share-actions > a,
+.site-shell .site-post-share-actions > button { display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid color-mix(in srgb, var(--site-color-text) 8%, var(--site-color-background)); border-radius: 50%; background: transparent; color: var(--site-color-muted); cursor: pointer; font-size: 18px; text-decoration: none; transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 2.4), background-color 150ms ease-in-out, border-color 150ms ease-in-out, color 150ms ease-in-out; }
+.site-shell .site-post-share-actions > a:hover,
+.site-shell .site-post-share-actions > button:hover { background: var(--site-color-hover-background); border-color: var(--site-color-hover-background); color: var(--site-color-heading); transform: translateY(-1px); }
+.site-shell .site-post-share-status { position: absolute; top: calc(100% + 6px); right: 0; z-index: 1; padding: 6px 10px; border: 1px solid var(--site-color-border); border-radius: 8px; background: var(--site-color-background); color: var(--site-color-text); font-size: 12px; white-space: nowrap; }
+}
+</style>

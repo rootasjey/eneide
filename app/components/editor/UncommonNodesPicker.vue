@@ -68,5 +68,8 @@ function select(type: string) {
 </script>
 
 <style scoped>
+@layer components {
+
 /* Keep styles minimal — buttons use global UI theme */
+}
 </style>

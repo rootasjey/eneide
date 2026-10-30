@@ -76,6 +76,8 @@ watch(() => props.selected, (val) => { if (val) updateDimensions() })
 </script>
 
 <style scoped>
+@layer components {
+
 .image-figure {
   position: relative;
   margin: 2rem 0;
@@ -152,5 +154,17 @@ watch(() => props.selected, (val) => { if (val) updateDimensions() })
     color: black;
     background: yellow;
   }
+}
+}
+</style>
+
+<style>
+@layer components {
+
+/* Tiptap styles for this component. */
+.ProseMirror figure.image-figure { margin: 2.5rem 0; text-align: center; }
+.ProseMirror figure.image-figure img { display: block; margin: 0 auto; }
+.ProseMirror figure.image-figure figcaption.image-caption { font-size: 0.7rem; line-height: 1.1; color: var(--un-muted-color, #6b7280); margin-top: 0.5rem; font-style: italic; }
+.dark .ProseMirror figure.image-figure figcaption.image-caption { color: var(--un-muted-color, #9ca3af); }
 }
 </style>

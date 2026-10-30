@@ -805,6 +805,8 @@ function handleGlobalKeydown(e: KeyboardEvent) {
 </script>
 
 <style scoped>
+@layer components {
+
 .animate-entrance {
   opacity: 0;
   transform: translateY(8px) scale(0.996);
@@ -820,10 +822,11 @@ function handleGlobalKeydown(e: KeyboardEvent) {
 
 @media (prefers-reduced-motion: reduce) {
   .animate-entrance {
-    transition: none !important;
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
+    transition: none;
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
+}
 }
 </style>

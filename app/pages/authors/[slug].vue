@@ -156,3 +156,11 @@ useHead({
   link: [{ rel: 'canonical', href: `${config.public.siteUrl}/authors/${slug}` }],
 })
 </script>
+
+<style>
+@layer components {
+
+/* Component and page styles moved from the global stylesheets. */
+.site-shell .site-author-detail > div { width: min(700px, calc(100% - 32px)); max-width: 700px; margin-inline: auto; }
+}
+</style>
